@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-11 22:31:49
+ * @LastEditTime: 2024-01-12 11:27:41
 -->
 <template>
   <div class="header__nav">
@@ -207,9 +207,26 @@ const getDivisionList = async (v) => {
     showToast(res.msg);
   }
 }
+// 获取用户信息
+const queryUserInfo = async (v) => {
+  const res = await useMy.getUserInfo({ code: v });
+  if (res?.code === 200) {
+    setSession("TOKEN", res.token);
+    showToast('授权成功');
+  } else {
+    showToast(res.msg);
+  }
+}
 $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
 });
+onMounted(() => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const code = searchParams.get('code');
+  if (code) {
+    queryUserInfo(code);
+  }
+})
 </script>
 <style lang="less" scoped>
 .header__nav {

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 10:14:55
+ * @LastEditTime: 2024-01-12 11:44:29
 -->
 <template>
 	<div class="app">
@@ -50,10 +50,10 @@
 					<div class="Mapcontant">{{ locationObj.contant }}</div>
 					<div class="Mapdistanc">{{ locationObj.distanc }}</div>
 					<img class="Mapimg" :src="getImgType('title')" />
-					<div v-if="getSession('TOKEN') != 'admin'" class="Mapbtn" @click="navigateLine">到这里去</div>
-					<div v-if="getSession('TOKEN') != 'admin'" class="Maptips">查看更多详情<span class="span"
-							@click="hasUser">去登录</span></div>
-					<div v-if="getSession('TOKEN') == 'admin'" class="Mapinfo">
+					<div v-if="!getSession('TOKEN')" class="Mapbtn" @click="navigateLine">到这里去</div>
+					<div v-if="!getSession('TOKEN')" class="Maptips">查看更多详情<span class="span" @click="hasUser">去登录</span>
+					</div>
+					<div v-if="getSession('TOKEN')" class="Mapinfo">
 						<div class="Mapinfo_box">
 							<div>项目主任：<span>{{ locationObj.name }}</span></div>
 							<div class="ml585">联系方式：<span>{{ locationObj.phone }}</span></div>
@@ -63,7 +63,7 @@
 							<div class="ml385">物业费：<span>{{ locationObj.wyf }}</span></div>
 						</div>
 					</div>
-					<div v-if="getSession('TOKEN') == 'admin'" class="Mapbtns" @click="navigateLine">到这里去</div>
+					<div v-if="getSession('TOKEN')" class="Mapbtns" @click="navigateLine">到这里去</div>
 				</div>
 			</div>
 		</van-overlay>
@@ -186,8 +186,14 @@ const clickArrayMarker = async (marker) => {
 	mapDetailShow.value = true
 }
 // 登录
-const hasUser = () => {
-	router.push({ name: "login" });
+const hasUser = async () => {
+	const res = await useMy.getSingleUrl();
+	if (res?.code === 200) {
+		window.location = res.qw_auth_url
+	} else {
+		showToast(res.msg);
+	}
+	// router.push({ name: "login" });
 };
 const handleSearch = (v) => {
 	loading.value = true
@@ -282,7 +288,22 @@ const getMarkList = async () => {
 		showToast(res.msg);
 	}
 }
+// 获取用户信息
+const queryUserInfo = async (v) => {
+	const res = await useMy.getUserInfo({ code: v });
+	if (res?.code === 200) {
+		setSession("TOKEN", res.token);
+		showToast('授权成功');
+	} else {
+		showToast(res.msg);
+	}
+}
 onMounted(() => {
+	const searchParams = new URLSearchParams(window.location.search);
+	const code = searchParams.get('code');
+	if (code) {
+		queryUserInfo(code);
+	}
 })
 </script>
 

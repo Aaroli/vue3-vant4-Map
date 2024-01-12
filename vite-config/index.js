@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 1.0
+ * @Author: AaroLi
+ * @Date: 2024-01-12 10:29:50
+ * @LastEditors: AaroLi
+ * @LastEditTime: 2024-01-12 10:58:23
+ */
 import { resolve, join, extname } from "path";
 import fs from "fs";
 import postCssPxToRem from "postcss-pxtorem";
@@ -37,7 +45,7 @@ const baseCfg = (viteEnv = {}) => {
 		},
 		server: {
 			host: "0.0.0.0", // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
-			port: 3301,
+			port: 9161,
 			open: false,
 			cors: true
 		},

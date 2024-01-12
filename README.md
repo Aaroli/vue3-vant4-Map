@@ -326,3 +326,6 @@ export { vueSetupExtend };
   onMounted(() => {});
 </script>
 ```
+
+Tips： 写在最后
+写一了一个花里胡哨的 404 页面 当小彩蛋了 有缘人可自行查看
