@@ -6,7 +6,7 @@
  * @LastEditors: AaroLi
  * @LastEditTime: 2024-01-11 18:11:13
  */
-import { getAddersslist, getRegionList, getPointInfo, getSingleUrl, getUserInfo } from "@/api/My";
+import { getAddersslist, getRegionList, getPointInfo, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
 	state: () => ({
 		companyName: "全部",
@@ -23,6 +23,18 @@ export default defineStore('useMy', {
 		async getAddersslist(params) {
 			let url = $globalRequestUrl({
 				url: getAddersslist,
+			});
+
+			try {
+				const rep = await $globalRequest(url, params, { method: "GET" });
+				return rep;
+			} catch (error) {
+				return error;
+			}
+		},
+		async getWxAuth(params) {
+			let url = $globalRequestUrl({
+				url: getWxAuth,
 			});
 
 			try {

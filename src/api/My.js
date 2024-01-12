@@ -8,3 +8,5 @@ export const getAddersslist = "getregionlist"
 export const getRegionList = "getprojectcitylistbyregion"
 // 获取详情
 export const getPointInfo = "getsampleprojectlistbyregionandcity"
+// 获取wxJSDK 鉴权
+export const getWxAuth = "getwxauth"
