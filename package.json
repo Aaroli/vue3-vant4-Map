@@ -1,0 +1,65 @@
+{
+  "name": "vue3-map",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode dev",
+    "build:pro": "vite build --mode prod",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vuemap/vue-amap": "^2.0.13",
+    "axios": "^1.6.3",
+    "core-js": "^3.35.0",
+    "jsonp": "^0.2.1",
+    "lodash": "^4.17.21",
+    "mitt": "^3.0.1",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
+    "vant": "^4.8.1",
+    "vconsole": "^3.15.1",
+    "vue": "^3.4.0",
+    "vue-dompurify-html": "^5.0.1",
+    "vue-i18n": "^9.8.0",
+    "vue-router": "^4.2.5",
+    "weixin-js-sdk": "^1.6.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^5.2.0",
+    "@vitejs/plugin-vue": "^5.0.1",
+    "@vuemap/unplugin-resolver": "^2.0.0",
+    "amfe-flexible": "^2.2.1",
+    "autoprefixer": "^10.4.16",
+    "jszip": "^3.10.1",
+    "less": "^4.2.0",
+    "less-loader": "^11.1.4",
+    "postcss-pxtorem": "^6.0.0",
+    "unplugin-auto-import": "^0.17.3",
+    "unplugin-vue-components": "^0.26.0",
+    "vite": "^5.0.10",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-progress": "^0.0.7",
+    "vite-plugin-style-import": "^2.0.0",
+    "vite-plugin-vue-setup-extend": "^0.4.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
