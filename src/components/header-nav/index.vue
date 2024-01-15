@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 16:11:53
+ * @LastEditTime: 2024-01-15 16:47:50
 -->
 <template>
   <div class="header__nav">
@@ -65,7 +65,7 @@ const keyWord = ref('');
 const itemRef = ref(null);
 const menuRef = ref(null);
 const cityName = ref('杭州市');
-const locationName = ref('');
+const loctionName = ref('');
 const columns = ref([
   // { text: '杭州', value: 'Hangzhou' },
   // { text: '宁波', value: 'Ningbo' },
@@ -206,11 +206,9 @@ const getDivisionList = async (v) => {
         v.value = v.xmproject;
       });
       columns.value = res.data;
-      // cityName.value = res.data[0].text;
-      console.log('locationName.value',locationName.value)
-      // if (lo) {
-        
-      // }
+      const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
+      arr.length > 0 ? emit("initData", arr[0].egion, arr[0].xmproject) : emit("initData", res.data[0].egion, res.data[0].xmproject);
+      arr.length > 0 ? cityName.value = arr[0].text : cityName.value = res.data[0].text;
     }
   } else {
     showToast(res.msg);
@@ -235,7 +233,8 @@ onBeforeMount(() => {
       const { getLocalCity } = res;
       getLocalCity().then(cityResult => {
         cityName.value = cityResult.city || '未知'
-        locationName.value = cityResult.city || '未知'
+        loctionName.value = cityResult.city || '未知'
+        getDivisionList('海岸');
       })
     })
   })
@@ -246,7 +245,6 @@ onMounted(() => {
   if (code) {
     queryUserInfo(code);
   }
-  getDivisionList('海岸');
 })
 </script>
 <style lang="less" scoped>

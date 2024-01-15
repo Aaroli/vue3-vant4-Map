@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 16:08:27
+ * @LastEditTime: 2024-01-15 16:43:46
 -->
 <template>
 	<div class="app">
@@ -308,7 +308,6 @@ const queryUserInfo = async (v) => {
 onBeforeMount(() => {
 	lazyAMapApiLoaderInstance.then(() => {
 		useCitySearch().then(res => {
-			console.log('1', 1)
 			const { getLocalCity } = res;
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
