@@ -4,12 +4,12 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 15:46:33
+ * @LastEditTime: 2024-01-15 11:45:00
  */
 import { getAddersslist, getRegionList, getPointInfo, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
 	state: () => ({
-		companyName: "全部",
+		companyName: "海岸",
 		companyNum: "0", //总数
 	}),
 	getters: {},

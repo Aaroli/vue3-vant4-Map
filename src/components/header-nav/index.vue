@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 18:02:10
+ * @LastEditTime: 2024-01-15 11:41:50
 -->
 <template>
   <div class="header__nav">
@@ -14,7 +14,7 @@
       <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
           style="vertical-align: middle;" /></div>
       <div class="fl6">
-        <van-dropdown-menu ref="menuRef">
+        <van-dropdown-menu ref="menuRef" style="display: flex;">
           <van-dropdown-item title="类别" ref="itemRef">
             <div class="Category__box">
               <div class="title">类别</div>
@@ -29,8 +29,8 @@
               </div>
             </div>
           </van-dropdown-item>
-        </van-dropdown-menu><van-icon class="pt36 " name="arrow-down" color="#A6B2C3" size="17"
-          style="vertical-align: middle;" />
+          <van-icon class="pt36 " name="arrow-down" color="#A6B2C3" size="17" style="vertical-align: middle;" />
+        </van-dropdown-menu>
       </div>
     </div>
     <div class="header__right ml4">
@@ -56,9 +56,10 @@
   
 <script setup name="headerNav">
 import i_search from '@/assets/images/i_search.png'
+import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 const { useMy } = $globalStore
 const router = useRouter();
-const emit = defineEmits(["handleSearch", "cityChange", 'stausChange']);
+const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "setName"]);
 
 const keyWord = ref('');
 const itemRef = ref(null);
@@ -88,7 +89,6 @@ const handleOrgCancel = () => {
 const hasUser = async () => {
   const res = await useMy.getSingleUrl();
   if (res?.code === 200) {
-    alert(window.location)
     window.location = res.qw_auth_url
   } else {
     showToast(res.msg);
@@ -199,11 +199,15 @@ const isMenuActive = () => {
 const getDivisionList = async (v) => {
   const res = await useMy.getRegionList({ egion: v });
   if (res?.code === 200) {
-    res.data.forEach(v => {
-      v.text = v.xmproject;
-      v.value = v.xmproject;
-    });
-    columns.value = res.data;
+    if (res.data && res.data.length > 0) {
+      res.data.forEach(v => {
+        v.text = v.xmproject;
+        v.value = v.xmproject;
+      });
+      columns.value = res.data;
+      cityName.value = res.data[0].text;
+      emit("setName", res.data[0].text);
+    }
   } else {
     showToast(res.msg);
   }
@@ -221,6 +225,16 @@ const queryUserInfo = async (v) => {
 $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
 });
+onBeforeMount(() => {
+  lazyAMapApiLoaderInstance.then(() => {
+    useCitySearch().then(res => {
+      const { getLocalCity } = res;
+      getLocalCity().then(cityResult => {
+        cityResult.city = cityName || '未知'
+      })
+    })
+  })
+})
 onMounted(() => {
   const searchParams = new URLSearchParams(window.location.search);
   const code = searchParams.get('code');

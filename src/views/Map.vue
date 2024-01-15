@@ -4,14 +4,14 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 18:02:31
+ * @LastEditTime: 2024-01-15 11:49:17
 -->
 <template>
 	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
 			<header-nav :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange" @stausChange="stausChange"
-				titelText="首页"></header-nav>
+				@setName="setXmprojectName" titelText="首页"></header-nav>
 		</div>
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
@@ -80,7 +80,8 @@
 </template>
 
 <script setup name="Map">
-import { getSession, navigationWx, isWx, navToMap } from "@/util/util";
+import { getSession, navigationWx, isWx, navToMap, setCompanyNum } from "@/util/util";
+import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
 const router = useRouter();
@@ -167,7 +168,6 @@ const getImgType = (v) => {
 }
 // marker点击事件
 const clickArrayMarker = async (marker) => {
-	console.log('marker', marker)
 	locationObj.value = {
 		title: marker.name ? marker.name : '暂无数据',
 		name: marker.leaderName ? marker.leaderName : '暂无数据',
@@ -189,7 +189,6 @@ const clickArrayMarker = async (marker) => {
 const hasUser = async () => {
 	const res = await useMy.getSingleUrl();
 	if (res?.code === 200) {
-		alert(window.location)
 		window.location = res.qw_auth_url
 	} else {
 		showToast(res.msg);
@@ -215,6 +214,11 @@ const cityChange = (v) => {
 	searchInfo.value.xmproject = v
 	getMarkList();
 }
+// 动态更换数据
+const setXmprojectName = (v) => {
+	searchInfo.value.xmproject = v
+	getMarkList();
+}
 // 类型切换事件
 const stausChange = (v) => {
 	searchInfo.value.type = v
@@ -227,7 +231,7 @@ const textChange = async (v) => {
 // 筛选点事件
 const selectList = (v) => {
 	searchInfo.value.egion = v
-	getMarkList();
+	// getMarkList();
 }
 const isShowSheet = ref(false)
 const sheetList = [
@@ -281,10 +285,10 @@ const getMarkList = async () => {
 				v.type = useMy.$state.companyName
 		});
 		markers.value = res.data;
+		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
 		}
-		console.log('markers.value', markers.value)
 	} else {
 		showToast(res.msg);
 	}
@@ -299,11 +303,21 @@ const queryUserInfo = async (v) => {
 		showToast(res.msg);
 	}
 }
+onBeforeMount(() => {
+	lazyAMapApiLoaderInstance.then(() => {
+		useCitySearch().then(res => {
+			console.log('1', 1)
+			const { getLocalCity } = res;
+			getLocalCity().then(cityResult => {
+				center.value = cityResult.bounds.getCenter().toArray()
+			})
+		})
+	})
+})
 onMounted(() => {
-	console.log('window.location', window.location)
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');
-	console.log('code', code)
+	// console.log('code', code)
 	if (code) {
 		queryUserInfo(code);
 	}

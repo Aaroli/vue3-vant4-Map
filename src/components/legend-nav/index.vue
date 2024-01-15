@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-11 20:38:41
+ * @LastEditTime: 2024-01-15 11:50:18
 -->
 <template>
 	<div class="legend_nav">
@@ -34,7 +34,7 @@ import img1 from '@/assets/images/i_company.png'
 const emit = defineEmits(["textChange", "selectList"]);
 const stateDom = ref(null);
 const legendShow = ref(true);
-const isChange = ref(0);
+const isChange = ref(1);
 const legendList = ref([
 	// {
 	// 	id: 1,
@@ -89,7 +89,7 @@ const change = (v, id) => {
 	$globalEventBus.emit('adcdChange', v.name);
 	setCompanyName(v.name)
 	setCompanyNum(0)
-	emit("selectList",v.name);
+	emit("selectList", v.name);
 	isChange.value = id;
 };
 // 获取列表数据
@@ -142,6 +142,8 @@ onMounted(() => {
 	border-radius: 12px;
 
 	.tab-content-box {
+		padding-top: 4px;
+
 		p {
 			display: flex;
 			padding: 0;

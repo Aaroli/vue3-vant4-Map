@@ -5,7 +5,6 @@ axios.defaults.withCredentials = true;
 const $globalRequestUrl = (params) => {
 	const { VITE_BASE_URL } = import.meta.env;
 	const baseUrl = VITE_BASE_URL;
-	console.log('baseUrl', baseUrl)
 	return `${params.baseUrl ? params.baseUrl : baseUrl}${params.url}`;
 };
 
