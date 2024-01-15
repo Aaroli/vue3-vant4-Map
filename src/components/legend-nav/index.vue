@@ -136,7 +136,7 @@ onMounted(() => {
 	background: #f2f6fc;
 	max-height: 0;
 	overflow: hidden;
-	transition: max-height 1s ease-out;
+	transition: max-height 0.5s ease-out;
 	background: #FFFFFF;
 	box-shadow: 0px 5px 10px 0px rgba(13, 121, 253, 0.07);
 	border-radius: 12px;
