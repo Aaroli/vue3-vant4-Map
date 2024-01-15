@@ -112,10 +112,11 @@ onMounted(() => {
 
 .num__num {
 	position: absolute;
-	right: 12px;
+	// right: 12px;
+	left: 110px;
 	font-size: 18px;
 	font-weight: normal;
 	color: #FFFFFF;
-	float: right;
+	// float: right;
 }
 </style>
