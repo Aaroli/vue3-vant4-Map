@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 10:44:49
+ * @LastEditTime: 2024-01-12 16:45:39
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -114,32 +114,32 @@ const setCompanyNum = (data) => {
 // TODO 微信打开三方地图  需求没明确说要  暂留一个口子 @yl
 const navigationWx = async (addressInfo) => {
 	const { lat, lng, name, address } = addressInfo
-	const res = await $globalStore.useMy.getWxAuth();
+	const res = await $globalStore.useMy.getWxAuth({ url: window.location.href });
 	if (res?.code === 200) {
-		console.log('res', res)
-		// wx.config({
-		// 	beta: true,
-		// 	debug: res.debug,
-		// 	appId: res.appId,
-		// 	timestamp: res.timestamp,
-		// 	nonceStr: res.nonceStr,
-		// 	signature: res.signature,
-		// 	// jsApiList: res.jsApiList
-		// 	jsApiList: ["checkJsApi", "openLocation"],
-		// 	success(res) {
-		// 		showToast(res)
-		// 	},
-		// });
-		// wx.ready(function () {
-		// 	wx.openLocation({
-		// 		type: "gcj02",
-		// 		latitude: lat,
-		// 		longitude: lng,
-		// 		name: name,
-		// 		scale: 18,
-		// 		address: address || ''
-		// 	});
-		// })
+		console.log('res', res.appId)
+		wx.config({
+			beta: true,
+			debug: false,
+			appId: res.appId,
+			timestamp: res.timestamp,
+			nonceStr: res.nonceStr,
+			signature: res.signature,
+			// jsApiList: res.jsApiList
+			jsApiList: ["checkJsApi", "openLocation"],
+			success(res) {
+				showToast(res)
+			},
+		});
+		wx.ready(function () {
+			wx.openLocation({
+				type: "gcj02",
+				latitude: Number(lat),
+				longitude: Number(lng),
+				name: name,
+				scale: 18,
+				address: address || ''
+			});
+		})
 	} else {
 		showToast(res.msg);
 	}

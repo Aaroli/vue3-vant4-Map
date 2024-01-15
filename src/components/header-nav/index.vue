@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 11:27:41
+ * @LastEditTime: 2024-01-12 18:02:10
 -->
 <template>
   <div class="header__nav">
@@ -88,6 +88,7 @@ const handleOrgCancel = () => {
 const hasUser = async () => {
   const res = await useMy.getSingleUrl();
   if (res?.code === 200) {
+    alert(window.location)
     window.location = res.qw_auth_url
   } else {
     showToast(res.msg);

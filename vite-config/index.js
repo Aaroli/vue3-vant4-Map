@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-12 10:29:50
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 10:58:23
+ * @LastEditTime: 2024-01-12 17:50:54
  */
 import { resolve, join, extname } from "path";
 import fs from "fs";
@@ -36,6 +36,7 @@ const baseCfg = (viteEnv = {}) => {
 	const { VITE_BASE_URL } = viteEnv;
 	return {
 		envDir: "vite-env",
+		base: './',
 		resolve: {
 			alias: {
 				"@": resolve("./src"),
@@ -47,7 +48,14 @@ const baseCfg = (viteEnv = {}) => {
 			host: "0.0.0.0", // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
 			port: 9161,
 			open: false,
-			cors: true
+			cors: true,
+			proxy: {
+				'/api/': {
+					target: 'http://61.169.37.106:9167/api/',
+					changeOrigin: true,
+					rewrite: (p) => p.replace(/^\/api/, ''),
+				}
+			}
 		},
 		build: {
 			outDir: "dist",

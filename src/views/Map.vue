@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-12 11:44:29
+ * @LastEditTime: 2024-01-12 18:02:31
 -->
 <template>
 	<div class="app">
@@ -189,6 +189,7 @@ const clickArrayMarker = async (marker) => {
 const hasUser = async () => {
 	const res = await useMy.getSingleUrl();
 	if (res?.code === 200) {
+		alert(window.location)
 		window.location = res.qw_auth_url
 	} else {
 		showToast(res.msg);
@@ -299,8 +300,10 @@ const queryUserInfo = async (v) => {
 	}
 }
 onMounted(() => {
+	console.log('window.location', window.location)
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');
+	console.log('code', code)
 	if (code) {
 		queryUserInfo(code);
 	}
