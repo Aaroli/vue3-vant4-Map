@@ -4,14 +4,14 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 11:49:17
+ * @LastEditTime: 2024-01-15 16:08:27
 -->
 <template>
 	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
 			<header-nav :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange" @stausChange="stausChange"
-				@setName="setXmprojectName" titelText="首页"></header-nav>
+				@initData="initData" titelText="首页"></header-nav>
 		</div>
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
@@ -214,9 +214,11 @@ const cityChange = (v) => {
 	searchInfo.value.xmproject = v
 	getMarkList();
 }
-// 动态更换数据
-const setXmprojectName = (v) => {
-	searchInfo.value.xmproject = v
+// 初始化没值的时候 赋值有值的数据
+const initData = (egion, xmproject) => {
+	searchInfo.value.egion = egion;
+	searchInfo.value.xmproject = xmproject;
+	searchInfo.value.type = '';
 	getMarkList();
 }
 // 类型切换事件
