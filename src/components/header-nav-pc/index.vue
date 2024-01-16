@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 07:48:24
+ * @LastEditTime: 2024-01-16 08:07:14
 -->
 <template>
   <div class="header__nav">
@@ -380,18 +380,18 @@ onMounted(() => {
 }
 
 .Category__box {
-  height: 101px;
+  height: 60px;
   background: #FFFFFF;
   padding-top: 6px;
 
 
   .title {
-    font-size: 7.5px;
+    font-size: 5px;
     font-family: PingFangSC, PingFang SC;
     font-weight: 600;
     color: #161A1D;
     margin-left: 8px;
-    margin-bottom: 9px;
+    margin-bottom: 4px;
   }
 }
 
@@ -402,15 +402,15 @@ onMounted(() => {
 .clickBox {
   display: flex;
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   margin-left: 8px;
 
   div {
-    width: 55px;
-    height: 18px;
-    line-height: 18px;
-    border-radius: 10px;
-    font-size: 7px;
+    width: 40px;
+    height: 10px;
+    line-height: 10px;
+    border-radius: 8px;
+    font-size: 5px;
     background: #F1F1F1;
     font-family: PingFangSC, PingFang SC;
     font-weight: 600;
@@ -430,14 +430,15 @@ onMounted(() => {
 .btn {
   display: flex;
   text-align: center;
-  margin-left: 8px;
+  align-items: center;
+  justify-content: center;
 
   div {
-    width: 80px;
-    height: 20px;
-    line-height: 20px;
+    width: 40px;
+    height: 10px;
+    line-height: 10px;
     border-radius: 10px;
-    font-size: 7.5px;
+    font-size: 5px;
     font-family: PingFangSC, PingFang SC;
     font-weight: 600;
   }

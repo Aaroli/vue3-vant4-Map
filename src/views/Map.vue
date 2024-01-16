@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 06:56:46
+ * @LastEditTime: 2024-01-16 07:59:34
 -->
 <template>
 	<div class="app">
@@ -36,8 +36,11 @@
 			<!-- <el-amap-control-geolocation :visible="true" @complete="aaa" /> -->
 		</el-amap>
 		<!-- 底部 -->
-		<div class="footer_body">
+		<div class="footer_body" v-if="phoneType()">
 			<footer-nav></footer-nav>
+		</div>
+		<div class="footer_body_pc" v-if="!phoneType()">
+			<footer-nav-pc></footer-nav-pc>
 		</div>
 		<div class="legend_body">
 			<legend-nav @textChange="textChange" @selectList="selectList" />

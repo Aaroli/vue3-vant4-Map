@@ -12,7 +12,7 @@
 	</div>
 </template>
 
-<script setup name="footerNav">
+<script setup name="footerNavPc">
 import img1 from '@/assets/images/i_compny1.png'
 import img2 from '@/assets/images/i_compny2.png'
 import img3 from '@/assets/images/i_compny3.png'
@@ -52,30 +52,30 @@ onMounted(() => {
 
 .right__nav {
 	position: relative;
-	width: 243px;
-	height: 40px;
-	line-height: 40px;
+	width: 122px;
+	height: 20px;
+	line-height: 20px;
 	background: #0D79FD;
-	border-radius: 12px;
-	margin-top: 4px;
-	margin-right: 4px;
+	border-radius: 6px;
+	margin-top: 2px;
+	margin-right: 2px;
 	// float: right;
 	display: flex;
 	position: absolute;
-	right: 4px;
+	right: 2px;
 
 	&_img {
 		position: relative;
-		width: 32px;
-		height: 32px;
+		width: 16px;
+		height: 16px;
 		background: #FFFFFF;
-		border-radius: 12px;
-		margin: 4px 0 0 4px;
+		border-radius: 6px;
+		margin: 2px 0 0 2px;
 
 		.imgIcon {
 			position: absolute;
-			width: 23px;
-			height: 23px;
+			width: 12px;
+			height: 12px;
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
@@ -84,28 +84,28 @@ onMounted(() => {
 }
 
 .img {
-	width: 24px;
-	height: 24px;
-	margin-top: 12px;
-	margin-left: 18.5px;
+	width: 12px;
+	height: 12px;
+	margin-top: 7.5px;
+	margin-left: 9.5px;
 	background-image: url("~@/assets/images/Group 427319587.png");
 	background-size: 100% 100%;
 }
 
 .title {
-	height: 24px;
-	font-size: 12px;
+	height: 12px;
+	font-size: 6px;
 	font-weight: 500;
 	color: #48535A;
 	margin-left: 5px;
-	margin-top: 12px;
-	line-height: 24px;
-	padding-top: 2px;
+	margin-top: 6px;
+	line-height: 12px;
+	padding-top: 1px;
 }
 
 .num__lable {
-	margin: 0 0 0 4px;
-	font-size: 14px;
+	margin: 0 0 0 2px;
+	font-size: 7px;
 	font-weight: 500;
 	color: #FFFFFF;
 }
@@ -113,8 +113,8 @@ onMounted(() => {
 .num__num {
 	// position: absolute;
 	// right: 75px;
-	margin-left: 20px;
-	font-size: 18px;
+	margin-left: 10px;
+	font-size: 9px;
 	font-weight: normal;
 	color: #FFFFFF;
 	// float: right;
