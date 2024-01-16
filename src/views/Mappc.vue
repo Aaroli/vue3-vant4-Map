@@ -4,20 +4,22 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 02:40:18
+ * @LastEditTime: 2024-01-16 08:37:06
 -->
 <template>
 	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
-			<header-nav :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange" @stausChange="stausChange"
-				@initData="initData" titelText="首页"></header-nav>
+			<header-nav v-if="phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
+				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav>
+			<header-nav-pc v-if="!phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
+				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
 			<!-- 地图标记 -->
 			<el-amap-marker :visible="textVisible" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:offset="[-50, -32]" :iconSize="[5, 5]" @click="(e) => { clickArrayMarker(marker, e) }">
+				:offset="[-50, -35]" :iconSize="[5, 5]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content">
 					<div class="title">{{ marker.name }}</div>
 				</div>
@@ -31,11 +33,14 @@
 			<!-- 地图类型切换 -->
 			<el-amap-control-map-type :visible="MapStatusvisible" />
 			<!-- 定位 -->
-			<!-- <el-amap-control-geolocation :visible="visible" @complete="getLocation" /> -->
+			<!-- <el-amap-control-geolocation :visible="true" @complete="aaa" /> -->
 		</el-amap>
 		<!-- 底部 -->
-		<div class="footer_body">
+		<div class="footer_body" v-if="phoneType()">
 			<footer-nav></footer-nav>
+		</div>
+		<div class="footer_body_pc" v-if="!phoneType()">
+			<footer-nav-pc></footer-nav-pc>
 		</div>
 		<div class="legend_body">
 			<legend-nav @textChange="textChange" @selectList="selectList" />
@@ -80,7 +85,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, navigationWx, isWx, navToMap, setCompanyNum, setCoordinate, calcDistance } from "@/util/util";
+import { getSession, navigationWx, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -280,6 +285,7 @@ const getLocation = () => {
 }
 // 获取点的数组 
 const getMarkList = async () => {
+	markers.value = [];
 	const res = await useMy.getPointInfo(searchInfo.value);
 	if (res?.code === 200) {
 		res.data.forEach(v => {
@@ -287,7 +293,6 @@ const getMarkList = async () => {
 				v.type = useMy.$state.companyName
 		});
 		markers.value = res.data;
-		console.log('markers.value', markers.value)
 		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
@@ -307,12 +312,13 @@ const queryUserInfo = async (v) => {
 	}
 }
 onBeforeMount(() => {
+	initWx();
 	lazyAMapApiLoaderInstance.then(() => {
 		useCitySearch().then(res => {
 			const { getLocalCity } = res;
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
-				setCoordinate(center.value)
+				console.log('cityResult', cityResult)
 			})
 		})
 	})
@@ -328,7 +334,7 @@ onMounted(() => {
 </script>
 
 
-<style scoped>
+<style scoped lang="less">
 .app {
 	width: 100%;
 	height: 100%;
@@ -489,5 +495,9 @@ onMounted(() => {
 
 .ml385 {
 	margin-left: 38.5px;
+}
+
+:deep(.amap-geolocation) {
+	bottom: 90px !important;
 }
 </style>

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 07:59:34
+ * @LastEditTime: 2024-01-16 09:24:52
 -->
 <template>
 	<div class="app">
@@ -18,14 +18,22 @@
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
 			<!-- 地图标记 -->
-			<el-amap-marker :visible="textVisible" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:offset="[-50, -35]" :iconSize="[5, 5]" @click="(e) => { clickArrayMarker(marker, e) }">
+			<el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
+				:position="marker.position" :offset="[-50, -35]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content">
 					<div class="title">{{ marker.name }}</div>
 				</div>
 			</el-amap-marker>
-			<el-amap-marker v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:icon="getImgType(marker.type)" :iconSize="[5, 5]" @click="(e) => { clickArrayMarker(marker, e) }" />
+			<!-- pc地图标记 -->
+			<el-amap-marker v-if="!phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
+				:position="marker.position" :offset="[0, 0]" @click="(e) => { clickArrayMarker(marker, e) }">
+				<div class="marker-content_pc">
+					<div class="title">{{ marker.name }}</div>
+					<div class="img"><img :src="getImgType(marker.type)" /></div>
+				</div>
+			</el-amap-marker>
+			<el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
+				:icon="getImgType(marker.type)" @click="(e) => { clickArrayMarker(marker, e) }" />
 			<!-- 比例尺 -->
 			<el-amap-control-scale :visible="ScaleVisible" />
 			<!-- 缩放控件 -->
@@ -42,14 +50,17 @@
 		<div class="footer_body_pc" v-if="!phoneType()">
 			<footer-nav-pc></footer-nav-pc>
 		</div>
-		<div class="legend_body">
+		<div class="legend_body" v-if="phoneType()">
 			<legend-nav @textChange="textChange" @selectList="selectList" />
+		</div>
+		<div class="legend_body_pc" v-if="!phoneType()">
+			<legend-nav-pc @textChange="textChange" @selectList="selectList" />
 		</div>
 
 		<!-- 地图信息 -->
 		<van-overlay :show="mapDetailShow" z-index="3" @click="mapDetailShow = false">
 			<div class="wrapper" @click.stop>
-				<div class="block">
+				<div class="block" v-if="phoneType()">
 					<van-icon name="cross" size="20" class="closeBtn" @click="mapDetailShow = false" />
 					<div class="Maptitle">{{ locationObj.title }}</div>
 					<div class="Mapcontant">{{ locationObj.contant }}</div>
@@ -69,6 +80,27 @@
 						</div>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapbtns" @click="navigateLine">到这里去</div>
+				</div>
+				<div class="block_pc" v-if="!phoneType()">
+					<van-icon name="cross" size="20" class="closeBtn_pc" @click="mapDetailShow = false" />
+					<div class="Maptitle_pc">{{ locationObj.title }}</div>
+					<div class="Mapcontant_pc">{{ locationObj.contant }}</div>
+					<div class="Mapdistanc_pc">{{ locationObj.distanc }}</div>
+					<img class="Mapimg_pc" :src="getImgType('title')" />
+					<div v-if="!getSession('TOKEN')" class="Mapbtn_pc" @click="navigateLine">到这里去</div>
+					<div v-if="!getSession('TOKEN')" class="Maptips_pc">查看更多详情<span class="span" @click="hasUser">去登录</span>
+					</div>
+					<div v-if="getSession('TOKEN')" class="Mapinfo_pc">
+						<div class="Mapinfo_box_pc">
+							<div>项目主任：<span>{{ locationObj.name }}</span></div>
+							<div class="ml585_pc">联系方式：<span>{{ locationObj.phone }}</span></div>
+						</div>
+						<div class="Mapinfo_box_pc mt15_pc">
+							<div>项目面积：<span>{{ locationObj.mj }}</span></div>
+							<div class="ml385_pc">物业费：<span>{{ locationObj.wyf }}</span></div>
+						</div>
+					</div>
+					<div v-if="getSession('TOKEN')" class="Mapbtns_pc" @click="navigateLine">到这里去</div>
 				</div>
 			</div>
 		</van-overlay>
@@ -334,7 +366,7 @@ onMounted(() => {
 </script>
 
 
-<style scoped>
+<style scoped lang="less">
 .app {
 	width: 100%;
 	height: 100%;
@@ -366,6 +398,32 @@ onMounted(() => {
 	text-align: center;
 }
 
+.marker-content_pc {
+	width: 35.5px;
+	height: 10px;
+	line-height: 9px;
+	font-size: 4px;
+	font-weight: 500;
+	color: #0D79FD;
+	background-image: url("~@/assets/images/prop.png");
+	background-size: 100% 100%;
+	text-align: center;
+
+	.title {
+		padding: 0px 0 0px 0;
+	}
+
+	.img {
+		img {
+			width: 12px;
+			height: 12px;
+			padding-left: 10px;
+			padding-top: 1px;
+		}
+
+	}
+}
+
 .title {
 	padding: 0px 0 0px 0;
 }
@@ -385,9 +443,23 @@ onMounted(() => {
 	position: relative;
 }
 
+.block_pc {
+	width: 150px;
+	height: 120px;
+	background: #FFFFFF;
+	border-radius: 4px;
+	position: relative;
+}
+
 .closeBtn {
 	float: right;
 	margin: 12px 27.5px 0 0;
+}
+
+.closeBtn_pc {
+	float: right;
+	margin: 6px 10px 0 0;
+	cursor: pointer;
 }
 
 .Maptitle {
@@ -397,6 +469,15 @@ onMounted(() => {
 	font-weight: 500;
 	color: #383E44;
 	margin: 28.5px 0 16.5px 18px;
+}
+
+.Maptitle_pc {
+	width: 100px;
+	height: 12px;
+	font-size: 9px;
+	font-weight: 500;
+	color: #383E44;
+	margin: 9px 0 6.5px 9px;
 }
 
 .Mapcontant {
@@ -410,11 +491,29 @@ onMounted(() => {
 	word-break: break-all;
 }
 
+.Mapcontant_pc {
+	width: 100px;
+	font-size: 6.5px;
+	font-weight: 400;
+	color: #7A868D;
+	margin-bottom: 5px;
+	margin-left: 9px;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
 .Mapdistanc {
 	font-size: 13px;
 	font-weight: 400;
 	color: #7A868D;
 	margin-left: 18px;
+}
+
+.Mapdistanc_pc {
+	font-size: 6.5px;
+	font-weight: 400;
+	color: #7A868D;
+	margin-left: 9px;
 }
 
 .Mapimg {
@@ -423,6 +522,14 @@ onMounted(() => {
 	position: absolute;
 	right: 18px;
 	top: 41px;
+}
+
+.Mapimg_pc {
+	width: 32.5px;
+	height: 31px;
+	position: absolute;
+	right: 9px;
+	top: 15px;
 }
 
 .Mapbtn,
@@ -443,7 +550,27 @@ onMounted(() => {
 	margin-bottom: 10px;
 }
 
-.Mapbtns {
+.Mapbtn_pc,
+.Mapbtns_pc {
+	width: 115px;
+	height: 16px;
+	line-height: 16px;
+	background: #0D79FD;
+	cursor: pointer;
+	box-shadow: 0px 2.5px 5px 0px rgba(13, 121, 253, 0.07);
+	border-radius: 9px;
+	margin-left: 16px;
+	margin-top: 18px;
+	text-align: center;
+	font-size: 7px;
+	font-family: PingFangSC, PingFang SC;
+	font-weight: 400;
+	color: #FFFFFF;
+	margin-bottom: 5px;
+}
+
+.Mapbtns,
+.Mapbtns_pc {
 	margin-top: 0px;
 }
 
@@ -462,6 +589,22 @@ onMounted(() => {
 	}
 }
 
+.Maptips_pc {
+	margin-top: 10.5px;
+	margin-left: 40.5px;
+	font-size: 7.5px;
+	font-family: PingFangSC, PingFang SC;
+	font-weight: 400;
+	cursor: pointer;
+	color: #7A868D;
+
+	.span {
+		color: #0D79FD;
+		font-weight: 600;
+		margin-left: 3px;
+	}
+}
+
 .Mapinfo {
 	width: 294.5px;
 	height: 70px;
@@ -469,6 +612,15 @@ onMounted(() => {
 	padding-top: 14px;
 	border-top: 1px solid #D9D9D9;
 	margin-top: 6px;
+}
+
+.Mapinfo_pc {
+	width: 140;
+	height: 35px;
+	margin-left: 9px;
+	padding-top: 7px;
+	border-top: 0.5px solid #D9D9D9;
+	margin-top: 3px;
 }
 
 .Mapinfo_box {
@@ -485,16 +637,42 @@ onMounted(() => {
 	}
 }
 
+.Mapinfo_box_pc {
+	display: flex;
+	font-size: 6.5px;
+	font-weight: 400;
+	color: #8D8D8D;
+	white-space: nowrap;
+	width: 50%;
+
+	span {
+		color: #3F454A;
+		font-weight: 500;
+	}
+}
+
 .mt15 {
 	margin-top: 10px;
+}
+
+.mt15_pc {
+	margin-top: 5px;
 }
 
 .ml585 {
 	margin-left: 20px;
 }
 
+.ml585_pc {
+	margin-left: 10px;
+}
+
 .ml385 {
 	margin-left: 38.5px;
+}
+
+.ml385_pc {
+	margin-left: 17.5px;
 }
 
 :deep(.amap-geolocation) {

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 11:50:18
+ * @LastEditTime: 2024-01-16 08:57:20
 -->
 <template>
 	<div class="legend_nav">
@@ -26,7 +26,7 @@
 	</div>
 </template>
 
-<script setup name="legendNav">
+<script setup name="legendNavPc">
 import { setCompanyNum, setCompanyName } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
@@ -113,18 +113,18 @@ onMounted(() => {
 <style lang="less" scoped>
 .legend__nav {
 	position: relative;
-	width: 41.5px;
-	height: 41.5px;
+	width: 20.5px;
+	height: 20.5px;
 	background: #FFFFFF;
-	box-shadow: 0px 5px 10px 0px rgba(13, 121, 253, 0.07);
-	border-radius: 12px;
+	box-shadow: 0px 2.5px 5px 0px rgba(13, 121, 253, 0.07);
+	border-radius: 6px;
 	float: right;
 }
 
 .imgIcon {
 	position: absolute;
-	width: 23px;
-	height: 23px;
+	width: 13px;
+	height: 13px;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
@@ -132,26 +132,27 @@ onMounted(() => {
 
 .tab-content {
 	margin: 0 auto;
-	width: 124px;
+	width: 62px;
 	background: #f2f6fc;
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.5s ease-out;
 	background: #FFFFFF;
 	box-shadow: 0px 5px 10px 0px rgba(13, 121, 253, 0.07);
-	border-radius: 12px;
+	border-radius: 6px;
 
 	.tab-content-box {
-		padding-top: 4px;
+		padding-top: 2px;
 
 		p {
 			display: flex;
 			padding: 0;
-			margin: 0px 5px 5px 5px;
-			padding: 7px 16px;
+			margin: 0px 2.5px 2.5px 2.5px;
+			padding: 3.5px 8px;
+			cursor: pointer;
 		}
 
-		font-size: 14px;
+		font-size: 7px;
 		font-family: PingFangSC,
 		PingFang SC;
 		font-weight: 400;
@@ -165,59 +166,59 @@ onMounted(() => {
 .span4,
 .span5 {
 	display: block;
-	width: 8px;
-	height: 8px;
+	width: 4px;
+	height: 4px;
 	border-radius: 50%;
-	margin-right: 8px;
-	margin-top: 7px;
+	margin-right: 4px;
+	margin-top: 3.5px;
 }
 
 .span1 {
 	background: linear-gradient(180deg, #0D79FD 0%, #9DC9FF 100%);
-	box-shadow: 0px 0px 2px 0px rgba(13, 121, 253, 0.2);
+	box-shadow: 0px 0px 1px 0px rgba(13, 121, 253, 0.2);
 }
 
 .span2 {
 	background: linear-gradient(180deg, #28C3CD 0%, #92EFF5 100%);
-	box-shadow: 0px 0px 4px 0px rgba(63, 227, 220, 0.2);
+	box-shadow: 0px 0px 2px 0px rgba(63, 227, 220, 0.2);
 }
 
 .span3 {
 	background: linear-gradient(180deg, #0047FF 0%, #A99CF5 100%);
-	box-shadow: 0px 0px 4px 0px rgba(0, 77, 255, 0.2);
+	box-shadow: 0px 0px 2px 0px rgba(0, 77, 255, 0.2);
 }
 
 .span4 {
 	background: linear-gradient(180deg, #EFB051 0%, #FFE298 100%);
-	box-shadow: 0px 0px 4px 0px rgba(251, 181, 69, 0.2);
+	box-shadow: 0px 0px 2px 0px rgba(251, 181, 69, 0.2);
 }
 
 .span5 {
 	background: linear-gradient(180deg, #850DFD 0%, #D49DFF 100%);
-	box-shadow: 0px 0px 4px 0px rgba(158, 23, 255, 0.2);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
 }
 
 .allBox,
 .closeBox {
 	text-align: center;
-	padding: 5px 0px;
-
+	padding: 2.5px 0px;
+	cursor: pointer;
 }
 
 .allBox {
-	margin: 5px;
+	margin: 2.5px;
 }
 
 .activeBox {
 	background: #EEF6FF;
-	box-shadow: 0px 5px 10px 0px rgba(13, 121, 253, 0.07);
-	border-radius: 8px;
-	border: 1px solid #007BFF;
+	box-shadow: 0px 2.5px 5px 0px rgba(13, 121, 253, 0.07);
+	border-radius: 4px;
+	border: 0.5px solid #007BFF;
 }
 
 .closeBox {
 	padding: 3px 0 0 0;
-	margin: 0 5px;
-	border-top: 1px solid #D2D9E3;
+	margin: 0 2.5px;
+	border-top: 0.5px solid #D2D9E3;
 }
 </style>
