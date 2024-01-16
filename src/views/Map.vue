@@ -4,14 +4,16 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 03:54:52
+ * @LastEditTime: 2024-01-16 06:56:46
 -->
 <template>
 	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
-			<header-nav :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange" @stausChange="stausChange"
-				@initData="initData" titelText="首页"></header-nav>
+			<header-nav v-if="phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
+				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav>
+			<header-nav-pc v-if="!phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
+				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
@@ -31,7 +33,7 @@
 			<!-- 地图类型切换 -->
 			<el-amap-control-map-type :visible="MapStatusvisible" />
 			<!-- 定位 -->
-			<el-amap-control-geolocation :visible="true" @complete="aaa" />
+			<!-- <el-amap-control-geolocation :visible="true" @complete="aaa" /> -->
 		</el-amap>
 		<!-- 底部 -->
 		<div class="footer_body">
@@ -80,7 +82,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, navigationWx, isWx, navToMap, setCompanyNum, setCoordinate, calcDistance, initWx } from "@/util/util";
+import { getSession, navigationWx, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -306,10 +308,8 @@ const queryUserInfo = async (v) => {
 		showToast(res.msg);
 	}
 }
-const aaa = (e) => {
-	console.log('getLocation: ', e)
-}
 onBeforeMount(() => {
+	initWx();
 	lazyAMapApiLoaderInstance.then(() => {
 		useCitySearch().then(res => {
 			const { getLocalCity } = res;

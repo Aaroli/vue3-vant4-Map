@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 06:54:31
+ * @LastEditTime: 2024-01-16 07:48:24
 -->
 <template>
   <div class="header__nav">
@@ -29,7 +29,7 @@
               </div>
             </div>
           </van-dropdown-item>
-          <van-icon class="pt36" name="arrow-down" color="#A6B2C3" size="17" style="vertical-align: middle;" />
+          <van-icon class="pt36 " name="arrow-down" color="#A6B2C3" size="17" style="vertical-align: middle;" />
         </van-dropdown-menu>
       </div>
     </div>
@@ -54,7 +54,7 @@
   </div>
 </template>
   
-<script setup name="headerNav">
+<script setup name="headerNavPc">
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -254,54 +254,68 @@ onMounted(() => {
   display: flex;
   top: 0;
   width: 100%;
-  height: 50px;
-  line-height: 50px;
+  height: 20px;
+  line-height: 20px;
   z-index: 2;
   background: #FFFFFF;
-  border-radius: 0px 0px 12px 12px;
+  border-radius: 0px 0px 6px 6px;
 }
 
 .header__left {
-  width: 107.5px;
-  height: 35px;
-  line-height: 35px;
+  width: 53.25px;
+  height: 17.5px;
+  line-height: 17.5px;
   display: flex;
-  margin-top: 8px;
-  margin-left: 12px;
-  font-size: 12px;
+  margin-top: 1px;
+  margin-left: 6px;
+  font-size: 6px;
   font-weight: 600;
   color: #383E44;
+  cursor: pointer;
 }
 
 .fl6 {
-  margin-left: 6.5px;
+  margin-left: 8px;
   display: flex;
+  cursor: pointer;
 }
 
 :deep(.van-field) {
-  width: 203.5px;
-  height: 35px;
+  width: 200px;
+  height: 10px;
   background: #F3F3F3;
-  border-radius: 8px;
-  margin-top: 8px;
+  margin-top: 3px;
+  border-radius: 2px;
 }
 
 :deep(.van-dropdown-menu__title:after) {
   display: none;
 }
 
+:deep(.van-icon__image) {
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+}
+
 :deep(.van-cell__value) {
-  margin-top: -4px;
-  margin-left: -8px;
+  font-size: 5px;
+  margin-top: -12px;
+  margin-left: 0px;
+}
+
+:deep(.van-cell) {
+  padding: 7px;
 }
 
 .pt36 {
-  padding-top: 10px;
-  margin-left: 2px;
+  padding-top: 7px;
+  margin-left: 1px;
+  cursor: pointer;
 }
 
 :deep(.van-dropdown-menu__bar) {
-  height: 34px;
+  height: 17px;
   box-shadow: none;
   background: none;
   padding: 0px;
@@ -309,25 +323,41 @@ onMounted(() => {
 
 :deep(.van-dropdown-menu__title) {
   padding: 0px;
-  font-size: 12px;
+  font-size: 6px;
   font-weight: 600;
   color: #383E44;
-  margin-top: 2px;
+  margin-top: 1px;
+}
+
+:deep(.van-picker__toolbar) {
+  height: 25px;
+}
+
+:deep(.van-picker__cancel) {
+  font-size: 7px !important;
+}
+
+:deep(.van-picker__confirm) {
+  font-size: 7px !important;
+}
+
+:deep(.van-picker-column .van-ellipsis) {
+  font-size: 7px !important;
 }
 
 .ml4 {
-  margin-left: 4px;
+  margin-left: 2px;
 }
 
 .handleButton {
   display: flex;
   justify-content: space-between;
-  height: 44px;
-  line-height: 44px;
+  height: 22px;
+  line-height: 22px;
 }
 
 .font {
-  font-size: 16px;
+  font-size: 8px;
   font-family: PingFangSC, PingFang SC;
   font-weight: 600;
   color: #171B1F;
@@ -339,46 +369,48 @@ onMounted(() => {
 }
 
 .user {
-  width: 24px;
-  height: 24px;
-  margin-top: 11.5px;
-  margin-left: 12px;
+  width: 12px;
+  height: 12px;
+  position: fixed;
+  right: 4px;
+  top: 4px;
+  cursor: pointer;
   background-image: url("~@/assets/images/i_user.png");
   background-size: 100% 100%;
 }
 
 .Category__box {
-  height: 202px;
+  height: 101px;
   background: #FFFFFF;
-  padding-top: 12px;
+  padding-top: 6px;
 
 
   .title {
-    font-size: 15px;
+    font-size: 7.5px;
     font-family: PingFangSC, PingFang SC;
     font-weight: 600;
     color: #161A1D;
-    margin-left: 16px;
-    margin-bottom: 18px;
+    margin-left: 8px;
+    margin-bottom: 9px;
   }
 }
 
 :deep(.van-dropdown-item__content) {
-  border-radius: 0px 0px 12px 12px;
+  border-radius: 0px 0px 6px 6px;
 }
 
 .clickBox {
   display: flex;
   text-align: center;
-  margin-bottom: 50px;
-  margin-left: 16px;
+  margin-bottom: 25px;
+  margin-left: 8px;
 
   div {
-    width: 110px;
-    height: 36px;
-    line-height: 36px;
-    border-radius: 20px;
-    font-size: 14px;
+    width: 55px;
+    height: 18px;
+    line-height: 18px;
+    border-radius: 10px;
+    font-size: 7px;
     background: #F1F1F1;
     font-family: PingFangSC, PingFang SC;
     font-weight: 600;
@@ -392,20 +424,20 @@ onMounted(() => {
 }
 
 .ml18 {
-  margin-left: 18px;
+  margin-left: 9px;
 }
 
 .btn {
   display: flex;
   text-align: center;
-  margin-left: 16px;
+  margin-left: 8px;
 
   div {
-    width: 160px;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 20px;
-    font-size: 15px;
+    width: 80px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+    font-size: 7.5px;
     font-family: PingFangSC, PingFang SC;
     font-weight: 600;
   }
@@ -417,9 +449,9 @@ onMounted(() => {
 
   &_right {
     background: #0D79FD;
-    box-shadow: 0px 10px 20px 0px rgba(13, 121, 253, 0.07);
+    box-shadow: 0px 5px 10px 0px rgba(13, 121, 253, 0.07);
     color: #FFFFFF;
-    margin-left: 22.5px;
+    margin-left: 11.25px;
   }
 }
 </style>
