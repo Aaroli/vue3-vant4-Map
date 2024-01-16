@@ -11,7 +11,7 @@ export default defineStore('useMy', {
 	state: () => ({
 		companyName: "海岸",
 		companyNum: "0", //总数
-		coordinate: [120.05, 30.04], //定位坐标
+		coordinate: [120.0424575805664, 30.293476104736328], //定位坐标
 	}),
 	getters: {},
 	actions: {

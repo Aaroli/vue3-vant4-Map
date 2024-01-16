@@ -4,13 +4,13 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 11:50:18
+ * @LastEditTime: 2024-01-16 09:55:24
 -->
 <template>
 	<div class="legend_nav">
-		<div class="legend__nav" @click="handleChange" v-if="legendShow">
+		<!-- <div class="legend__nav" @click="handleChange" v-if="legendShow">
 			<img class="imgIcon" :src="img1" />
-		</div>
+		</div> -->
 		<div class="box">
 			<div class="tab-content" ref="stateDom">
 				<div class="tab-content-box">
@@ -104,6 +104,9 @@ const getList = async () => {
 		showToast(res.msg);
 	}
 };
+$globalEventBus.on("LegendClick", eventData => {
+	handleChange();
+});
 onMounted(() => {
 	// $globalConfigure(() => {
 	getList();

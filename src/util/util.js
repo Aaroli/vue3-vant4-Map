@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 06:42:50
+ * @LastEditTime: 2024-01-16 10:17:14
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -135,9 +135,7 @@ const initWx = async () => {
 			wx.getLocation({
 				type: "gcj02",
 				success: function (res) {
-					alert('定位', res)
-					$globalStore.useMy.SET_COORDINATE([res.latitude, res.longitude]);
-					console.log('定位坐标', [res.latitude, res.longitude])
+					$globalStore.useMy.SET_COORDINATE([res.longitude, res.latitude]);
 				}
 			});
 		})
@@ -242,16 +240,26 @@ const navToMap = (addressInfo, type) => {
 }
 // 根据经纬度换算距离
 const calcDistance = (lat1, lon1, lat2, lon2) => {
-	const R = 6371; // 地球半径，单位为千米
-	const dLat = (lat2 - lat1) * Math.PI / 180;
-	const dLon = (lon2 - lon1) * Math.PI / 180;
-	const a =
-		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-		Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-		Math.sin(dLon / 2) * Math.sin(dLon / 2);
-	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	const distance = R * c;
-	return distance.toFixed(2);
+	// const R = 6371; // 地球半径，单位为千米
+	// const dLat = (lat2 - lat1) * Math.PI / 180;
+	// const dLon = (lon2 - lon1) * Math.PI / 180;
+	// const a =
+	// 	Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+	// 	Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+	// 	Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	// const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	// const distance = R * c;
+	// return distance.toFixed(2);
+	let a = Math.PI / 180;
+	let t1 = Math.sin(lat1 * a) * Math.sin(lat2 * a);
+	let t2 = Math.cos(lat1 * a) * Math.cos(lat2 * a);
+	let t3 = Math.cos(lon1 * a - lon2 * a);
+	let t4 = t2 * t3;
+	let t5 = t1 + t4;
+	let s = Math.atan(-t5 / Math.sqrt(-t5 * t5 + 1)) + 2 * Math.atan(1);
+	s = s * 6378.137;// EARTH_RADIUS;
+	s = Math.round(s * 10000) / 10000;
+	return s.toFixed(2);
 }
 // 判断手机类型
 const phoneType = () => {

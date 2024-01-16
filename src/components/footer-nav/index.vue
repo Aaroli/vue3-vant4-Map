@@ -1,12 +1,12 @@
 <template>
 	<div class="footer_nav">
-		<div class="img"></div>
-		<!-- <div class="title" v-text="useMy.$state.companyName"></div> -->
+		<div class="img" @click="hasLegendClick"></div>
+		<div class="title" @click="hasLegendClick" v-text="useMy.$state.companyName"></div>
 		<div class="right__nav">
 			<div class="right__nav_img">
 				<img class="imgIcon" :src="getImg()" />
 			</div>
-			<div class="num__lable">{{ `${useMy.$state.companyName}项目总数` }}</div>
+			<div class="num__lable">项目总数</div>
 			<div class="num__num">{{ numberWithCommas(useMy.$state.companyNum) }}</div>
 		</div>
 	</div>
@@ -40,6 +40,10 @@ const numberWithCommas = (x) => {
 		x = x.replace(pattern, "$1,$2");
 	return x;
 }
+// 唤起图例事件
+const hasLegendClick = () => {
+	$globalEventBus.emit('LegendClick', true);
+}
 onMounted(() => {
 })
 </script>
@@ -71,6 +75,7 @@ onMounted(() => {
 		background: #FFFFFF;
 		border-radius: 12px;
 		margin: 4px 0 0 4px;
+		cursor: pointer;
 
 		.imgIcon {
 			position: absolute;
