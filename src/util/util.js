@@ -4,11 +4,11 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 03:11:56
+ * @LastEditTime: 2024-01-16 03:51:58
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
-
+import { setCoordinate } from "@/util/util";
 // 判断是否还是一个对象
 const isObject = (obj) => {
 	return Object.prototype.toString.call(obj) === "[object Object]";
@@ -115,24 +115,50 @@ const setCompanyNum = (data) => {
 const setCoordinate = (data) => {
 	$globalStore.useMy.SET_COORDINATE(data);
 };
+//初始化微信
+const initWx = async () => {
+	wx.config({
+		beta: true,
+		debug: false,
+		appId: res.appId,
+		timestamp: res.timestamp,
+		nonceStr: res.nonceStr,
+		signature: res.signature,
+		// jsApiList: res.jsApiList
+		jsApiList: ["checkJsApi", "openLocation", "getLocation"],
+		success(res) {
+			showToast(res)
+		},
+	});
+	wx.ready(function () {
+		wx.getLocation({
+			type: "gcj02",
+			success: function (res) {
+				alert('定位', res)
+				setCoordinate([res.latitude, res.longitude])
+				console.log('定位坐标', [res.latitude, res.longitude])
+			}
+		});
+	})
+}
 // TODO 微信打开三方地图  需求没明确说要  暂留一个口子 @yl
 const navigationWx = async (addressInfo) => {
 	const { lat, lng, name, address } = addressInfo
 	const res = await $globalStore.useMy.getWxAuth({ url: window.location.href });
 	if (res?.code === 200) {
-		wx.config({
-			beta: true,
-			debug: true,
-			appId: res.appId,
-			timestamp: res.timestamp,
-			nonceStr: res.nonceStr,
-			signature: res.signature,
-			// jsApiList: res.jsApiList
-			jsApiList: ["checkJsApi", "openLocation", "getLocation"],
-			success(res) {
-				showToast(res)
-			},
-		});
+		// wx.config({
+		// 	beta: true,
+		// 	debug: true,
+		// 	appId: res.appId,
+		// 	timestamp: res.timestamp,
+		// 	nonceStr: res.nonceStr,
+		// 	signature: res.signature,
+		// 	// jsApiList: res.jsApiList
+		// 	jsApiList: ["checkJsApi", "openLocation", "getLocation"],
+		// 	success(res) {
+		// 		showToast(res)
+		// 	},
+		// });
 		wx.ready(function () {
 			wx.openLocation({
 				type: "gcj02",
@@ -141,12 +167,6 @@ const navigationWx = async (addressInfo) => {
 				name: name,
 				scale: 18,
 				address: address || ''
-			});
-			wx.getLocation({
-				type: "gcj02",
-				success: function (res) {
-					alert('定位', res)
-				}
 			});
 		})
 	} else {
@@ -228,4 +248,4 @@ const calcDistance = (lat1, lon1, lat2, lon2) => {
 	const distance = R * c;
 	return distance.toFixed(2);
 }
-export { isObject, comparisonObject, isElementHidden, debounce, getSession, setSession, setCompanyNum, setCoordinate, setCompanyName, navigationWx, isWx, navToMap, calcDistance };
+export { isObject, comparisonObject, isElementHidden, debounce, getSession, setSession, setCompanyNum, initWx, setCoordinate, setCompanyName, navigationWx, isWx, navToMap, calcDistance };

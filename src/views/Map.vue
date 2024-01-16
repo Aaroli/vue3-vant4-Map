@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 03:03:19
+ * @LastEditTime: 2024-01-16 03:49:28
 -->
 <template>
 	<div class="app">
@@ -80,7 +80,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, navigationWx, isWx, navToMap, setCompanyNum, setCoordinate, calcDistance } from "@/util/util";
+import { getSession, navigationWx, isWx, navToMap, setCompanyNum, setCoordinate, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -316,7 +316,6 @@ onBeforeMount(() => {
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
 				console.log('cityResult', cityResult)
-				setCoordinate(center.value)
 			})
 		})
 	})
