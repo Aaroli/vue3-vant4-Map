@@ -4,11 +4,10 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 03:51:58
+ * @LastEditTime: 2024-01-16 03:54:00
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
-import { setCoordinate } from "@/util/util";
 // 判断是否还是一个对象
 const isObject = (obj) => {
 	return Object.prototype.toString.call(obj) === "[object Object]";
@@ -135,7 +134,7 @@ const initWx = async () => {
 			type: "gcj02",
 			success: function (res) {
 				alert('定位', res)
-				setCoordinate([res.latitude, res.longitude])
+				$globalStore.useMy.SET_COORDINATE([res.latitude, res.longitude]);
 				console.log('定位坐标', [res.latitude, res.longitude])
 			}
 		});

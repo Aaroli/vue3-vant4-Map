@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 03:49:28
+ * @LastEditTime: 2024-01-16 03:54:52
 -->
 <template>
 	<div class="app">
@@ -17,7 +17,7 @@
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
 			<!-- 地图标记 -->
 			<el-amap-marker :visible="textVisible" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:offset="[-50, -32]" :iconSize="[5, 5]" @click="(e) => { clickArrayMarker(marker, e) }">
+				:offset="[-50, -35]" :iconSize="[5, 5]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content">
 					<div class="title">{{ marker.name }}</div>
 				</div>
