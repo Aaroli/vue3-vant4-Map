@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 16:47:50
+ * @LastEditTime: 2024-01-16 02:47:47
 -->
 <template>
   <div class="header__nav">
@@ -56,6 +56,7 @@
   
 <script setup name="headerNav">
 import i_search from '@/assets/images/i_search.png'
+import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 const { useMy } = $globalStore
 const router = useRouter();

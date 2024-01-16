@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 02:49:19
+ * @LastEditTime: 2024-01-16 02:40:18
 -->
 <template>
 	<div class="app">
@@ -280,7 +280,6 @@ const getLocation = () => {
 }
 // 获取点的数组 
 const getMarkList = async () => {
-	markers.value = [];
 	const res = await useMy.getPointInfo(searchInfo.value);
 	if (res?.code === 200) {
 		res.data.forEach(v => {
@@ -288,6 +287,7 @@ const getMarkList = async () => {
 				v.type = useMy.$state.companyName
 		});
 		markers.value = res.data;
+		console.log('markers.value', markers.value)
 		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]

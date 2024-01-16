@@ -4,13 +4,14 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 11:45:00
+ * @LastEditTime: 2024-01-16 02:04:17
  */
 import { getAddersslist, getRegionList, getPointInfo, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
 	state: () => ({
 		companyName: "海岸",
 		companyNum: "0", //总数
+		coordinate: [120.05, 30.04], //定位坐标
 	}),
 	getters: {},
 	actions: {
@@ -19,6 +20,9 @@ export default defineStore('useMy', {
 		},
 		SET_COMPANY_NUM(data) {
 			this.companyNum = data;
+		},
+		SET_COORDINATE(data) {
+			this.coordinate = data;
 		},
 		async getAddersslist(params) {
 			let url = $globalRequestUrl({

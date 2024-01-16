@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-15 11:11:30
+ * @LastEditTime: 2024-01-16 02:13:55
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -111,6 +111,10 @@ const setCompanyName = (data) => {
 const setCompanyNum = (data) => {
 	$globalStore.useMy.SET_COMPANY_NUM(data);
 };
+// 设置自身坐标定位
+const setCoordinate = (data) => {
+	$globalStore.useMy.SET_COORDINATE(data);
+};
 // TODO 微信打开三方地图  需求没明确说要  暂留一个口子 @yl
 const navigationWx = async (addressInfo) => {
 	const { lat, lng, name, address } = addressInfo
@@ -212,4 +216,16 @@ const navToMap = (addressInfo, type) => {
 		window.location.href = url
 	}
 }
-export { isObject, comparisonObject, isElementHidden, debounce, getSession, setSession, setCompanyNum, setCompanyName, navigationWx, isWx, navToMap };
+const calcDistance = (lat1, lon1, lat2, lon2) => {
+	const R = 6371; // 地球半径，单位为千米
+	const dLat = (lat2 - lat1) * Math.PI / 180;
+	const dLon = (lon2 - lon1) * Math.PI / 180;
+	const a =
+		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+		Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	const distance = R * c;
+	return distance.toFixed(2);
+}
+export { isObject, comparisonObject, isElementHidden, debounce, getSession, setSession, setCompanyNum, setCoordinate, setCompanyName, navigationWx, isWx, navToMap, calcDistance };
