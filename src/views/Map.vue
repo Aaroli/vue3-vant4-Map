@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 02:49:19
+ * @LastEditTime: 2024-01-16 03:03:19
 -->
 <template>
 	<div class="app">
@@ -31,7 +31,7 @@
 			<!-- 地图类型切换 -->
 			<el-amap-control-map-type :visible="MapStatusvisible" />
 			<!-- 定位 -->
-			<!-- <el-amap-control-geolocation :visible="visible" @complete="getLocation" /> -->
+			<el-amap-control-geolocation :visible="true" @complete="aaa" />
 		</el-amap>
 		<!-- 底部 -->
 		<div class="footer_body">
@@ -306,12 +306,16 @@ const queryUserInfo = async (v) => {
 		showToast(res.msg);
 	}
 }
+const aaa = (e) => {
+	console.log('getLocation: ', e)
+}
 onBeforeMount(() => {
 	lazyAMapApiLoaderInstance.then(() => {
 		useCitySearch().then(res => {
 			const { getLocalCity } = res;
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
+				console.log('cityResult', cityResult)
 				setCoordinate(center.value)
 			})
 		})
@@ -489,5 +493,9 @@ onMounted(() => {
 
 .ml385 {
 	margin-left: 38.5px;
+}
+
+:deep(.amap-geolocation) {
+	bottom: 90px !important;
 }
 </style>

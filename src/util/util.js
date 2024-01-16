@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 02:13:55
+ * @LastEditTime: 2024-01-16 03:11:56
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -122,7 +122,7 @@ const navigationWx = async (addressInfo) => {
 	if (res?.code === 200) {
 		wx.config({
 			beta: true,
-			debug: false,
+			debug: true,
 			appId: res.appId,
 			timestamp: res.timestamp,
 			nonceStr: res.nonceStr,
@@ -142,12 +142,12 @@ const navigationWx = async (addressInfo) => {
 				scale: 18,
 				address: address || ''
 			});
-			// wx.getLocation({
-			// 	type: "gcj02",
-			// 	success: function (res) {
-			// 		console.log('res', res)
-			// 	}
-			// });
+			wx.getLocation({
+				type: "gcj02",
+				success: function (res) {
+					alert('定位', res)
+				}
+			});
 		})
 	} else {
 		showToast(res.msg);
