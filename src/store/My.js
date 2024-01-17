@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 09:28:15
+ * @LastEditTime: 2024-01-17 10:27:24
  */
 import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
@@ -102,7 +102,7 @@ export default defineStore('useMy', {
 			});
 
 			try {
-				const rep = await $globalRequest(url, params, { method: "POST" });
+				const rep = await $globalRequest(url, params, { method: "GET" });
 				return rep;
 			} catch (error) {
 				return error;

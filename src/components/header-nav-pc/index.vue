@@ -217,15 +217,15 @@ const getDivisionList = async (v) => {
   }
 }
 // 获取用户信息
-const queryUserInfo = async (v) => {
-  const res = await useMy.getUserInfo({ code: v });
-  if (res?.code === 200) {
-    setSession("TOKEN", res.token);
-    showToast('授权成功');
-  } else {
-    showToast(res.msg);
-  }
-}
+// const queryUserInfo = async (v) => {
+//   const res = await useMy.getUserInfo({ code: v });
+//   if (res?.code === 200) {
+//     setSession("TOKEN", res.token);
+//     showToast('授权成功');
+//   } else {
+//     showToast(res.msg);
+//   }
+// }
 $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
 });
