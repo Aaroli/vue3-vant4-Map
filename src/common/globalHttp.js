@@ -1,5 +1,6 @@
 import axios from "axios";
 import { showToast } from "vant";
+import { getSession } from "@/util/util";
 
 const $globalHttp = () => {
 	return {
@@ -9,6 +10,9 @@ const $globalHttp = () => {
 			// http请求拦截器
 			axios.interceptors.request.use(
 				(config) => {
+					if (getSession('TOKEN')) {
+						config.headers['Authorization'] = 'Bearer ' + getSession('TOKEN')
+					}
 					return config;
 				},
 				(error) => {
@@ -44,5 +48,5 @@ const $globalHttp = () => {
 };
 
 export {
-  $globalHttp
+	$globalHttp
 };

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 10:09:23
+ * @LastEditTime: 2024-01-17 08:37:04
 -->
 <template>
 	<div class="app">
@@ -134,7 +134,7 @@ const loading = ref(false) //地图loading
 const searchInfo = ref({
 	egion: '', //公司列表
 	xmproject: '', //区划
-	type: '', //类型
+	manage: '', //类型
 })
 // 地图标记
 const markers = ref([
@@ -255,12 +255,12 @@ const cityChange = (v) => {
 const initData = (egion, xmproject) => {
 	searchInfo.value.egion = egion;
 	searchInfo.value.xmproject = xmproject;
-	searchInfo.value.type = '';
+	searchInfo.value.manage = '';
 	getMarkList();
 }
 // 类型切换事件
 const stausChange = (v) => {
-	searchInfo.value.type = v
+	searchInfo.value.manage = v
 	getMarkList();
 }
 // 显示地图文本标记事件

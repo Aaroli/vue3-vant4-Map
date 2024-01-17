@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 08:07:14
+ * @LastEditTime: 2024-01-17 08:35:17
 -->
 <template>
   <div class="header__nav">
@@ -15,13 +15,13 @@
           style="vertical-align: middle;" /></div>
       <div class="fl6">
         <van-dropdown-menu ref="menuRef" style="display: flex;">
-          <van-dropdown-item title="类别" ref="itemRef">
+          <van-dropdown-item title="管理" ref="itemRef">
             <div class="Category__box">
               <div class="title">类别</div>
               <div class="clickBox">
-                <div :class="isChange === 1 ? 'activeBox' : ''" @click="change(isChange === 1 ? null : 1)">实管</div>
+                <div :class="isChange === 1 ? 'activeBox' : ''" @click="change(isChange === 1 ? null : 1)">案场</div>
                 <div :class="isOtherChange === 1 ? 'activeBox' : ''" @click="otherChange(isOtherChange === 1 ? null : 1)"
-                  class="ml18">前期</div>
+                  class="ml18">项目</div>
               </div>
               <div class="btn">
                 <div class="btn_left" @click="reset">重置</div>
@@ -55,6 +55,7 @@
 </template>
   
 <script setup name="headerNavPc">
+import { setSession } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -75,8 +76,8 @@ const columns = ref([
   // { text: '湖州', value: 'Huzhou' },
 ]);
 const showPicker = ref(false);
-const isChange = ref(1);
-const isOtherChange = ref(1);
+const isChange = ref(0);
+const isOtherChange = ref(0);
 const change = (v) => {
   isChange.value = v;
 };
@@ -179,9 +180,9 @@ const reset = () => {
 const hasConfirm = () => {
   let searchValue = []
   if (isChange.value) {
-    isOtherChange.value ? searchValue = ['实管', '前期'] : searchValue = ['实管']
+    isOtherChange.value ? searchValue = ['案场', '项目'] : searchValue = ['案场']
   } else if (isOtherChange.value) {
-    isOtherChange.value ? searchValue = ['前期'] : searchValue = ['前期']
+    isOtherChange.value ? searchValue = ['项目'] : searchValue = ['项目']
   } else {
     searchValue = []
   }
@@ -241,11 +242,11 @@ onBeforeMount(() => {
   })
 })
 onMounted(() => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const code = searchParams.get('code');
-  if (code) {
-    queryUserInfo(code);
-  }
+  // const searchParams = new URLSearchParams(window.location.search);
+  // const code = searchParams.get('code');
+  // if (code) {
+  //   queryUserInfo(code);
+  // }
 })
 </script>
 <style lang="less" scoped>
