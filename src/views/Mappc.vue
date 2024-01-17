@@ -324,12 +324,12 @@ onBeforeMount(() => {
 	})
 })
 onMounted(() => {
-	const searchParams = new URLSearchParams(window.location.search);
-	const code = searchParams.get('code');
+	// const searchParams = new URLSearchParams(window.location.search);
+	// const code = searchParams.get('code');
 	// console.log('code', code)
-	if (code) {
-		queryUserInfo(code);
-	}
+	// if (code) {
+	// 	queryUserInfo(code);
+	// }
 })
 </script>
 

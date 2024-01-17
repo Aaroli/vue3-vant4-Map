@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 09:41:18
+ * @LastEditTime: 2024-01-17 09:57:42
 -->
 <template>
 	<div class="app">
@@ -107,7 +107,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, navigationWx, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
+import { getSession, setSession, navigationWx, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -175,23 +175,34 @@ const getImgType = (v) => {
 // marker点击事件
 const clickArrayMarker = async (marker) => {
 	console.log('marker', marker)
-	const res = await useMy.getPointInfoList({ id: 1 });
-	if (res?.code === 200) {
-		console.log('res', res)
-		locationObj.value = {
-			title: marker.name ? marker.name : '暂无数据',
-			contant: marker.addr ? marker.addr : '暂无数据',
-			distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
-			lat: marker.latitude,
-			lng: marker.longitude,
-			addressName: marker.name,
-			address: marker.addr,
-			infoList: res.data
-		}
-		mapDetailShow.value = true
-	} else {
-		showToast(res.msg);
+	locationObj.value = {
+		title: marker.name ? marker.name : '暂无数据',
+		contant: marker.addr ? marker.addr : '暂无数据',
+		distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
+		lat: marker.latitude,
+		lng: marker.longitude,
+		addressName: marker.name,
+		address: marker.addr,
+		infoList: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},]
 	}
+	mapDetailShow.value = true
+	// const res = await useMy.getPointInfoList({ id: 1 });
+	// if (res?.code === 200) {
+	// 	console.log('res', res)
+	// 	locationObj.value = {
+	// 		title: marker.name ? marker.name : '暂无数据',
+	// 		contant: marker.addr ? marker.addr : '暂无数据',
+	// 		distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
+	// 		lat: marker.latitude,
+	// 		lng: marker.longitude,
+	// 		addressName: marker.name,
+	// 		address: marker.addr,
+	// 		infoList: res.data
+	// 	}
+	// 	mapDetailShow.value = true
+	// } else {
+	// 	showToast(res.msg);
+	// }
 
 }
 // 登录
@@ -331,7 +342,7 @@ onMounted(() => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');
 	// console.log('code', code)
-	if (code) {
+	if (code && !getSession('TOKEN')) {
 		queryUserInfo(code);
 	}
 })
@@ -579,16 +590,17 @@ onMounted(() => {
 
 .Mapinfo {
 	width: 294.5px;
-	height: 70px;
+	// height: 70px;
 	margin-left: 18px;
-	padding-top: 14px;
+	padding-top: 10px;
 	border-top: 1px solid #D9D9D9;
 	margin-top: 6px;
+	margin-bottom: 4px;
 }
 
 .Mapinfo_pc {
 	width: 140;
-	height: 35px;
+	// height: 35px;
 	margin-left: 9px;
 	padding-top: 7px;
 	border-top: 0.5px solid #D9D9D9;
