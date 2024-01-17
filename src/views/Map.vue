@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 08:37:04
+ * @LastEditTime: 2024-01-17 09:41:18
 -->
 <template>
 	<div class="app">
@@ -70,13 +70,8 @@
 					<div v-if="!getSession('TOKEN')" class="Maptips">查看更多详情<span class="span" @click="hasUser">去登录</span>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapinfo">
-						<div class="Mapinfo_box">
-							<div>项目主任：<span>{{ locationObj.name }}</span></div>
-							<div class="ml585">联系方式：<span>{{ locationObj.phone }}</span></div>
-						</div>
-						<div class="Mapinfo_box mt15">
-							<div>项目面积：<span>{{ locationObj.mj }}</span></div>
-							<div class="ml385">物业费：<span>{{ locationObj.wyf }}</span></div>
+						<div class="Mapinfo_box" v-for="(item, index) in locationObj.infoList" :key="index">
+							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span></div>
 						</div>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapbtns" @click="navigateLine">到这里去</div>
@@ -91,13 +86,8 @@
 					<div v-if="!getSession('TOKEN')" class="Maptips_pc">查看更多详情<span class="span" @click="hasUser">去登录</span>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapinfo_pc">
-						<div class="Mapinfo_box_pc">
-							<div>项目主任：<span>{{ locationObj.name }}</span></div>
-							<div class="ml585_pc">联系方式：<span>{{ locationObj.phone }}</span></div>
-						</div>
-						<div class="Mapinfo_box_pc mt15_pc">
-							<div>项目面积：<span>{{ locationObj.mj }}</span></div>
-							<div class="ml385_pc">物业费：<span>{{ locationObj.wyf }}</span></div>
+						<div class="Mapinfo_box_pc" v-for="(item, index) in locationObj.infoList" :key="index">
+							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span></div>
 						</div>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapbtns_pc" @click="navigateLine">到这里去</div>
@@ -137,30 +127,8 @@ const searchInfo = ref({
 	manage: '', //类型
 })
 // 地图标记
-const markers = ref([
-	// { id: 1, object: '万家', position: [120.01, 30.040], type: '1', title: '富阳旅游项目', locationObj: { title: '富阳旅游项目', name: '张涵', phone: '17232111322', mj: '21.5万㎡', wyf: '1.9元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区富春路3201室', distanc: '8.6KM' } },
-	// { id: 2, object: '新城', position: [120.012, 30.080], type: '2', title: '基村招商项目', locationObj: { title: '基村招商项目', name: '建华', phone: '17247987412', mj: '30.72万㎡', wyf: '2.4元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区吉村路320室', distanc: '12.15KM' } },
-	// { id: 3, object: '海岸', position: [120.036, 30.060], type: '3', title: '春江度假项目', locationObj: { title: '春江度假项目', name: '汪明', phone: '18647619988', mj: '60.72万㎡', wyf: '3.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区春江路204铺', distanc: '14.74KM' } },
-	// { id: 4, object: '浙中南', position: [120.032, 30.019], type: '4', title: '唐家物业项目', locationObj: { title: '唐家物业项目', name: '李萧', phone: '18647618189', mj: '20.12万㎡', wyf: '2.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区自在路32号', distanc: '14.51KM' } },
-	// { id: 5, object: '萧山滨弘', position: [120.009, 30.001], type: '5', title: '自在村园项目', locationObj: { title: '自在村园项目', name: '张健', phone: '18647618284', mj: '12.32万㎡', wyf: '1.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区陈家路', distanc: '12.3KM' } },
-	// { id: 6, object: '万家', position: [120.07, 30.0441], type: '1', title: '李山镇乡项目', locationObj: { title: '李山镇乡项目', name: '李潇', phone: '14777061444', mj: '40.22万㎡', wyf: '7.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区灵山区', distanc: '11.8KM' } },
-	// { id: 7, object: '新城', position: [120.072, 30.080], type: '2', title: '桥头招商项目', locationObj: { title: '桥头招商项目', name: '吴枝', phone: '18644110012', mj: '24.42万㎡', wyf: '4.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区唐家路32号', distanc: '10.91KM' } },
-	// { id: 8, object: '海岸', position: [120.069, 30.060], type: '3', title: '东洲赵家项目', locationObj: { title: '东洲赵家项目', name: '李渺', phone: '15247860031', mj: '33.12万㎡', wyf: '3.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区自在路76号', distanc: '19.57KM' } },
-	// { id: 9, object: '浙中南', position: [120.072, 30.019], type: '4', title: '家装物业项目', locationObj: { title: '家装物业项目', name: '沈红', phone: '14777966321', mj: '15.72万㎡', wyf: '2.53元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区陈家路96号', distanc: '17.34KM' } },
-	// { id: 10, object: '萧山滨弘', position: [120.099, 30.001], type: '5', title: '森林公园项目', locationObj: { title: '森林公园项目', name: '晓蓉', phone: '14247562211', mj: '70.72万㎡', wyf: '2.2元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区灵山31号', distanc: '17.32KM' } },
-])
-const markersAll = ref([
-	// { id: 1, object: '万家', position: [120.01, 30.040], type: '1', title: '富阳旅游项目', locationObj: { title: '富阳旅游项目', name: '张涵', phone: '17232111322', mj: '21.5万㎡', wyf: '1.9元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区富春路3201室', distanc: '8.6KM' } },
-	// { id: 2, object: '新城', position: [120.012, 30.080], type: '2', title: '基村招商项目', locationObj: { title: '基村招商项目', name: '建华', phone: '17247987412', mj: '30.72万㎡', wyf: '2.4元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区吉村路320室', distanc: '12.15KM' } },
-	// { id: 3, object: '海岸', position: [120.036, 30.060], type: '3', title: '春江度假项目', locationObj: { title: '春江度假项目', name: '汪明', phone: '18647619988', mj: '60.72万㎡', wyf: '3.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区春江路204铺', distanc: '14.74KM' } },
-	// { id: 4, object: '浙中南', position: [120.032, 30.019], type: '4', title: '唐家物业项目', locationObj: { title: '唐家物业项目', name: '李萧', phone: '18647618189', mj: '20.12万㎡', wyf: '2.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区自在路32号', distanc: '14.51KM' } },
-	// { id: 5, object: '萧山滨弘', position: [120.009, 30.001], type: '5', title: '自在村园项目', locationObj: { title: '自在村园项目', name: '张健', phone: '18647618284', mj: '12.32万㎡', wyf: '1.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区陈家路', distanc: '12.3KM' } },
-	// { id: 6, object: '万家', position: [120.07, 30.0441], type: '1', title: '李山镇乡项目', locationObj: { title: '李山镇乡项目', name: '李潇', phone: '14777061444', mj: '40.22万㎡', wyf: '7.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区灵山区', distanc: '11.8KM' } },
-	// { id: 7, object: '新城', position: [120.072, 30.080], type: '2', title: '桥头招商项目', locationObj: { title: '桥头招商项目', name: '吴枝', phone: '18644110012', mj: '24.42万㎡', wyf: '4.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区唐家路32号', distanc: '10.91KM' } },
-	// { id: 8, object: '海岸', position: [120.069, 30.060], type: '3', title: '东洲赵家项目', locationObj: { title: '东洲赵家项目', name: '李渺', phone: '15247860031', mj: '33.12万㎡', wyf: '3.6元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区自在路76号', distanc: '19.57KM' } },
-	// { id: 9, object: '浙中南', position: [120.072, 30.019], type: '4', title: '家装物业项目', locationObj: { title: '家装物业项目', name: '沈红', phone: '14777966321', mj: '15.72万㎡', wyf: '2.53元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区陈家路96号', distanc: '17.34KM' } },
-	// { id: 10, object: '萧山滨弘', position: [120.099, 30.001], type: '5', title: '森林公园项目', locationObj: { title: '森林公园项目', name: '晓蓉', phone: '14247562211', mj: '70.72万㎡', wyf: '2.2元/㎡/月', type: 'title1', contant: '浙江省杭州市富阳区灵山31号', distanc: '17.32KM' } },
-])
+const markers = ref([])
+const markersAll = ref([])
 const zoom = ref(12)
 // 比例尺
 const ScaleVisible = ref(false)
@@ -184,7 +152,8 @@ const locationObj = ref({
 	lat: '30.061333',
 	lng: '120.001',
 	name: 'A',
-	address: '杭州市西湖区武林广场'
+	address: '杭州市西湖区武林广场',
+	infoList: []
 })
 // 地图事件
 const onUpdatedZoom = (e) => {
@@ -205,22 +174,25 @@ const getImgType = (v) => {
 }
 // marker点击事件
 const clickArrayMarker = async (marker) => {
-	locationObj.value = {
-		title: marker.name ? marker.name : '暂无数据',
-		name: marker.leaderName ? marker.leaderName : '暂无数据',
-		phone: '暂无数据',
-		mj: '暂无数据',
-		wyf: '暂无数据',
-		// mj: '--万㎡',
-		// wyf: '--元/㎡/月',
-		contant: marker.addr ? marker.addr : '暂无数据',
-		distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
-		lat: marker.latitude,
-		lng: marker.longitude,
-		addressName: marker.name,
-		address: marker.addr
+	console.log('marker', marker)
+	const res = await useMy.getPointInfoList({ id: 1 });
+	if (res?.code === 200) {
+		console.log('res', res)
+		locationObj.value = {
+			title: marker.name ? marker.name : '暂无数据',
+			contant: marker.addr ? marker.addr : '暂无数据',
+			distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
+			lat: marker.latitude,
+			lng: marker.longitude,
+			addressName: marker.name,
+			address: marker.addr,
+			infoList: res.data
+		}
+		mapDetailShow.value = true
+	} else {
+		showToast(res.msg);
 	}
-	mapDetailShow.value = true
+
 }
 // 登录
 const hasUser = async () => {
@@ -624,12 +596,14 @@ onMounted(() => {
 }
 
 .Mapinfo_box {
-	display: flex;
 	font-size: 13px;
 	font-weight: 400;
 	color: #8D8D8D;
-	white-space: nowrap;
-	width: 50%;
+	// white-space: nowrap;
+	width: 100%;
+	margin-bottom: 2px;
+	word-wrap: break-word;
+	word-break: break-all;
 
 	span {
 		color: #3F454A;
@@ -638,12 +612,14 @@ onMounted(() => {
 }
 
 .Mapinfo_box_pc {
-	display: flex;
-	font-size: 6.5px;
+	font-size: 13px;
 	font-weight: 400;
 	color: #8D8D8D;
-	white-space: nowrap;
-	width: 50%;
+	// white-space: nowrap;
+	width: 100%;
+	margin-bottom: 2px;
+	word-wrap: break-word;
+	word-break: break-all;
 
 	span {
 		color: #3F454A;

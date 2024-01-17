@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 1.0
+ * @Author: AaroLi
+ * @Date: 2024-01-16 01:41:37
+ * @LastEditors: AaroLi
+ * @LastEditTime: 2024-01-17 09:27:42
+ */
 // 企业微信单点登录
 export const getSingleUrl = "getqyweiauthurl"
 // 用户详情
@@ -10,3 +18,5 @@ export const getRegionList = "getprojectcitylistbyregion"
 export const getPointInfo = "getsampleprojectlistbyregionandcity"
 // 获取wxJSDK 鉴权
 export const getWxAuth = "getWxInfo"
+// 获取详情
+export const getPointInfoList = "getprojectinfo"
