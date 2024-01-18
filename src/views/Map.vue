@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 03:00:41
+ * @LastEditTime: 2024-01-18 07:05:51
 -->
 <template>
 	<div class="app">
@@ -312,6 +312,9 @@ const getMarkList = async () => {
 		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
+		}
+		if (useMy.$state.centerCoordinate) {
+			center.value = useMy.$state.centerCoordinate
 		}
 	} else {
 		showToast(res.msg);

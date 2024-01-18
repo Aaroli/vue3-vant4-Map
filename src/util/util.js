@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 10:17:14
+ * @LastEditTime: 2024-01-18 07:11:51
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -105,6 +105,22 @@ const getSession = (attr) => {
 // 设置企业名称
 const setCompanyName = (data) => {
 	$globalStore.useMy.SET_COMPANY_NAME(data);
+};
+// 设置区划名称
+const setAdcdName = (data) => {
+	$globalStore.useMy.SET_ADCD_NAME(data);
+};
+// 设置输入框名称
+const setInputValue = (data) => {
+	$globalStore.useMy.SET_INPUT_VALUE(data);
+};
+// 设置公司类型
+const setCompanyType = (data) => {
+	$globalStore.useMy.SET_COMPANY_TYPE(data);
+};
+// 设置区划名称
+const setCenterValue = (data) => {
+	$globalStore.useMy.SET_CENTER_COORDINATE(data);
 };
 // 设置企业项目数量
 const setCompanyNum = (data) => {
@@ -285,5 +301,9 @@ export {
 	isWx,
 	navToMap,
 	calcDistance,
-	phoneType
+	phoneType,
+	setAdcdName,
+	setCenterValue,
+	setInputValue,
+	setCompanyType,
 };

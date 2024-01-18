@@ -4,19 +4,35 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 02:47:45
+ * @LastEditTime: 2024-01-18 07:10:18
  */
 import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, queryFuzzy, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
 	state: () => ({
 		companyName: "海岸",
 		companyNum: "0", //总数
+		adcdName: null,
 		coordinate: [120.0424575805664, 30.293476104736328], //定位坐标
+		centerCoordinate: null, //更新中心点坐标
+		inputValue: null, //输入框名称
+		companyType: null, //输入框名称
 	}),
 	getters: {},
 	actions: {
 		SET_COMPANY_NAME(data) {
 			this.companyName = data;
+		},
+		SET_INPUT_VALUE(data) {
+			this.inputValue = data;
+		},
+		SET_COMPANY_TYPE(data) {
+			this.companyType = data;
+		},
+		SET_CENTER_COORDINATE(data) {
+			this.centerCoordinate = data;
+		},
+		SET_ADCD_NAME(data) {
+			this.adcdName = data;
 		},
 		SET_COMPANY_NUM(data) {
 			this.companyNum = data;

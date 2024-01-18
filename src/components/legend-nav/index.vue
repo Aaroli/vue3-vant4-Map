@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 02:48:10
+ * @LastEditTime: 2024-01-18 07:29:06
 -->
 <template>
 	<div class="legend_nav">
@@ -33,6 +33,7 @@ import { setCompanyNum, setCompanyName } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
+import { nextTick } from "vue";
 const emit = defineEmits(["textChange", "selectList"]);
 const stateDom = ref(null);
 const legendShow = ref(true);
@@ -66,7 +67,15 @@ const legendList = ref([
 	// },
 ])
 const handleChange = () => {
-	if (stateDom.value.style.maxHeight) {
+	const map = {
+		'海岸': 1,
+		'万家': 2,
+		'新城': 3,
+		'浙中南': 4,
+		'萧山滨弘': 5,
+	};
+	isChange.value = map[useMy.$state.companyName] || 1
+	if (stateDom.value && stateDom.value.style.maxHeight) {
 		emit("textChange", false);
 		legendShow.value = true;
 		stateDom.value.style.maxHeight = null;
@@ -75,7 +84,9 @@ const handleChange = () => {
 		emit("textChange", true);
 		legendShow.value = false;
 		isTriangleShow.value = true
-		stateDom.value.style.maxHeight = stateDom.value.scrollHeight + "px";
+		if (stateDom.value) {
+			stateDom.value.style.maxHeight = stateDom.value.scrollHeight + "px";
+		}
 	}
 }
 const getClass = (v) => {
