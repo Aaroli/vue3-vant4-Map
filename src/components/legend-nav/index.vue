@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-16 09:55:24
+ * @LastEditTime: 2024-01-18 02:45:48
 -->
 <template>
 	<div class="legend_nav">
@@ -17,10 +17,12 @@
 					<!-- <div class="allBox" :class="isChange === 0 ? 'activeBox' : ''" @click="change('', 0)">全部</div> -->
 					<p v-for="item in legendList" :key="item.id" :class="isChange === item.id ? 'activeBox' : ''"
 						@click="change(item, item.id)"><span :class="getClass(item.id)"></span>{{ item.name }}</p>
-					<div class="closeBox">
+					<!-- <div class="closeBox">
 						<van-icon name="arrow-up" size="20" @click="handleChange" />
-					</div>
+					</div>-->
 				</div>
+			</div>
+			<div class="triangle" v-if="isTriangleShow">
 			</div>
 		</div>
 	</div>
@@ -34,6 +36,7 @@ import img1 from '@/assets/images/i_company.png'
 const emit = defineEmits(["textChange", "selectList"]);
 const stateDom = ref(null);
 const legendShow = ref(true);
+const isTriangleShow = ref(false);
 const isChange = ref(1);
 const legendList = ref([
 	// {
@@ -67,9 +70,11 @@ const handleChange = () => {
 		emit("textChange", false);
 		legendShow.value = true;
 		stateDom.value.style.maxHeight = null;
+		isTriangleShow.value = false
 	} else {
 		emit("textChange", true);
 		legendShow.value = false;
+		isTriangleShow.value = true
 		stateDom.value.style.maxHeight = stateDom.value.scrollHeight + "px";
 	}
 }
@@ -114,6 +119,10 @@ onMounted(() => {
 });
 </script>
 <style lang="less" scoped>
+.box {
+	// background-color: skyblue;
+}
+
 .legend__nav {
 	position: relative;
 	width: 41.5px;
@@ -134,6 +143,7 @@ onMounted(() => {
 }
 
 .tab-content {
+	position: relative;
 	margin: 0 auto;
 	width: 124px;
 	background: #f2f6fc;
@@ -145,7 +155,7 @@ onMounted(() => {
 	border-radius: 12px;
 
 	.tab-content-box {
-		padding-top: 4px;
+		padding-top: 12px;
 
 		p {
 			display: flex;
@@ -160,6 +170,14 @@ onMounted(() => {
 		font-weight: 400;
 		color: #48535A;
 	}
+}
+
+.triangle {
+	width: 0px;
+	height: 0px;
+	border: 10px solid transparent;
+	border-top-color: #FFFFFF;
+	margin: auto;
 }
 
 .span1,
