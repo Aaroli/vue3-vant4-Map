@@ -4,10 +4,11 @@
  * @Author: AaroLi
  * @Date: 2023-12-29 16:20:34
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-01 09:47:33
+ * @LastEditTime: 2024-01-18 03:21:36
  */
 import login from "@/views/login.vue";
 import Map from "@/views/Map.vue";
+import Search from "@/views/Search.vue";
 const routes = [
 	{
 		path: "/login",
@@ -19,6 +20,14 @@ const routes = [
 		path: "/map",
 		name: "Map",
 		component: Map,
+		meta: {
+			isKeepAlive: false,
+		},
+	},
+	{
+		path: "/Search",
+		name: "Search",
+		component: Search,
 		meta: {
 			isKeepAlive: false,
 		},

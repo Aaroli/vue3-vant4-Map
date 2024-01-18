@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 02:51:39
+ * @LastEditTime: 2024-01-18 03:00:41
 -->
 <template>
 	<div class="app">
@@ -218,12 +218,15 @@ const hasUser = async () => {
 	// router.push({ name: "login" });
 };
 const handleSearch = async (v) => {
+	// 要判断一下当前的公司和地市是不是跟这条记录一样，如果一样，就直接定位到那个项目就行了，
+	// 如果不一样，那要切换项目和地市，并刷新当前项目和地市的数据，并定位到当前选的项目，管理那个查询字段要清空（如果当前有选过的话）
 	loading.value = true
 	const res = await useMy.queryFuzzy({ name: v });
 	if (res?.code === 200) {
 		console.log('res', res)
 		loading.value = false
 	} else {
+		loading.value = false
 		showToast(res.msg);
 	}
 };

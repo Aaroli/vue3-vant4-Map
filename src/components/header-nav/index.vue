@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 08:48:09
+ * @LastEditTime: 2024-01-18 03:28:47
 -->
 <template>
   <div class="header__nav">
@@ -34,7 +34,8 @@
       </div>
     </div>
     <div class="header__right ml4">
-      <van-field v-model="keyWord" :right-icon="i_search" placeholder="城市-项目" @click-right-icon="hasSearch" />
+      <van-field v-model="keyWord" :right-icon="i_search" @focus="hasSearch" placeholder="城市-项目"
+        @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
     <!-- <van-popup v-model:show="showPicker" position="bottom">
@@ -51,6 +52,9 @@
     <van-popup v-model:show="showPicker" position="bottom">
       <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
     </van-popup>
+    <div>
+
+    </div>
   </div>
 </template>
   
@@ -191,8 +195,7 @@ const hasConfirm = () => {
 };
 // 搜索事件
 const hasSearch = () => {
-  // console.log('length',length)
-  emit("handleSearch", keyWord.value);
+  router.push({ name: "Search" });
 };
 // 切换父级区划事件
 const isMenuActive = () => {
