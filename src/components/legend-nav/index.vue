@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:29:06
+ * @LastEditTime: 2024-01-18 07:36:18
 -->
 <template>
 	<div class="legend_nav">
@@ -16,7 +16,9 @@
 				<div class="tab-content-box">
 					<!-- <div class="allBox" :class="isChange === 0 ? 'activeBox' : ''" @click="change('', 0)">全部</div> -->
 					<p v-for="item in legendList" :key="item.id" :class="isChange === item.id ? 'activeBox' : ''"
-						@click="change(item, item.id)"><span :class="getClass(item.id)"></span>{{ item.name }}</p>
+						@click="change(item, item.id)"><span :class="getClass(item.id)"></span>{{ item.name }}
+						<van-icon v-if="isChange === item.id" name="success" class="icon" color="#007BFF" />
+					</p>
 					<!-- <div class="closeBox">
 						<van-icon name="arrow-up" size="20" @click="handleChange" />
 					</div>-->
@@ -165,6 +167,7 @@ onMounted(() => {
 		padding-top: 12px;
 
 		p {
+			position: relative;
 			display: flex;
 			padding: 0;
 			margin: 0px 5px 5px 5px;
@@ -185,6 +188,13 @@ onMounted(() => {
 	border: 10px solid transparent;
 	border-top-color: #FFFFFF;
 	margin: auto;
+}
+
+.icon {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 5px;
 }
 
 .span1,
