@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:36:18
+ * @LastEditTime: 2024-01-18 07:55:21
 -->
 <template>
 	<div class="legend_nav">
@@ -186,7 +186,8 @@ onMounted(() => {
 	width: 0px;
 	height: 0px;
 	border: 10px solid transparent;
-	border-top-color: #FFFFFF;
+	border-top-color: #f5f5f5;
+	// border-top-color: #FFFFFF;
 	margin: auto;
 }
 

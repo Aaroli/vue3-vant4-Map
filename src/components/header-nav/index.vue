@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:17:21
+ * @LastEditTime: 2024-01-18 08:15:31
 -->
 <template>
   <div class="header__nav">
@@ -65,7 +65,7 @@ import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 const { useMy } = $globalStore
 const router = useRouter();
-const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData"]);
+const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData", "clearData"]);
 
 const keyWord = ref('');
 const itemRef = ref(null);
@@ -222,7 +222,9 @@ const getDivisionList = async (v) => {
         arr.length > 0 ? emit("initData", arr[0].egion, arr[0].xmproject) : emit("initData", res.data[0].egion, res.data[0].xmproject);
         arr.length > 0 ? cityName.value = arr[0].text : cityName.value = res.data[0].text;
       }
-
+    }
+    if (res.data && res.data.length == 0) {
+      emit("clearData", true);
     }
   } else {
     showToast(res.msg);

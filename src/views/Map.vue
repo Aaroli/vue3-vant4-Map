@@ -4,14 +4,14 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:05:51
+ * @LastEditTime: 2024-01-18 08:17:05
 -->
 <template>
 	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
 			<header-nav v-if="phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
-				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav>
+				@stausChange="stausChange" @initData="initData" @clearData="clearData" titelText="首页"></header-nav>
 			<header-nav-pc v-if="!phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
 				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav-pc>
 		</div>
@@ -241,6 +241,11 @@ const initData = (egion, xmproject) => {
 	searchInfo.value.xmproject = xmproject;
 	searchInfo.value.manage = '';
 	getMarkList();
+}
+// 没数据清理缓存
+const clearData = () => {
+	markers.value = [];
+	showToast('暂无数据');
 }
 // 类型切换事件
 const stausChange = (v) => {

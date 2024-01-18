@@ -4,14 +4,14 @@
  * @Author: AaroLi
  * @Date: 2024-01-18 03:15:50
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:27:50
+ * @LastEditTime: 2024-01-18 08:02:01
 -->
 <template>
     <div class="app">
         <van-search v-model="value" update:model-value clearable :right-icon="i_search" left-icon=""
             @click-right-icon="handleSearch" placeholder="请输入城市-项目查询" @search="handleSearch" @clear="clearList">
             <template #left>
-                <van-icon class="icon" name="arrow-left" @click="routerCallBack" />
+                <van-icon color="#7D7D7D" size="0.6rem" class="icon" name="arrow-left" @click="routerCallBack" />
             </template>
         </van-search>
         <div class="list">
@@ -52,7 +52,6 @@ const handleSearch = async (v) => {
 };
 // 更新地图事件
 const updateMap = (v) => {
-    console.log('v', v)
     setCompanyName(v.egion)
     setAdcdName(v.xmproject)
     setCenterValue([v.longitude, v.latitude])
@@ -82,7 +81,7 @@ onMounted(() => {
     margin-right: 4px;
 }
 
-.app {
+； .app {
     height: 100vh;
     overflow: hidden;
 }
