@@ -4,9 +4,9 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 10:27:24
+ * @LastEditTime: 2024-01-18 02:47:45
  */
-import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
+import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, queryFuzzy, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
 	state: () => ({
 		companyName: "海岸",
@@ -99,6 +99,18 @@ export default defineStore('useMy', {
 		async getPointInfoList(params) {
 			let url = $globalRequestUrl({
 				url: getPointInfoList,
+			});
+
+			try {
+				const rep = await $globalRequest(url, params, { method: "GET" });
+				return rep;
+			} catch (error) {
+				return error;
+			}
+		},
+		async queryFuzzy(params) {
+			let url = $globalRequestUrl({
+				url: queryFuzzy,
 			});
 
 			try {

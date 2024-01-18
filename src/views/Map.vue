@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 01:57:24
+ * @LastEditTime: 2024-01-18 02:51:39
 -->
 <template>
 	<div class="app">
@@ -217,19 +217,15 @@ const hasUser = async () => {
 	}
 	// router.push({ name: "login" });
 };
-const handleSearch = (v) => {
+const handleSearch = async (v) => {
 	loading.value = true
-	setTimeout(() => {
-		if (v != '') {
-			markers.value = markers.value.filter((value) => {
-				return value.title.match(v);
-			});
-		} else {
-			markers.value = markersAll.value;
-		}
+	const res = await useMy.queryFuzzy({ name: v });
+	if (res?.code === 200) {
+		console.log('res', res)
 		loading.value = false
-
-	}, 3000);
+	} else {
+		showToast(res.msg);
+	}
 };
 // 区划选中事件
 const cityChange = (v) => {

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-16 01:41:37
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 09:27:42
+ * @LastEditTime: 2024-01-18 02:47:26
  */
 // 企业微信单点登录
 export const getSingleUrl = "getqyweiauthurl"
@@ -20,3 +20,5 @@ export const getPointInfo = "getsampleprojectlistbyregionandcity"
 export const getWxAuth = "getWxInfo"
 // 获取详情
 export const getPointInfoList = "getprojectinfo"
+// 模糊查询
+export const queryFuzzy = "selectsampleprojectlistbyname"

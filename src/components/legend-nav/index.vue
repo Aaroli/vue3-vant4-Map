@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 02:45:48
+ * @LastEditTime: 2024-01-18 02:48:10
 -->
 <template>
 	<div class="legend_nav">
@@ -119,10 +119,6 @@ onMounted(() => {
 });
 </script>
 <style lang="less" scoped>
-.box {
-	// background-color: skyblue;
-}
-
 .legend__nav {
 	position: relative;
 	width: 41.5px;
