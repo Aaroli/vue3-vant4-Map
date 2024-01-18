@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 10:39:08
+ * @LastEditTime: 2024-01-18 01:57:24
 -->
 <template>
 	<div class="app">
@@ -175,9 +175,25 @@ const getImgType = (v) => {
 // marker点击事件
 const clickArrayMarker = async (marker) => {
 	console.log('marker', marker)
-	const res = await useMy.getPointInfoList({ id: 1 });
-	if (res?.code === 200) {
-		console.log('res', res)
+	if (getSession('TOKEN')) {
+		const res = await useMy.getPointInfoList({ id: marker.id });
+		if (res?.code === 200) {
+			console.log('res', res)
+			locationObj.value = {
+				title: marker.name ? marker.name : '暂无数据',
+				contant: marker.addr ? marker.addr : '暂无数据',
+				distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
+				lat: marker.latitude,
+				lng: marker.longitude,
+				addressName: marker.name,
+				address: marker.addr,
+				infoList: res.data
+			}
+			mapDetailShow.value = true
+		} else {
+			showToast(res.msg);
+		}
+	} else {
 		locationObj.value = {
 			title: marker.name ? marker.name : '暂无数据',
 			contant: marker.addr ? marker.addr : '暂无数据',
@@ -186,13 +202,10 @@ const clickArrayMarker = async (marker) => {
 			lng: marker.longitude,
 			addressName: marker.name,
 			address: marker.addr,
-			infoList: res.data
+			infoList: []
 		}
 		mapDetailShow.value = true
-	} else {
-		showToast(res.msg);
 	}
-
 }
 // 登录
 const hasUser = async () => {
