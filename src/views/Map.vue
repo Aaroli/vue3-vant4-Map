@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-19 02:34:31
+ * @LastEditTime: 2024-01-19 02:55:33
 -->
 <template>
 	<div class="app">
@@ -16,7 +16,7 @@
 				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
-		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom">
+		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom" @click="closeLegend">
 			<!-- 地图标记 -->
 			<el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
 				:position="marker.position" :offset="[-50, -35]" @click="(e) => { clickArrayMarker(marker, e) }">
@@ -261,6 +261,10 @@ const textChange = async (v) => {
 const selectList = (v) => {
 	searchInfo.value.egion = v
 	// getMarkList();
+}
+// 关闭图例事件
+const closeLegend = () => {
+	$globalEventBus.emit('LegendClick', false);
 }
 const isShowSheet = ref(false)
 const sheetList = [
