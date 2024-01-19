@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-18 03:15:50
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 08:02:01
+ * @LastEditTime: 2024-01-19 06:33:13
 -->
 <template>
     <div class="app">
@@ -52,6 +52,7 @@ const handleSearch = async (v) => {
 };
 // 更新地图事件
 const updateMap = (v) => {
+    console.log('v', v)
     setCompanyName(v.egion)
     setAdcdName(v.xmproject)
     setCenterValue([v.longitude, v.latitude])

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-19 02:40:43
+ * @LastEditTime: 2024-01-19 06:45:45
 -->
 <template>
 	<div class="legend_nav">
@@ -124,7 +124,11 @@ const getList = async () => {
 		res.data.forEach(v => {
 			v.name = v.regionName;
 		});
+		console.log('res.data', res.data)
 		legendList.value = res.data;
+		// if (legendList.value && legendList.value[0].name) {
+		// 	setCompanyName(legendList.value[0].name)
+		// }
 	} else {
 		showToast(res.msg);
 	}

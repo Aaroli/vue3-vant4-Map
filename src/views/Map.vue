@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-19 02:55:33
+ * @LastEditTime: 2024-01-19 06:42:48
 -->
 <template>
 	<div class="app">
@@ -237,11 +237,11 @@ const cityChange = (v) => {
 	getMarkList();
 }
 // 初始化没值的时候 赋值有值的数据
-const initData = (egion, xmproject) => {
+const initData = (egion, xmproject, isMycity) => {
 	searchInfo.value.egion = egion;
 	searchInfo.value.xmproject = xmproject;
 	searchInfo.value.manage = '';
-	getMarkList();
+	getMarkList(isMycity);
 }
 // 没数据清理缓存
 const clearData = () => {
@@ -310,7 +310,7 @@ const getLocation = () => {
 	}
 }
 // 获取点的数组 
-const getMarkList = async () => {
+const getMarkList = async (v) => {
 	markers.value = [];
 	const res = await useMy.getPointInfo(searchInfo.value);
 	if (res?.code === 200) {
@@ -325,6 +325,9 @@ const getMarkList = async () => {
 		}
 		if (useMy.$state.centerCoordinate) {
 			center.value = useMy.$state.centerCoordinate
+		}
+		if (v && v == true) {
+			center.value = useMy.$state.coordinate
 		}
 	} else {
 		showToast(res.msg);
@@ -347,7 +350,7 @@ onBeforeMount(() => {
 			const { getLocalCity } = res;
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
-				console.log('cityResult', cityResult)
+				// console.log('cityResult', cityResult)
 			})
 		})
 	})

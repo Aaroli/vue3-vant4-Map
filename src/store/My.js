@@ -4,12 +4,12 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:10:18
+ * @LastEditTime: 2024-01-19 06:41:46
  */
 import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, queryFuzzy, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
 	state: () => ({
-		companyName: "海岸",
+		companyName: "万家",
 		companyNum: "0", //总数
 		adcdName: null,
 		coordinate: [120.0424575805664, 30.293476104736328], //定位坐标

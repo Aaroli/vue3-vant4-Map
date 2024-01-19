@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 08:48:07
+ * @LastEditTime: 2024-01-19 06:42:54
 -->
 <template>
 	<div class="app">
@@ -318,7 +318,7 @@ onBeforeMount(() => {
 			const { getLocalCity } = res;
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
-				console.log('cityResult', cityResult)
+				// console.log('cityResult', cityResult)
 			})
 		})
 	})

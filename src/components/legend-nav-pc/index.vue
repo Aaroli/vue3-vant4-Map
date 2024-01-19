@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-19 02:49:03
+ * @LastEditTime: 2024-01-19 06:45:38
 -->
 <template>
 	<div class="legend_nav">
