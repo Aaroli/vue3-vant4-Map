@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 02:54:10
+ * @LastEditTime: 2024-01-19 02:49:03
 -->
 <template>
 	<div class="legend_nav">
@@ -16,7 +16,9 @@
 				<div class="tab-content-box">
 					<!-- <div class="allBox" :class="isChange === 0 ? 'activeBox' : ''" @click="change('', 0)">全部</div> -->
 					<p v-for="item in legendList" :key="item.id" :class="isChange === item.id ? 'activeBox' : ''"
-						@click="change(item, item.id)"><span :class="getClass(item.id)"></span>{{ item.name }}</p>
+						@click="change(item, item.id)"><span :class="getClass(item.id)"></span>{{ item.name }}
+						<van-icon v-if="isChange === item.id" name="success" class="icon" color="#007BFF" />
+					</p>
 					<!-- <div class="closeBox">
 						<van-icon name="arrow-up" size="20" @click="handleChange" />
 					</div>-->
@@ -33,6 +35,7 @@ import { setCompanyNum, setCompanyName } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
+import { nextTick } from "vue";
 const emit = defineEmits(["textChange", "selectList"]);
 const stateDom = ref(null);
 const legendShow = ref(true);
@@ -66,7 +69,15 @@ const legendList = ref([
 	// },
 ])
 const handleChange = () => {
-	if (stateDom.value.style.maxHeight) {
+	const map = {
+		'海岸': 1,
+		'万家': 2,
+		'新城': 3,
+		'浙中南': 4,
+		'萧山滨弘': 5,
+	};
+	isChange.value = map[useMy.$state.companyName] || 1
+	if (stateDom.value && stateDom.value.style.maxHeight) {
 		emit("textChange", false);
 		legendShow.value = true;
 		stateDom.value.style.maxHeight = null;
@@ -75,8 +86,17 @@ const handleChange = () => {
 		emit("textChange", true);
 		legendShow.value = false;
 		isTriangleShow.value = true
-		stateDom.value.style.maxHeight = stateDom.value.scrollHeight + "px";
+		if (stateDom.value) {
+			stateDom.value.style.maxHeight = stateDom.value.scrollHeight + "px";
+		}
 	}
+}
+const closeLegend = () => {
+	if (stateDom.value) {
+		stateDom.value.style.maxHeight = null;
+		isTriangleShow.value = false
+	}
+
 }
 const getClass = (v) => {
 	const map = {
@@ -110,7 +130,11 @@ const getList = async () => {
 	}
 };
 $globalEventBus.on("LegendClick", eventData => {
-	handleChange();
+	if (eventData == false) {
+		closeLegend();
+	} else {
+		handleChange();
+	}
 });
 onMounted(() => {
 	// $globalConfigure(() => {

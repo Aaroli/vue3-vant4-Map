@@ -4,11 +4,11 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-17 08:35:17
+ * @LastEditTime: 2024-01-19 02:50:06
 -->
 <template>
   <div class="header__nav">
-    <div class="header__left">
+    <div class="header__left" @click="closeLegend">
       <!-- <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
           style="vertical-align: middle;" /></div> -->
       <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
@@ -29,12 +29,13 @@
               </div>
             </div>
           </van-dropdown-item>
-          <van-icon class="pt36 " name="arrow-down" color="#A6B2C3" size="17" style="vertical-align: middle;" />
+          <van-icon class="pt36" name="arrow-down" color="#A6B2C3" size="17" style="vertical-align: middle;" />
         </van-dropdown-menu>
       </div>
     </div>
     <div class="header__right ml4">
-      <van-field v-model="keyWord" :right-icon="i_search" placeholder="城市-项目" @click-right-icon="hasSearch" />
+      <van-field v-model="keyWord" :right-icon="i_search" @focus="hasSearch" placeholder="城市-项目"
+        @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
     <!-- <van-popup v-model:show="showPicker" position="bottom">
@@ -51,6 +52,8 @@
     <van-popup v-model:show="showPicker" position="bottom">
       <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
     </van-popup>
+    <div>
+    </div>
   </div>
 </template>
   
@@ -61,7 +64,7 @@ import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 const { useMy } = $globalStore
 const router = useRouter();
-const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData"]);
+const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData", "clearData"]);
 
 const keyWord = ref('');
 const itemRef = ref(null);
@@ -78,6 +81,10 @@ const columns = ref([
 const showPicker = ref(false);
 const isChange = ref(0);
 const isOtherChange = ref(0);
+// 关闭图例事件
+const closeLegend = () => {
+  $globalEventBus.emit('LegendClick', false);
+}
 const change = (v) => {
   isChange.value = v;
 };
@@ -191,8 +198,7 @@ const hasConfirm = () => {
 };
 // 搜索事件
 const hasSearch = () => {
-  // console.log('length',length)
-  emit("handleSearch", keyWord.value);
+  router.push({ name: "Search" });
 };
 // 切换父级区划事件
 const isMenuActive = () => {
@@ -208,15 +214,26 @@ const getDivisionList = async (v) => {
         v.value = v.xmproject;
       });
       columns.value = res.data;
-      const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
-      arr.length > 0 ? emit("initData", arr[0].egion, arr[0].xmproject) : emit("initData", res.data[0].egion, res.data[0].xmproject);
-      arr.length > 0 ? cityName.value = arr[0].text : cityName.value = res.data[0].text;
+      if (useMy.$state.adcdName) {
+        cityName.value = useMy.$state.adcdName
+        emit("initData", useMy.$state.companyName, useMy.$state.adcdName)
+        keyWord.value = useMy.$state.inputValue
+        isChange.value = 0;
+        isOtherChange.value = 0;
+      } else {
+        const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
+        arr.length > 0 ? emit("initData", arr[0].egion, arr[0].xmproject) : emit("initData", res.data[0].egion, res.data[0].xmproject);
+        arr.length > 0 ? cityName.value = arr[0].text : cityName.value = res.data[0].text;
+      }
+    }
+    if (res.data && res.data.length == 0) {
+      emit("clearData", true);
     }
   } else {
     showToast(res.msg);
   }
 }
-// 获取用户信息
+// // 获取用户信息
 // const queryUserInfo = async (v) => {
 //   const res = await useMy.getUserInfo({ code: v });
 //   if (res?.code === 200) {
@@ -236,7 +253,7 @@ onBeforeMount(() => {
       getLocalCity().then(cityResult => {
         cityName.value = cityResult.city || '未知'
         loctionName.value = cityResult.city || '未知'
-        getDivisionList('海岸');
+        getDivisionList(useMy.$state.companyName);
       })
     })
   })

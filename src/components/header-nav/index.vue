@@ -4,11 +4,11 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 08:15:31
+ * @LastEditTime: 2024-01-19 02:46:34
 -->
 <template>
   <div class="header__nav">
-    <div class="header__left">
+    <div class="header__left" @click="closeLegend">
       <!-- <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
           style="vertical-align: middle;" /></div> -->
       <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
@@ -82,6 +82,10 @@ const columns = ref([
 const showPicker = ref(false);
 const isChange = ref(0);
 const isOtherChange = ref(0);
+// 关闭图例事件
+const closeLegend = () => {
+  $globalEventBus.emit('LegendClick', false);
+}
 const change = (v) => {
   isChange.value = v;
 };

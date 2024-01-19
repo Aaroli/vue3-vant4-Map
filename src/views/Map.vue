@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 08:17:05
+ * @LastEditTime: 2024-01-19 02:34:31
 -->
 <template>
 	<div class="app">
@@ -174,6 +174,7 @@ const getImgType = (v) => {
 }
 // marker点击事件
 const clickArrayMarker = async (marker) => {
+	$globalEventBus.emit('LegendClick', false);
 	console.log('marker', marker)
 	if (getSession('TOKEN')) {
 		const res = await useMy.getPointInfoList({ id: marker.id });
