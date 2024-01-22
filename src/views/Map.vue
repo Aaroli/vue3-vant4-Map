@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 04:24:24
+ * @LastEditTime: 2024-01-22 05:40:24
 -->
 <template>
 	<div class="app">
@@ -312,6 +312,7 @@ const getLocation = () => {
 // 获取点的数组 
 const getMarkList = async (v) => {
 	markers.value = [];
+	getSession('egion') ? searchInfo.value.egion = getSession('egion') : searchInfo.value.egion = useMy.$state.companyName
 	const res = await useMy.getPointInfo(searchInfo.value);
 	if (res?.code === 200) {
 		res.data.forEach(v => {

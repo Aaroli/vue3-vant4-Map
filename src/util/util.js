@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 07:11:51
+ * @LastEditTime: 2024-01-22 05:44:44
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -100,6 +100,10 @@ const setSession = (attr, value) => {
 // 获取session
 const getSession = (attr) => {
 	return window.sessionStorage.getItem(attr) || ''
+}
+// 删除session 某一项
+const removeSession = (attr) => {
+	return window.sessionStorage.removeItem(attr) || ''
 }
 
 // 设置企业名称
@@ -306,4 +310,5 @@ export {
 	setCenterValue,
 	setInputValue,
 	setCompanyType,
+	removeSession
 };

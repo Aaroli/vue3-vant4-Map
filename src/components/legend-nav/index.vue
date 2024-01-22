@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 03:45:57
+ * @LastEditTime: 2024-01-22 05:46:18
 -->
 <template>
 	<div class="legend_nav">
@@ -31,7 +31,7 @@
 </template>
 
 <script setup name="legendNav">
-import { setCompanyNum, setCompanyName, setAdcdName } from "@/util/util";
+import { setCompanyNum, setCompanyName, setAdcdName, getSession, removeSession } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
@@ -69,6 +69,8 @@ const legendList = ref([
 	// },
 ])
 const handleChange = () => {
+	let type = ''
+	getSession('egion') ? type = getSession('egion') : type = useMy.$state.companyName
 	const map = {
 		'海岸': 1,
 		'万家': 2,
@@ -76,7 +78,7 @@ const handleChange = () => {
 		'浙中南': 4,
 		'萧山滨弘': 5,
 	};
-	isChange.value = map[useMy.$state.companyName] || 1
+	isChange.value = map[type] || 1
 	if (stateDom.value && stateDom.value.style.maxHeight) {
 		emit("textChange", false);
 		legendShow.value = true;
@@ -111,6 +113,9 @@ const getClass = (v) => {
 	return map[v] || "";
 }
 const change = (v, id) => {
+	if (getSession('egion')) {
+		removeSession('egion');
+	}
 	$globalEventBus.emit('adcdChange', v.name);
 	setAdcdName(null)
 	setCompanyName(v.name)
@@ -127,9 +132,9 @@ const getList = async () => {
 		});
 		console.log('res.data', res.data)
 		legendList.value = res.data;
-		// if (legendList.value && legendList.value[0].name) {
-		// 	setCompanyName(legendList.value[0].name)
-		// }
+		if (legendList.value && legendList.value[0].name) {
+			setCompanyName(legendList.value[0].name)
+		}
 	} else {
 		showToast(res.msg);
 	}

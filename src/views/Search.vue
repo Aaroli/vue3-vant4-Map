@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-18 03:15:50
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-19 06:33:13
+ * @LastEditTime: 2024-01-22 05:36:21
 -->
 <template>
     <div class="app">
@@ -58,6 +58,7 @@ const updateMap = (v) => {
     setCenterValue([v.longitude, v.latitude])
     setInputValue(v.searchValue)
     // setCompanyType(map[v.egion] || 1)
+    setSession("egion", v.egion);
     router.back();
     // 地市名称  v.xmproject
     // 公司  v.egion

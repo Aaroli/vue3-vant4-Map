@@ -1,7 +1,8 @@
 <template>
 	<div class="footer_nav">
 		<div class="img" @click="hasLegendClick"></div>
-		<div class="title" @click="hasLegendClick" v-text="useMy.$state.companyName"></div>
+		<div class="title" @click="hasLegendClick"
+			v-text="getSession('egion') ? getSession('egion') : useMy.$state.companyName"></div>
 		<div class="right__nav">
 			<div class="right__nav_img">
 				<img class="imgIcon" :src="getImg()" />
@@ -13,13 +14,16 @@
 </template>
 
 <script setup name="footerNavPc">
+import { getSession } from "@/util/util";
 import img1 from '@/assets/images/i_compny1.png'
 import img2 from '@/assets/images/i_compny2.png'
 import img3 from '@/assets/images/i_compny3.png'
 import img4 from '@/assets/images/i_compny4.png'
 import img5 from '@/assets/images/i_compny5.png'
 const { useMy } = $globalStore;
+const router = useRouter();
 const num = ref('356142')
+const text = ref('')
 const getImg = () => {
 	const map = {
 		'全部': img1,
