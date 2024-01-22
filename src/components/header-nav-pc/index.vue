@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 05:50:20
+ * @LastEditTime: 2024-01-22 06:34:03
 -->
 <template>
   <div class="header__nav">
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="header__right ml4">
-      <van-field v-model="keyWord" :right-icon="i_search" @focus="hasSearch" placeholder="城市-项目"
+      <van-field v-model="keyWord" :right-icon="i_search" @focus="hasSearch" placeholder="请输入项目名称"
         @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
@@ -175,7 +175,7 @@ const handleConfirm = () => {
 const onConfirm = ({ selectedOptions }) => {
   if (selectedOptions[0]?.text) {
     cityName.value = selectedOptions[0]?.text;
-    emit("cityChange", cityName.value);
+    emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value);
   }
   showPicker.value = false;
 };

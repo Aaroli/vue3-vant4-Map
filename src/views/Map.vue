@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 05:40:24
+ * @LastEditTime: 2024-01-22 06:31:43
 -->
 <template>
 	<div class="app">
@@ -232,9 +232,9 @@ const handleSearch = async (v) => {
 	}
 };
 // 区划选中事件
-const cityChange = (v) => {
+const cityChange = (status, v) => {
 	searchInfo.value.xmproject = v
-	getMarkList();
+	getMarkList(status);
 }
 // 初始化没值的时候 赋值有值的数据
 const initData = (egion, xmproject, isMycity) => {
