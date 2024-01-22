@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 11:19:15
+ * @LastEditTime: 2024-01-22 13:16:17
 -->
 <template>
   <div class="header__nav">
@@ -73,6 +73,7 @@
 </template>
   
 <script setup name="headerNav">
+import { autofocusFn } from '@/util/ceshi'
 import { setSession, setCompanyName, setAdcdName, setCenterValue, setCompanyType, setInputValue } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
@@ -229,6 +230,7 @@ const hasSearch = () => {
   // router.push({ name: "Search" });
   list.value = []
   value.value = ''
+  autofocusFn();
   showRight.value = true;
 };
 // 切换父级区划事件
@@ -265,10 +267,10 @@ const getDivisionList = async (v) => {
   }
 }
 const opened = () => {
-  // if (inputRef.value) {
-  //   const inputEl = inputRef.value.$el.querySelector('.van-field__control');
-  //   inputEl.focus();
-  // }
+  if (inputRef.value) {
+    const inputEl = inputRef.value.$el.querySelector('.van-field__control');
+    inputEl.focus();
+  }
 }
 const getDivisionLists = async (v) => {
   const res = await useMy.getRegionList({ egion: v });
