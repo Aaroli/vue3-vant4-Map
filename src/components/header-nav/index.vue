@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 09:42:17
+ * @LastEditTime: 2024-01-22 11:19:15
 -->
 <template>
   <div class="header__nav">
@@ -55,9 +55,9 @@
     <div>
 
     </div>
-    <van-popup v-model:show="showRight" position="right" :style="{ width: '100%', height: '100%' }">
+    <van-popup v-model:show="showRight" @opened="opened" position="right" :style="{ width: '100%', height: '100%' }">
       <div class="appBox">
-        <van-search v-model="value" update:model-value clearable :right-icon="i_search" left-icon=""
+        <van-search v-model="value" autofocus update:model-value clearable :right-icon="i_search" left-icon=""
           @click-right-icon="handleSearch" placeholder="请输入项目名称" @search="handleSearch" @clear="clearList">
           <template #left>
             <van-icon color="#7D7D7D" size="0.6rem" class="icon" name="arrow-left" @click="routerCallBack" />
@@ -263,6 +263,12 @@ const getDivisionList = async (v) => {
   } else {
     showToast(res.msg);
   }
+}
+const opened = () => {
+  // if (inputRef.value) {
+  //   const inputEl = inputRef.value.$el.querySelector('.van-field__control');
+  //   inputEl.focus();
+  // }
 }
 const getDivisionLists = async (v) => {
   const res = await useMy.getRegionList({ egion: v });
