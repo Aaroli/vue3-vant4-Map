@@ -4,10 +4,10 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 09:29:09
+ * @LastEditTime: 2024-01-22 09:40:00
 -->
 <template>
-	<div class="app" v-if="aaa">
+	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
 			<header-nav v-if="phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
@@ -122,7 +122,6 @@ import img5 from '@/assets/images/point_yellow.png'
 import img_mag_title from '@/assets/images/img_mag_title.png'
 
 const mapDetailShow = ref(false) //地图prop
-const aaa = ref(true) //地图prop
 const loading = ref(false) //地图loading
 const searchInfo = ref({
 	egion: '', //公司列表
