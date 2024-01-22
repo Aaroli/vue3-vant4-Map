@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 13:16:17
+ * @LastEditTime: 2024-01-22 13:28:04
 -->
 <template>
   <div class="header__nav">
@@ -57,8 +57,8 @@
     </div>
     <van-popup v-model:show="showRight" @opened="opened" position="right" :style="{ width: '100%', height: '100%' }">
       <div class="appBox">
-        <van-search v-model="value" autofocus update:model-value clearable :right-icon="i_search" left-icon=""
-          @click-right-icon="handleSearch" placeholder="请输入项目名称" @search="handleSearch" @clear="clearList">
+        <van-search ref="inputRef" autofocus v-model="value" update:model-value clearable :right-icon="i_search"
+          left-icon="" @click-right-icon="handleSearch" placeholder="请输入项目名称" @search="handleSearch" @clear="clearList">
           <template #left>
             <van-icon color="#7D7D7D" size="0.6rem" class="icon" name="arrow-left" @click="routerCallBack" />
           </template>
@@ -67,6 +67,7 @@
           <van-cell icon="location-o" v-for="(item, index) in list" :key="index" :title="item.searchValue"
             @click="updateMap(item)" />
         </div>
+
       </div>
     </van-popup>
   </div>
@@ -85,9 +86,11 @@ const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData
 const keyWord = ref('');
 const itemRef = ref(null);
 const menuRef = ref(null);
+const aaa = ref(true);
 const value = ref('');
 const list = ref([])
 const showRight = ref(false);
+const inputRef = ref(null);
 const cityName = ref('杭州市');
 const loctionName = ref('');
 const columns = ref([
@@ -232,7 +235,14 @@ const hasSearch = () => {
   value.value = ''
   autofocusFn();
   showRight.value = true;
+
 };
+const opened = () => {
+  if (inputRef.value) {
+    const inputEl = inputRef.value.$el.querySelector('.van-field__control');
+    inputEl.focus();
+  }
+}
 // 切换父级区划事件
 const isMenuActive = () => {
   activeId.value = '';
@@ -264,12 +274,6 @@ const getDivisionList = async (v) => {
     }
   } else {
     showToast(res.msg);
-  }
-}
-const opened = () => {
-  if (inputRef.value) {
-    const inputEl = inputRef.value.$el.querySelector('.van-field__control');
-    inputEl.focus();
   }
 }
 const getDivisionLists = async (v) => {
