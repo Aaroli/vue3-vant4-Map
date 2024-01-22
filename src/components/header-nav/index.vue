@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 09:22:38
+ * @LastEditTime: 2024-01-22 09:42:17
 -->
 <template>
   <div class="header__nav">
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="header__right ml4">
-      <van-field v-model="keyWord" :right-icon="i_search" @focus="hasSearch" placeholder="请输入项目名称"
+      <van-field v-model="keyWord" readonly :right-icon="i_search" @focus="hasSearch" placeholder="请输入项目名称"
         @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
@@ -371,7 +371,7 @@ onMounted(() => {
   display: flex;
 }
 
-:deep(.van-field) {
+:deep(.header__right .van-field) {
   width: 203.5px;
   height: 35px;
   background: #F3F3F3;
