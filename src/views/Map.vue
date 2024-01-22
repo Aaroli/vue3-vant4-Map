@@ -4,16 +4,17 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 06:31:43
+ * @LastEditTime: 2024-01-22 09:11:58
 -->
 <template>
-	<div class="app">
+	<div class="app" v-if="aaa">
 		<!-- 导航栏 -->
 		<div class="header_body">
 			<header-nav v-if="phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
-				@stausChange="stausChange" @initData="initData" @clearData="clearData" titelText="首页"></header-nav>
+				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" @clearData="clearData"
+				titelText="首页"></header-nav>
 			<header-nav-pc v-if="!phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
-				@stausChange="stausChange" @initData="initData" titelText="首页"></header-nav-pc>
+				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom" @click="closeLegend">
@@ -107,7 +108,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, setSession, navigationWx, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
+import { getSession, setSession, navigationWx, setAdcdName, setCenterValue, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -120,6 +121,7 @@ import img5 from '@/assets/images/point_yellow.png'
 import img_mag_title from '@/assets/images/img_mag_title.png'
 
 const mapDetailShow = ref(false) //地图prop
+const aaa = ref(true) //地图prop
 const loading = ref(false) //地图loading
 const searchInfo = ref({
 	egion: '', //公司列表
@@ -129,7 +131,7 @@ const searchInfo = ref({
 // 地图标记
 const markers = ref([])
 const markersAll = ref([])
-const zoom = ref(12)
+const zoom = ref(18)
 // 比例尺
 const ScaleVisible = ref(false)
 // 文本标记
@@ -243,6 +245,25 @@ const initData = (egion, xmproject, isMycity) => {
 	searchInfo.value.manage = '';
 	getMarkList(isMycity);
 }
+const initDatas = async (egion, xmproject, list) => {
+	searchInfo.value.egion = egion;
+	searchInfo.value.xmproject = xmproject;
+	searchInfo.value.manage = '';
+	markers.value = [];
+	const res = await useMy.getPointInfo(searchInfo.value);
+	if (res?.code === 200) {
+		res.data.forEach(v => {
+			v.position = [v.longitude, v.latitude],
+				v.type = useMy.$state.companyName
+		});
+		zoom.value = 18
+		markers.value = res.data;
+		setCompanyNum(res.data.length);
+		center.value = list
+	} else {
+		showToast(res.msg);
+	}
+}
 // 没数据清理缓存
 const clearData = () => {
 	markers.value = [];
@@ -312,7 +333,6 @@ const getLocation = () => {
 // 获取点的数组 
 const getMarkList = async (v) => {
 	markers.value = [];
-	getSession('egion') ? searchInfo.value.egion = getSession('egion') : searchInfo.value.egion = useMy.$state.companyName
 	const res = await useMy.getPointInfo(searchInfo.value);
 	if (res?.code === 200) {
 		res.data.forEach(v => {
@@ -321,7 +341,6 @@ const getMarkList = async (v) => {
 		});
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
-		zoom.value = 12
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
 		}
@@ -336,7 +355,6 @@ const getMarkList = async (v) => {
 			if (markers.value && markers.value.length > 0) {
 				center.value = [markers.value[0].longitude, markers.value[0].latitude]
 			}
-			zoom.value = 12
 		}
 	} else {
 		showToast(res.msg);
@@ -352,6 +370,18 @@ const queryUserInfo = async (v) => {
 		showToast(res.msg);
 	}
 }
+// $globalEventBus.on("initSearch", v => {
+// 	aaa.value = false;
+// 	aaa.value = true;
+// 	searchInfo.value.egion = v.egion;
+// 	searchInfo.value.xmproject = v.xmproject;
+// 	searchInfo.value.manage = '';
+// 	setCompanyName(v.egion)
+// 	setAdcdName(v.xmproject)
+// 	setCenterValue([v.longitude, v.latitude])
+// 	setInputValue(v.searchValue)
+// 	getMarkList(false);
+// });
 onBeforeMount(() => {
 	initWx();
 	lazyAMapApiLoaderInstance.then(() => {

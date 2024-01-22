@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-18 03:15:50
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 06:24:31
+ * @LastEditTime: 2024-01-22 09:18:38
 -->
 <template>
     <div class="app">
@@ -39,7 +39,6 @@ const handleSearch = async (v) => {
     // loading.value = true
     const res = await useMy.queryFuzzy({ name: value.value });
     if (res?.code === 200) {
-        console.log('res', res)
         res.data.forEach(v => {
             v.searchValue = `${v.xmproject}-${v.name}`
         });
@@ -55,7 +54,6 @@ const handleSearch = async (v) => {
 };
 // 更新地图事件
 const updateMap = (v) => {
-    console.log('v', v)
     setCompanyName(v.egion)
     setAdcdName(v.xmproject)
     setCenterValue([v.longitude, v.latitude])
@@ -63,6 +61,8 @@ const updateMap = (v) => {
     // setCompanyType(map[v.egion] || 1)
     setSession("egion", v.egion);
     router.back();
+    // 这么写的目的是为了 防止缓存导致页面不更新
+    // $globalEventBus.emit('initSearch', { longitude: v.longitude, latitude: v.latitude, egion: v.egion, xmproject: v.xmproject, searchValue: v.searchValue });
     // 地市名称  v.xmproject
     // 公司  v.egion
     // 中心点 [v.longitude,v.latitude]

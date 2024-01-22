@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 06:34:03
+ * @LastEditTime: 2024-01-22 07:42:30
 -->
 <template>
   <div class="header__nav">
@@ -192,6 +192,9 @@ const hasConfirm = () => {
   } else if (isOtherChange.value) {
     isOtherChange.value ? searchValue = ['项目'] : searchValue = ['项目']
   } else {
+    searchValue = []
+  }
+  if (searchValue.length == 2) {
     searchValue = []
   }
   emit("stausChange", searchValue.join(','));
