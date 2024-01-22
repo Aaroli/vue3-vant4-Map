@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 04:17:26
+ * @LastEditTime: 2024-01-22 04:24:24
 -->
 <template>
 	<div class="app">
@@ -320,6 +320,7 @@ const getMarkList = async (v) => {
 		});
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
+		zoom.value = 12
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
 		}
@@ -328,11 +329,13 @@ const getMarkList = async (v) => {
 		}
 		if (v && v == true) {
 			center.value = useMy.$state.coordinate
+			zoom.value = 18
 		}
 		if (v == false) {
 			if (markers.value && markers.value.length > 0) {
 				center.value = [markers.value[0].longitude, markers.value[0].latitude]
 			}
+			zoom.value = 12
 		}
 	} else {
 		showToast(res.msg);
