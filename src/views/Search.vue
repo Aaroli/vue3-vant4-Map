@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-18 03:15:50
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 05:36:21
+ * @LastEditTime: 2024-01-22 05:55:43
 -->
 <template>
     <div class="app">
@@ -44,6 +44,9 @@ const handleSearch = async (v) => {
             v.searchValue = `${v.xmproject}-${v.name}`
         });
         list.value = res.data
+        if (list.value && list.value.length == 0) {
+            showToast('暂无相关数据');
+        }
         // loading.value = false
     } else {
         // loading.value = false
