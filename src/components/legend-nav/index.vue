@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-19 06:45:45
+ * @LastEditTime: 2024-01-22 03:45:57
 -->
 <template>
 	<div class="legend_nav">
@@ -31,7 +31,7 @@
 </template>
 
 <script setup name="legendNav">
-import { setCompanyNum, setCompanyName } from "@/util/util";
+import { setCompanyNum, setCompanyName, setAdcdName } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
@@ -112,6 +112,7 @@ const getClass = (v) => {
 }
 const change = (v, id) => {
 	$globalEventBus.emit('adcdChange', v.name);
+	setAdcdName(null)
 	setCompanyName(v.name)
 	setCompanyNum(0)
 	emit("selectList", v.name);
