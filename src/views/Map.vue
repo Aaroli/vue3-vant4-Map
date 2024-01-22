@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 09:11:58
+ * @LastEditTime: 2024-01-22 09:29:09
 -->
 <template>
 	<div class="app" v-if="aaa">
@@ -19,8 +19,9 @@
 		<!-- 地图容器 -->
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom" @click="closeLegend">
 			<!-- 地图标记 -->
+			<!-- 左偏移 -50+ 上下偏移 -35 -->
 			<el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
-				:position="marker.position" :offset="[-50, -35]" @click="(e) => { clickArrayMarker(marker, e) }">
+				:position="marker.position" :offset="[-58, -35]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content">
 					<div class="title">{{ marker.name }}</div>
 				</div>
@@ -425,9 +426,9 @@ onMounted(() => {
 }
 
 .marker-content {
-	width: 100.5px;
-	height: 30.5px;
-	line-height: 28.5px;
+	width: 120.5px;
+	height: 33.5px;
+	line-height: 30.5px;
 	font-size: 14px;
 	font-weight: 500;
 	color: #0D79FD;
