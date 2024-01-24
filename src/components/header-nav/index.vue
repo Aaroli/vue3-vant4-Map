@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 08:50:19
+ * @LastEditTime: 2024-01-24 11:51:44
 -->
 <template>
   <div class="header__nav">
@@ -19,9 +19,10 @@
             <div class="Category__box">
               <div class="title">类别</div>
               <div class="clickBox">
-                <div :class="isChange === 1 ? 'activeBox' : ''" @click="change(isChange === 1 ? null : 1)">案场</div>
-                <div :class="isOtherChange === 1 ? 'activeBox' : ''" @click="otherChange(isOtherChange === 1 ? null : 1)"
-                  class="ml18">项目</div>
+                <div :class="isChange === 0 ? 'activeBox' : ''" @click="change(0)">全部</div>
+                <div :class="isChange === 1 ? 'activeBox' : ''" @click="change(1)" class="ml18">案场
+                </div>
+                <div :class="isChange === 2 ? 'activeBox' : ''" @click="change(2)" class="ml18">项目</div>
               </div>
               <div class="btn">
                 <div class="btn_left" @click="reset">重置</div>
@@ -208,23 +209,20 @@ const onConfirm = ({ selectedOptions }) => {
 };
 // 重置
 const reset = () => {
-  isChange.value = null;
+  isChange.value = 0;
   isOtherChange.value = null;
 };
 // 类别 => 确定
 const hasConfirm = () => {
-  let searchValue = []
-  if (isChange.value) {
-    isOtherChange.value ? searchValue = ['案场', '项目'] : searchValue = ['案场']
-  } else if (isOtherChange.value) {
-    isOtherChange.value ? searchValue = ['项目'] : searchValue = ['项目']
-  } else {
-    searchValue = []
+  let value = ''
+  if (isChange.value == 0) {
+    value = ''
+  } else if (isChange.value == 1) {
+    value = '案场'
+  } else if (isChange.value == 2) {
+    value = '项目'
   }
-  if (searchValue.length == 2) {
-    searchValue = []
-  }
-  emit("stausChange", searchValue.join(','));
+  emit("stausChange", value);
   itemRef.value.toggle();
 };
 // 搜索事件
@@ -338,7 +336,7 @@ const handleSearch = async (v) => {
 };
 // 更新地图事件
 const updateMap = (v) => {
-  isChange.value = null
+  isChange.value = 0
   isOtherChange.value = null
   cityName.value = v.xmproject
   keyWord.value = v.searchValue
@@ -500,7 +498,7 @@ onMounted(() => {
 }
 
 .ml18 {
-  margin-left: 18px;
+  margin-left: 9px;
 }
 
 .btn {

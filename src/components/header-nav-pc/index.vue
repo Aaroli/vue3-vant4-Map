@@ -4,10 +4,10 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 07:42:30
+ * @LastEditTime: 2024-01-24 11:56:35
 -->
 <template>
-  <div class="header__nav">
+   <div class="header__nav">
     <div class="header__left" @click="closeLegend">
       <!-- <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
           style="vertical-align: middle;" /></div> -->
@@ -19,9 +19,10 @@
             <div class="Category__box">
               <div class="title">类别</div>
               <div class="clickBox">
-                <div :class="isChange === 1 ? 'activeBox' : ''" @click="change(isChange === 1 ? null : 1)">案场</div>
-                <div :class="isOtherChange === 1 ? 'activeBox' : ''" @click="otherChange(isOtherChange === 1 ? null : 1)"
-                  class="ml18">项目</div>
+                <div :class="isChange === 0 ? 'activeBox' : ''" @click="change(0)">全部</div>
+                <div :class="isChange === 1 ? 'activeBox' : ''" @click="change(1)" class="ml18">案场
+                </div>
+                <div :class="isChange === 2 ? 'activeBox' : ''" @click="change(2)" class="ml18">项目</div>
               </div>
               <div class="btn">
                 <div class="btn_left" @click="reset">重置</div>
@@ -34,7 +35,7 @@
       </div>
     </div>
     <div class="header__right ml4">
-      <van-field v-model="keyWord" :right-icon="i_search" @focus="hasSearch" placeholder="请输入项目名称"
+      <van-field v-model="keyWord" readonly :right-icon="i_search" @focus="hasSearch" placeholder="请输入项目名称"
         @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
@@ -55,21 +56,42 @@
     <div>
 
     </div>
+    <van-popup v-model:show="showRight" @opened="opened" position="right" :style="{ width: '100%', height: '100%' }">
+      <div class="appBox">
+        <van-search ref="inputRef" autofocus v-model="value" update:model-value clearable :right-icon="i_search"
+          left-icon="" @click-right-icon="handleSearch" placeholder="请输入项目名称" @search="handleSearch" @clear="clearList">
+          <template #left>
+            <van-icon color="#7D7D7D" size="0.6rem" class="icon" name="arrow-left" @click="routerCallBack" />
+          </template>
+        </van-search>
+        <div class="list">
+          <van-cell icon="location-o" v-for="(item, index) in list" :key="index" :title="item.searchValue"
+            @click="updateMap(item)" />
+        </div>
+
+      </div>
+    </van-popup>
   </div>
 </template>
   
 <script setup name="headerNavPc">
-import { setSession } from "@/util/util";
+import { autofocusFn } from '@/util/ceshi'
+import { setSession, setCompanyName, setAdcdName, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 const { useMy } = $globalStore
 const router = useRouter();
-const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData", "clearData"]);
+const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData", "initDatas", "clearData"]);
 
 const keyWord = ref('');
 const itemRef = ref(null);
 const menuRef = ref(null);
+const aaa = ref(true);
+const value = ref('');
+const list = ref([])
+const showRight = ref(false);
+const inputRef = ref(null);
 const cityName = ref('杭州市');
 const loctionName = ref('');
 const columns = ref([
@@ -96,6 +118,11 @@ const otherChange = (v) => {
 const handleOrgCancel = () => {
   showPicker.value = false;
 };
+const routerCallBack = () => {
+  list.value = []
+  value.value = ''
+  showRight.value = false
+}
 // 登录
 const hasUser = async () => {
   const res = await useMy.getSingleUrl();
@@ -173,6 +200,7 @@ const handleConfirm = () => {
   showPicker.value = false;
 };
 const onConfirm = ({ selectedOptions }) => {
+  keyWord.value = ''
   if (selectedOptions[0]?.text) {
     cityName.value = selectedOptions[0]?.text;
     emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value);
@@ -181,29 +209,38 @@ const onConfirm = ({ selectedOptions }) => {
 };
 // 重置
 const reset = () => {
-  isChange.value = null;
+  isChange.value = 0;
   isOtherChange.value = null;
 };
 // 类别 => 确定
 const hasConfirm = () => {
-  let searchValue = []
-  if (isChange.value) {
-    isOtherChange.value ? searchValue = ['案场', '项目'] : searchValue = ['案场']
-  } else if (isOtherChange.value) {
-    isOtherChange.value ? searchValue = ['项目'] : searchValue = ['项目']
-  } else {
-    searchValue = []
+  let value = ''
+  if (isChange.value == 0) {
+    value = ''
+  } else if (isChange.value == 1) {
+    value = '案场'
+  } else if (isChange.value == 2) {
+    value = '项目'
   }
-  if (searchValue.length == 2) {
-    searchValue = []
-  }
-  emit("stausChange", searchValue.join(','));
+  emit("stausChange", value);
   itemRef.value.toggle();
 };
 // 搜索事件
 const hasSearch = () => {
-  router.push({ name: "Search" });
+  $globalEventBus.emit('LegendClick', false);
+  // router.push({ name: "Search" });
+  list.value = []
+  value.value = ''
+  autofocusFn();
+  showRight.value = true;
+
 };
+const opened = () => {
+  if (inputRef.value) {
+    const inputEl = inputRef.value.$el.querySelector('.van-field__control');
+    inputEl.focus();
+  }
+}
 // 切换父级区划事件
 const isMenuActive = () => {
   activeId.value = '';
@@ -237,6 +274,23 @@ const getDivisionList = async (v) => {
     showToast(res.msg);
   }
 }
+const getDivisionLists = async (v) => {
+  const res = await useMy.getRegionList({ egion: v });
+  if (res?.code === 200) {
+    if (res.data && res.data.length > 0) {
+      res.data.forEach(v => {
+        v.text = v.xmproject;
+        v.value = v.xmproject;
+      });
+      columns.value = res.data;
+    }
+    if (res.data && res.data.length == 0) {
+      emit("clearData", true);
+    }
+  } else {
+    showToast(res.msg);
+  }
+}
 // // 获取用户信息
 // const queryUserInfo = async (v) => {
 //   const res = await useMy.getUserInfo({ code: v });
@@ -251,6 +305,7 @@ $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
 });
 onBeforeMount(() => {
+  initWx();
   lazyAMapApiLoaderInstance.then(() => {
     useCitySearch().then(res => {
       const { getLocalCity } = res;
@@ -262,12 +317,39 @@ onBeforeMount(() => {
     })
   })
 })
+const handleSearch = async (v) => {
+  const res = await useMy.queryFuzzy({ name: value.value });
+  if (res?.code === 200) {
+
+    res.data.forEach(v => {
+      v.searchValue = `${v.xmproject}-${v.name}`
+    });
+    list.value = res.data
+    if (list.value && list.value.length == 0) {
+      showToast('暂无相关数据');
+    }
+    // loading.value = false
+  } else {
+    // loading.value = false
+    showToast(res.msg);
+  }
+};
+// 更新地图事件
+const updateMap = (v) => {
+  isChange.value = 0
+  isOtherChange.value = null
+  cityName.value = v.xmproject
+  keyWord.value = v.searchValue
+  setCompanyName(v.egion)
+  getDivisionLists(v.egion)
+  emit("initDatas", v.egion, v.xmproject, [v.longitude, v.latitude])
+  showRight.value = false
+}
+// 清除数据 更新视图
+const clearList = () => {
+  list.value = []
+}
 onMounted(() => {
-  // const searchParams = new URLSearchParams(window.location.search);
-  // const code = searchParams.get('code');
-  // if (code) {
-  //   queryUserInfo(code);
-  // }
 })
 </script>
 <style lang="less" scoped>
