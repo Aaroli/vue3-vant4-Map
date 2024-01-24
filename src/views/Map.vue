@@ -352,6 +352,7 @@ const getMarkList = async (v) => {
 			center.value = useMy.$state.centerCoordinate
 		}
 		if (v && v == true) {
+			console.log('useMy.$state.coordinate', useMy.$state.coordinate)
 			center.value = useMy.$state.coordinate
 			zoom.value = 18
 		}
