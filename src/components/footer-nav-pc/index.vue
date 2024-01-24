@@ -32,7 +32,8 @@ const getImg = () => {
 		'浙中南': img4,
 		'萧山滨弘': img5,
 	};
-	return map[useMy.$state.companyName] || "";
+	return map['万家'] || ""; //要求图标写死
+	// return map[useMy.$state.companyName] || "";
 }
 const numberWithCommas = (x) => {
 	if (x == 0) return 0

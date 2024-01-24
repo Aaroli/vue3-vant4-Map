@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 09:49:22
+ * @LastEditTime: 2024-01-24 07:27:47
 -->
 <template>
 	<div class="app">
@@ -31,11 +31,14 @@
 				:position="marker.position" :offset="[0, 0]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content_pc">
 					<div class="title">{{ marker.name }}</div>
-					<div class="img"><img :src="getImgType(marker.type)" /></div>
+					<div class="img"><img :src="img1" /></div>
+					<!-- <div class="img"><img :src="getImgType(marker.type)" /></div> -->
 				</div>
 			</el-amap-marker>
 			<el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:icon="getImgType(marker.type)" @click="(e) => { clickArrayMarker(marker, e) }" />
+				:icon="img1" @click="(e) => { clickArrayMarker(marker, e) }" />
+			<!-- <el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
+				:icon="getImgType(marker.type)" @click="(e) => { clickArrayMarker(marker, e) }" /> -->
 			<!-- 比例尺 -->
 			<el-amap-control-scale :visible="ScaleVisible" />
 			<!-- 缩放控件 -->

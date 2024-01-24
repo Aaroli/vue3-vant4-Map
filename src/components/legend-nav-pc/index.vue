@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 09:18:19
+ * @LastEditTime: 2024-01-24 07:47:10
 -->
 <template>
 	<div class="legend_nav">
@@ -107,7 +107,21 @@ const getClass = (v) => {
 		3: 'span3',
 		4: 'span4',
 		5: 'span5',
-
+		6: 'span6',
+		7: 'span7',
+		8: 'span8',
+		9: 'span9',
+		10: 'span10',
+		11: 'span11',
+		12: 'span12',
+		13: 'span13',
+		14: 'span14',
+		15: 'span15',
+		16: 'span16',
+		17: 'span17',
+		18: 'span18',
+		19: 'span19',
+		20: 'span20',
 	};
 	return map[v] || "";
 }
@@ -209,6 +223,21 @@ onMounted(() => {
 .span2,
 .span3,
 .span4,
+.span6,
+.span7,
+.span8,
+.span9,
+.span10,
+.span11,
+.span12,
+.span13,
+.span14,
+.span15,
+.span16,
+.span17,
+.span18,
+.span19,
+.span20,
 .span5 {
 	display: block;
 	width: 4px;
@@ -240,6 +269,81 @@ onMounted(() => {
 
 .span5 {
 	background: linear-gradient(180deg, #850DFD 0%, #D49DFF 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span6 {
+	background: linear-gradient(180deg, #124f03 0%, #1d251a 100%);
+	box-shadow: 0px 0px 2px 0px rgba(2, 84, 119, 0.2);
+}
+
+.span7 {
+	background: linear-gradient(180deg, #91b966 0%, #215004 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span8 {
+	background: linear-gradient(180deg, #b2096e 0%, #08997f 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span9 {
+	background: linear-gradient(180deg, #850DFD 0%, #D49DFF 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span10 {
+	background: linear-gradient(180deg, #38066a 0%, #9dd9ff 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span11 {
+	background: linear-gradient(180deg, #0da1fd 0%, #0b50a5 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span12 {
+	background: linear-gradient(180deg, #b2074b 0%, #230c15 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span13 {
+	background: linear-gradient(180deg, #570606 0%, #0c0114 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span14 {
+	background: linear-gradient(180deg, #06348b 0%, #070c77 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span15 {
+	background: linear-gradient(180deg, #048151 0%, #0d7752 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span16 {
+	background: linear-gradient(180deg, #072d61 0%, #0d0460 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span17 {
+	background: linear-gradient(180deg, #86898c6f 0%, #b8b6ca 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span18 {
+	background: linear-gradient(180deg, #530951 0%, #a8a5c1 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span19 {
+	background: linear-gradient(180deg, #0c57c1 0%, #7d79a0 100%);
+	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
+}
+
+.span20 {
+	background: linear-gradient(180deg, #611c07 0%, #090435 100%);
 	box-shadow: 0px 0px 2px 0px rgba(158, 23, 255, 0.2);
 }
 
