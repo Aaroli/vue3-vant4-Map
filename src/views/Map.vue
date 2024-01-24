@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 07:57:59
+ * @LastEditTime: 2024-01-24 08:53:35
 -->
 <template>
 	<div class="app">
@@ -352,7 +352,6 @@ const getMarkList = async (v) => {
 			center.value = useMy.$state.centerCoordinate
 		}
 		if (v && v == true) {
-			console.log('useMy.$state.coordinate', useMy.$state.coordinate)
 			center.value = useMy.$state.coordinate
 			zoom.value = 18
 		}
@@ -388,7 +387,6 @@ const queryUserInfo = async (v) => {
 // 	getMarkList(false);
 // });
 onBeforeMount(() => {
-	initWx();
 	lazyAMapApiLoaderInstance.then(() => {
 		useCitySearch().then(res => {
 			const { getLocalCity } = res;

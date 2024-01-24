@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-22 13:28:04
+ * @LastEditTime: 2024-01-24 08:50:19
 -->
 <template>
   <div class="header__nav">
@@ -75,7 +75,7 @@
   
 <script setup name="headerNav">
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, setCompanyName, setAdcdName, setCenterValue, setCompanyType, setInputValue } from "@/util/util";
+import { setSession, setCompanyName, setAdcdName, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -307,6 +307,7 @@ $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
 });
 onBeforeMount(() => {
+  initWx();
   lazyAMapApiLoaderInstance.then(() => {
     useCitySearch().then(res => {
       const { getLocalCity } = res;
