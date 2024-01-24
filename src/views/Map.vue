@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 07:27:47
+ * @LastEditTime: 2024-01-24 07:57:59
 -->
 <template>
 	<div class="app">
@@ -21,8 +21,9 @@
 			<!-- 地图标记 -->
 			<!-- 左偏移 -50+ 上下偏移 -35 -->
 			<el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
-				:position="marker.position" :offset="[-70, -40]" @click="(e) => { clickArrayMarker(marker, e) }">
-				<div class="marker-content">
+				:position="marker.position" :offset="marker.name.length >= 9 ? [-90, -40] : [-70, -40]"
+				@click="(e) => { clickArrayMarker(marker, e) }">
+				<div :class="marker.name.length >= 9 ? 'marker-contents' : 'marker-content'">
 					<div class="title">{{ marker.name }}</div>
 				</div>
 			</el-amap-marker>
@@ -429,6 +430,18 @@ onMounted(() => {
 
 .marker-content {
 	width: 120.5px;
+	height: 33.5px;
+	line-height: 30.5px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #0D79FD;
+	background-image: url("~@/assets/images/prop.png");
+	background-size: 100% 100%;
+	text-align: center;
+}
+
+.marker-contents {
+	width: 150.5px;
 	height: 33.5px;
 	line-height: 30.5px;
 	font-size: 14px;
