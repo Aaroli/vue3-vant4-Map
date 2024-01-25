@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 09:08:21
+ * @LastEditTime: 2024-01-25 09:28:47
 -->
 <template>
   <div class="header__nav">
@@ -211,7 +211,7 @@ const onConfirm = ({ selectedOptions }) => {
   keyWord.value = ''
   if (selectedOptions[0]?.text) {
     cityName.value = selectedOptions[0]?.text;
-    emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value);
+    emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value == '全部' ? '' : cityName.value);
   }
   setAdcdName(cityName.value)
   showPicker.value = false;
@@ -265,6 +265,7 @@ const getDivisionList = async (v) => {
         v.text = v.xmproject;
         v.value = v.xmproject;
       });
+      res.data.unshift({ xmproject: '全部', text: '全部', value: '全部' });
       columns.value = res.data;
       if (useMy.$state.adcdName) {
         cityName.value = useMy.$state.adcdName

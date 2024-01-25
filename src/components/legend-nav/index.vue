@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 08:27:47
+ * @LastEditTime: 2024-01-25 09:16:14
 -->
 <template>
 	<div class="legend_nav">
@@ -104,8 +104,8 @@ const getList = async () => {
 			v.name = v.regionName;
 		});
 		legendList.value = res.data;
-		if (legendList.value && legendList.value[0].name) {
-			setCompanyName(legendList.value[0].name)
+		if (legendList.value && legendList.value[1].name) {
+			setCompanyName(legendList.value[1].name)
 		}
 		resultType.value = legendList.value.reduce((acc, cur) => {
 			acc[cur.regionName] = cur.index;
