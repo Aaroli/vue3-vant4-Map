@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 11:05:04
+ * @LastEditTime: 2024-01-25 11:33:42
 -->
 <template>
   <div class="header__nav">
@@ -269,17 +269,17 @@ const getDivisionList = async (v) => {
       columns.value = res.data;
       if (useMy.$state.adcdName) {
         cityName.value = useMy.$state.adcdName
+        console.log('useMy.$state.adcdName', useMy.$state.adcdName)
         emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : useMy.$state.adcdName)
         keyWord.value = useMy.$state.inputValue
         isChange.value = 0;
         isOtherChange.value = 0;
       } else {
+        console.log('useMy.$state.companyName', useMy.$state.companyName)
         const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
-        console.log('arr', arr)
         // const arr = [];
-        arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", '', '', false);
+        arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", '', useMy.$state.companyName, false);
         arr.length > 0 && useMy.$state.companyName != '' ? cityName.value = arr[0].text : cityName.value = '全部';
-        setAdcdName(cityName.value)
         if (arr.length == 0) {
           setCompanyName('');
         }

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 11:03:10
+ * @LastEditTime: 2024-01-25 12:07:38
 -->
 <template>
 	<div class="app">
@@ -20,13 +20,13 @@
 		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom" @click="closeLegend">
 			<!-- 地图标记 -->
 			<!-- 左偏移 -50+ 上下偏移 -35 -->
-			<el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
+			<!-- <el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
 				:position="marker.position" :offset="marker.name.length >= 9 ? [-90, -40] : [-70, -40]"
 				@click="(e) => { clickArrayMarker(marker, e) }">
 				<div :class="marker.name.length >= 9 ? 'marker-contents' : 'marker-content'">
 					<div class="title">{{ marker.name }}</div>
 				</div>
-			</el-amap-marker>
+			</el-amap-marker> -->
 			<!-- pc地图标记 -->
 			<el-amap-marker v-if="!phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
 				:position="marker.position" :offset="[0, 0]" @click="(e) => { clickArrayMarker(marker, e) }">
@@ -36,16 +36,16 @@
 					<!-- <div class="img"><img :src="getImgType(marker.type)" /></div> -->
 				</div>
 			</el-amap-marker>
-			<el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:icon="img1" @click="(e) => { clickArrayMarker(marker, e) }" />
+			<!-- <el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
+				:icon="img1" @click="(e) => { clickArrayMarker(marker, e) }" /> -->
 			<!-- 备份代码 -->
 			<!-- <el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
 				:icon="getImgType(marker.type)" @click="(e) => { clickArrayMarker(marker, e) }" /> -->
-			<!-- <el-amap-layer-labels>
+			<el-amap-layer-labels>
 				<el-amap-label-marker :visible="labelOptions.visible" v-for="marker in markers" :key="marker.id"
-					:position="marker.position" :text="labelOptions.text" :icon="labelOptions.icon"
+					:position="marker.position" :text="marker.text" :icon="labelOptions.icon"
 					@click="(e) => { clickArrayMarker(marker, e) }" />
-			</el-amap-layer-labels> -->
+			</el-amap-layer-labels>
 			<!-- 比例尺 -->
 			<el-amap-control-scale :visible="ScaleVisible" />
 			<!-- 缩放控件 -->
@@ -149,11 +149,9 @@ const labelOptions = ref({
 		}
 	},
 	icon: {
-		image: 'https://a.amap.com/jsapi_demos/static/images/poi-marker.png',
-		anchor: 'bottom-center',
-		size: [25, 34],
-		clipOrigin: [459, 92],
-		clipSize: [50, 68]
+		image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+		// clipOrigin: [459, 92],
+		// clipSize: [50, 68]
 	}
 });
 
@@ -195,7 +193,7 @@ const locationObj = ref({
 })
 // 地图事件
 const onUpdatedZoom = (e) => {
-	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return textVisible.value = false
+	// if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return textVisible.value = false
 	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return
 	if (Math.round(e) <= 5) {
 		setCompanyZoom('全部')
@@ -278,13 +276,16 @@ const handleSearch = async (v) => {
 };
 // 区划选中事件
 const cityChange = (status, v) => {
+	console.log('v--------', v)
 	searchInfo.value.xmproject = v
 	getMarkList(status);
 }
 // 初始化没值的时候 赋值有值的数据
 const initData = (egion, xmproject, isMycity) => {
+	console.log('xmproject---------', egion, xmproject, isMycity)
 	searchInfo.value.egion = egion == '全部' ? '' : egion;
 	searchInfo.value.xmproject = xmproject;
+	console.log('searchInfo.value.xmproject', searchInfo.value.xmproject)
 	searchInfo.value.manage = '';
 	getMarkList(isMycity);
 }
@@ -299,7 +300,21 @@ const initDatas = async (egion, xmproject, list) => {
 	if (res?.code === 200) {
 		res.data.forEach(v => {
 			v.position = [v.longitude, v.latitude],
-				v.type = useMy.$state.companyName
+				v.type = useMy.$state.companyName,
+				v.text = {
+					content: v.name,
+					direction: 'right',
+					style: {
+						fontSize: 15,
+						fillColor: '#fff',
+						strokeColor: 'rgba(255,0,0,0.5)',
+						strokeWidth: 2,
+						padding: [3, 10],
+						backgroundColor: 'yellow',
+						borderColor: '#ccc',
+						borderWidth: 3,
+					}
+				}
 		});
 		zoom.value = 18
 		markers.value = res.data;
@@ -387,7 +402,18 @@ const getMarkList = async (v) => {
 	if (res?.code === 200) {
 		res.data.forEach(v => {
 			v.position = [v.longitude, v.latitude],
-				v.type = useMy.$state.companyName
+				v.type = useMy.$state.companyName,
+				v.text = {
+					content: v.name,
+					direction: 'top',
+					style: {
+						fontSize: 13,
+						fillColor: '#A94D36',
+						strokeWidth: 0,
+						padding: [0, 0],
+						borderWidth: 0,
+					}
+				}
 		});
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
