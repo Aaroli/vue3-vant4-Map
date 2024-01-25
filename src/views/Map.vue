@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 09:52:20
+ * @LastEditTime: 2024-01-25 11:03:10
 -->
 <template>
 	<div class="app">
@@ -38,8 +38,14 @@
 			</el-amap-marker>
 			<el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
 				:icon="img1" @click="(e) => { clickArrayMarker(marker, e) }" />
+			<!-- 备份代码 -->
 			<!-- <el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
 				:icon="getImgType(marker.type)" @click="(e) => { clickArrayMarker(marker, e) }" /> -->
+			<!-- <el-amap-layer-labels>
+				<el-amap-label-marker :visible="labelOptions.visible" v-for="marker in markers" :key="marker.id"
+					:position="marker.position" :text="labelOptions.text" :icon="labelOptions.icon"
+					@click="(e) => { clickArrayMarker(marker, e) }" />
+			</el-amap-layer-labels> -->
 			<!-- 比例尺 -->
 			<el-amap-control-scale :visible="ScaleVisible" />
 			<!-- 缩放控件 -->
@@ -125,6 +131,32 @@ import img4 from '@/assets/images/point_red.png'
 import img5 from '@/assets/images/point_yellow.png'
 import img_mag_title from '@/assets/images/img_mag_title.png'
 
+const labelOptions = ref({
+	visible: true,
+	position: [121.5495395, 31.21515044],
+	text: {
+		content: '测试content',
+		direction: 'right',
+		style: {
+			fontSize: 15,
+			fillColor: '#fff',
+			strokeColor: 'rgba(255,0,0,0.5)',
+			strokeWidth: 2,
+			padding: [3, 10],
+			backgroundColor: 'yellow',
+			borderColor: '#ccc',
+			borderWidth: 3,
+		}
+	},
+	icon: {
+		image: 'https://a.amap.com/jsapi_demos/static/images/poi-marker.png',
+		anchor: 'bottom-center',
+		size: [25, 34],
+		clipOrigin: [459, 92],
+		clipSize: [50, 68]
+	}
+});
+
 const mapDetailShow = ref(false) //地图prop
 const loading = ref(false) //地图loading
 const searchInfo = ref({
@@ -163,7 +195,8 @@ const locationObj = ref({
 })
 // 地图事件
 const onUpdatedZoom = (e) => {
-	if (useMy.$state.zomChange == '全部') return
+	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return textVisible.value = false
+	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return
 	if (Math.round(e) <= 5) {
 		setCompanyZoom('全部')
 		setCompanyName('')
@@ -185,6 +218,7 @@ const getImgType = (v) => {
 }
 // marker点击事件
 const clickArrayMarker = async (marker) => {
+	console.log('1', 1)
 	$globalEventBus.emit('LegendClick', false);
 	console.log('marker', marker)
 	if (getSession('TOKEN')) {
@@ -255,6 +289,7 @@ const initData = (egion, xmproject, isMycity) => {
 	getMarkList(isMycity);
 }
 const initDatas = async (egion, xmproject, list) => {
+	console.log('2', 2)
 	loading.value = true
 	searchInfo.value.egion = egion == '全部' ? '' : egion;;
 	searchInfo.value.xmproject = xmproject;
@@ -344,6 +379,8 @@ const getLocation = () => {
 }
 // 获取点的数组 
 const getMarkList = async (v) => {
+	console.log('searchInfo.value', searchInfo.value)
+	console.log('3', 3)
 	loading.value = true;
 	markers.value = [];
 	const res = await useMy.getPointInfo(searchInfo.value);

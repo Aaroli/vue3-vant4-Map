@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 10:01:10
+ * @LastEditTime: 2024-01-25 11:01:45
 -->
 <template>
 	<div class="legend_nav">
@@ -86,7 +86,7 @@ const getClass = (v) => {
 	return map[v] || "";
 }
 const change = (v, id) => {
-	console.log('v', v)
+	console.log('v', v.name)
 	if (v.name == '全部') {
 		$globalEventBus.emit('cityName', '全部')
 	}
