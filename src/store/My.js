@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 06:18:01
+ * @LastEditTime: 2024-01-25 08:52:01
  */
 import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, queryFuzzy, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
@@ -15,12 +15,20 @@ export default defineStore('useMy', {
 		coordinate: [120.0424575805664, 30.293476104736328], //定位坐标
 		centerCoordinate: null, //更新中心点坐标
 		inputValue: null, //输入框名称
-		companyType: null, //输入框名称
+		companyType: null, //公司列表
+		zomChange: '', //zoomchange
+		typeChange: '全部', //类别事件暂存
 	}),
 	getters: {},
 	actions: {
 		SET_COMPANY_NAME(data) {
 			this.companyName = data;
+		},
+		SET_COMPANY_ZOOM(data) {
+			this.zomChange = data;
+		},
+		SET_USER_TYPE(data) {
+			this.typeChange = data;
 		},
 		SET_INPUT_VALUE(data) {
 			this.inputValue = data;

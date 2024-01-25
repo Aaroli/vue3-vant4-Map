@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 07:17:18
+ * @LastEditTime: 2024-01-25 09:01:02
 -->
 <template>
 	<div class="app">
@@ -113,7 +113,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, setSession, navigationWx, setAdcdName, setCenterValue, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
+import { getSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -163,7 +163,12 @@ const locationObj = ref({
 })
 // 地图事件
 const onUpdatedZoom = (e) => {
-	console.log('onUpdatedZoom', e)
+	if (useMy.$state.zomChange == '全部') return
+	if (Math.round(e) <= 5) {
+		setCompanyZoom('全部')
+		setCompanyName('')
+		$globalEventBus.emit('zoomChange', '全部')
+	}
 }
 
 const getImgType = (v) => {
@@ -244,14 +249,14 @@ const cityChange = (status, v) => {
 }
 // 初始化没值的时候 赋值有值的数据
 const initData = (egion, xmproject, isMycity) => {
-	searchInfo.value.egion = egion;
+	searchInfo.value.egion = egion == '全部' ? '' : egion;
 	searchInfo.value.xmproject = xmproject;
 	searchInfo.value.manage = '';
 	getMarkList(isMycity);
 }
 const initDatas = async (egion, xmproject, list) => {
 	loading.value = true
-	searchInfo.value.egion = egion;
+	searchInfo.value.egion = egion == '全部' ? '' : egion;;
 	searchInfo.value.xmproject = xmproject;
 	searchInfo.value.manage = '';
 	markers.value = [];
@@ -403,11 +408,39 @@ onBeforeMount(() => {
 		})
 	})
 })
+//页面回刷 保存历史记录信息
+const setDataSearch = async () => {
+	loading.value = true;
+	markers.value = [];
+	$globalEventBus.emit('userChange', { cityName: getSession('companyName'), isChange: getSession('typeChange') })
+	let data = {
+		egion: getSession('companyName'),
+		xmproject: getSession('adcdName'),
+		manage: getSession('typeChange'),
+	}
+	const res = await useMy.getPointInfo(data);
+	if (res?.code === 200) {
+		res.data.forEach(v => {
+			v.position = [v.longitude, v.latitude],
+				v.type = useMy.$state.companyName
+		});
+		markers.value = res.data;
+		setCompanyNum(res.data.length);
+		if (markers.value && markers.value.length > 0) {
+			center.value = [markers.value[0].longitude, markers.value[0].latitude]
+		}
+		loading.value = false;
+	} else {
+		showToast(res.msg);
+		loading.value = false;
+	}
+}
 onMounted(() => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');
 	if (code && !getSession('TOKEN')) {
 		queryUserInfo(code);
+		setDataSearch();
 	}
 })
 </script>

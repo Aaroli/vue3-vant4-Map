@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 08:52:38
+ * @LastEditTime: 2024-01-25 08:47:44
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -77,15 +77,23 @@ const isElementHidden = (ele = "", cloneEl = "", cssStyles = []) => {
 
 // 防抖
 const debounce = (fn, time) => {
-	let timer = null
-	return (...args) => {
-		const context = this
-		if (timer) {
-			clearTimeout(timer)
+	var last;
+	var timer;
+	var interval = interval || 200;
+	return function () {
+		var th = this;
+		var args = arguments;
+		var now = +new Date();
+		if (last && now - last < interval) {
+			clearTimeout(timer);
+			timer = setTimeout(function () {
+				last = now;
+				fn.apply(th, args);
+			}, interval);
+		} else {
+			last = now;
+			fn.apply(th, args);
 		}
-		timer = setTimeout(() => {
-			fn.call(context, ...args)
-		}, time)
 	}
 }
 // 设置session
@@ -110,9 +118,17 @@ const removeSession = (attr) => {
 const setCompanyName = (data) => {
 	$globalStore.useMy.SET_COMPANY_NAME(data);
 };
+//是否触发过层级
+const setCompanyZoom = (data) => {
+	$globalStore.useMy.SET_COMPANY_ZOOM(data);
+};
 // 设置区划名称
 const setAdcdName = (data) => {
 	$globalStore.useMy.SET_ADCD_NAME(data);
+};
+// 设置类别筛选条件
+const setSearchType = (data) => {
+	$globalStore.useMy.SET_USER_TYPE(data);
 };
 // 设置输入框名称
 const setInputValue = (data) => {
@@ -307,8 +323,10 @@ export {
 	calcDistance,
 	phoneType,
 	setAdcdName,
+	setSearchType,
 	setCenterValue,
 	setInputValue,
 	setCompanyType,
-	removeSession
+	removeSession,
+	setCompanyZoom
 };

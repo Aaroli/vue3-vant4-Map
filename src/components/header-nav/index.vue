@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 07:18:24
+ * @LastEditTime: 2024-01-25 09:08:21
 -->
 <template>
   <div class="header__nav">
@@ -76,7 +76,7 @@
   
 <script setup name="headerNav">
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, setCompanyName, setAdcdName, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
+import { setSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -125,13 +125,21 @@ const routerCallBack = () => {
 }
 // 登录
 const hasUser = async () => {
+  let storageData = {
+    companyName: useMy.$state.companyName == '全部' ? '' : useMy.$state.companyName,
+    adcdName: useMy.$state.adcdName,
+    typeChange: useMy.$state.typeChange == '全部' ? '' : useMy.$state.typeChange,
+  }
+  setSession("storageData", storageData);
   const res = await useMy.getSingleUrl();
   if (res?.code === 200) {
     window.location = res.qw_auth_url
   } else {
     showToast(res.msg);
   }
-  // router.push({ name: "login" });
+  // console.log('useMy.$state.companyName', useMy.$state.companyName)
+  // console.log('useMy.$state.adcdName', useMy.$state.adcdName)
+  // console.log('useMy.$state.typeChange', useMy.$state.typeChange)
 };
 const activeIndex = ref(0);
 const activeId = ref(1);
@@ -205,6 +213,7 @@ const onConfirm = ({ selectedOptions }) => {
     cityName.value = selectedOptions[0]?.text;
     emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value);
   }
+  setAdcdName(cityName.value)
   showPicker.value = false;
 };
 // 重置
@@ -214,6 +223,7 @@ const reset = () => {
 };
 // 类别 => 确定
 const hasConfirm = () => {
+  setCompanyZoom('')
   let value = ''
   if (isChange.value == 0) {
     value = ''
@@ -222,6 +232,7 @@ const hasConfirm = () => {
   } else if (isChange.value == 2) {
     value = '项目'
   }
+  setSearchType(value == '' ? '全部' : value);
   emit("stausChange", value);
   itemRef.value.toggle();
 };
@@ -266,6 +277,7 @@ const getDivisionList = async (v) => {
         // const arr = [];
         arr.length > 0 ? emit("initData", useMy.$state.companyName, arr[0].xmproject, true) : emit("initData", '', '', false);
         arr.length > 0 ? cityName.value = arr[0].text : cityName.value = '全部';
+        setAdcdName(cityName.value)
         if (arr.length == 0) {
           setCompanyName('');
         }
@@ -308,6 +320,21 @@ const getDivisionLists = async (v) => {
 $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
 });
+$globalEventBus.on("zoomChange", eventData => {
+  getDivisionLists('')
+  cityName.value = eventData
+  emit("initData", '', '', false)
+});
+$globalEventBus.on("userChange", eventData => {
+  cityName.value = eventData.cityName
+  if (eventData.isChange == '全部') {
+    isChange.value = 0
+  } else if (eventData.isChange == '案场') {
+    isChange.value = 1
+  } else if (eventData.isChange == '项目') {
+    isChange.value = 2
+  }
+});
 onBeforeMount(() => {
   initWx();
   lazyAMapApiLoaderInstance.then(() => {
@@ -343,6 +370,7 @@ const updateMap = (v) => {
   isChange.value = 0
   isOtherChange.value = null
   cityName.value = v.xmproject
+  setAdcdName(v.xmproject)
   keyWord.value = v.searchValue
   setCompanyName(v.egion == '全部' ? '' : v.egion)
   getDivisionLists(v.egion == '全部' ? '' : v.egion)

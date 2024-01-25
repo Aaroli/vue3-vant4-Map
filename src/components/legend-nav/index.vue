@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 06:30:01
+ * @LastEditTime: 2024-01-25 08:27:47
 -->
 <template>
 	<div class="legend_nav">
@@ -24,7 +24,7 @@
 </template>
 
 <script setup name="legendNav">
-import { setCompanyNum, setCompanyName, setAdcdName, getSession, removeSession } from "@/util/util";
+import { setCompanyNum, setCompanyName, setAdcdName, setCompanyZoom, getSession, removeSession } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
@@ -88,6 +88,7 @@ const getClass = (v) => {
 const change = (v, id) => {
 	$globalEventBus.emit('adcdChange', v.name == '全部' ? '' : v.name);
 	setAdcdName('')
+	setCompanyZoom('')
 	setCompanyName(v.name == '全部' ? '' : v.name)
 	setCompanyNum(0)
 	emit("selectList", v.name == '全部' ? '' : v.name);
