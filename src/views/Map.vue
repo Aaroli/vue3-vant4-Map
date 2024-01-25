@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 12:07:38
+ * @LastEditTime: 2024-01-25 12:18:47
 -->
 <template>
 	<div class="app">
@@ -149,9 +149,11 @@ const labelOptions = ref({
 		}
 	},
 	icon: {
-		image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-		// clipOrigin: [459, 92],
-		// clipSize: [50, 68]
+		image: 'https://a.amap.com/jsapi_demos/static/images/poi-marker.png',
+		anchor: 'bottom-center',
+		size: [25, 34],
+		clipOrigin: [459, 92],
+		clipSize: [50, 68]
 	}
 });
 
@@ -407,8 +409,8 @@ const getMarkList = async (v) => {
 					content: v.name,
 					direction: 'top',
 					style: {
-						fontSize: 13,
-						fillColor: '#A94D36',
+						fontSize: 17,
+						fillColor: '#792A17',
 						strokeWidth: 0,
 						padding: [0, 0],
 						borderWidth: 0,
