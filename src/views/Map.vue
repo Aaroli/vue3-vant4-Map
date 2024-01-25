@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 08:53:35
+ * @LastEditTime: 2024-01-25 07:17:18
 -->
 <template>
 	<div class="app">
@@ -141,7 +141,7 @@ const ScaleVisible = ref(false)
 // 文本标记
 const textVisible = ref(true)
 // 缩放控件
-const ScalinVisible = ref(false)
+const ScalinVisible = ref(true)
 // 地图类型切换
 const MapStatusvisible = ref(false)
 // 地图中心点
@@ -163,7 +163,7 @@ const locationObj = ref({
 })
 // 地图事件
 const onUpdatedZoom = (e) => {
-	// console.log('地图缩放事件')
+	console.log('onUpdatedZoom', e)
 }
 
 const getImgType = (v) => {
@@ -250,6 +250,7 @@ const initData = (egion, xmproject, isMycity) => {
 	getMarkList(isMycity);
 }
 const initDatas = async (egion, xmproject, list) => {
+	loading.value = true
 	searchInfo.value.egion = egion;
 	searchInfo.value.xmproject = xmproject;
 	searchInfo.value.manage = '';
@@ -264,7 +265,9 @@ const initDatas = async (egion, xmproject, list) => {
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
 		center.value = list
+		loading.value = false;
 	} else {
+		loading.value = false;
 		showToast(res.msg);
 	}
 }
@@ -336,6 +339,7 @@ const getLocation = () => {
 }
 // 获取点的数组 
 const getMarkList = async (v) => {
+	loading.value = true;
 	markers.value = [];
 	const res = await useMy.getPointInfo(searchInfo.value);
 	if (res?.code === 200) {
@@ -360,8 +364,10 @@ const getMarkList = async (v) => {
 				center.value = [markers.value[0].longitude, markers.value[0].latitude]
 			}
 		}
+		loading.value = false;
 	} else {
 		showToast(res.msg);
+		loading.value = false;
 	}
 }
 // 获取用户信息
@@ -417,6 +423,8 @@ onMounted(() => {
 	width: 34px;
 	height: 39px;
 }
+
+
 
 :deep(.amap-logo) {
 	display: none;
@@ -736,5 +744,9 @@ onMounted(() => {
 
 :deep(.amap-geolocation) {
 	bottom: 90px !important;
+}
+
+:deep(.amap-toolbar) {
+	bottom: 70px !important;
 }
 </style>

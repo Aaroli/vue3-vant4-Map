@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 03:49:38
+ * @LastEditTime: 2024-01-25 06:30:01
 -->
 <template>
 	<div class="legend_nav">
@@ -86,11 +86,11 @@ const getClass = (v) => {
 	return map[v] || "";
 }
 const change = (v, id) => {
-	$globalEventBus.emit('adcdChange', v.name);
-	setAdcdName(null)
-	setCompanyName(v.name)
+	$globalEventBus.emit('adcdChange', v.name == '全部' ? '' : v.name);
+	setAdcdName('')
+	setCompanyName(v.name == '全部' ? '' : v.name)
 	setCompanyNum(0)
-	emit("selectList", v.name);
+	emit("selectList", v.name == '全部' ? '' : v.name);
 	isChange.value = id;
 };
 // 获取列表数据

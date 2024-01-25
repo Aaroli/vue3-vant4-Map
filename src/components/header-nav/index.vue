@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 11:51:44
+ * @LastEditTime: 2024-01-25 07:18:24
 -->
 <template>
   <div class="header__nav">
@@ -247,7 +247,7 @@ const isMenuActive = () => {
 };
 // 获取行政区划列表
 const getDivisionList = async (v) => {
-  const res = await useMy.getRegionList({ egion: v });
+  const res = await useMy.getRegionList({ egion: v == '全部' ? '' : v });
   if (res?.code === 200) {
     if (res.data && res.data.length > 0) {
       res.data.forEach(v => {
@@ -263,8 +263,12 @@ const getDivisionList = async (v) => {
         isOtherChange.value = 0;
       } else {
         const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
-        arr.length > 0 ? emit("initData", arr[0].egion, arr[0].xmproject, true) : emit("initData", res.data[0].egion, res.data[0].xmproject, false);
-        arr.length > 0 ? cityName.value = arr[0].text : cityName.value = res.data[0].text;
+        // const arr = [];
+        arr.length > 0 ? emit("initData", useMy.$state.companyName, arr[0].xmproject, true) : emit("initData", '', '', false);
+        arr.length > 0 ? cityName.value = arr[0].text : cityName.value = '全部';
+        if (arr.length == 0) {
+          setCompanyName('');
+        }
       }
     }
     if (res.data && res.data.length == 0) {
@@ -340,8 +344,8 @@ const updateMap = (v) => {
   isOtherChange.value = null
   cityName.value = v.xmproject
   keyWord.value = v.searchValue
-  setCompanyName(v.egion)
-  getDivisionLists(v.egion)
+  setCompanyName(v.egion == '全部' ? '' : v.egion)
+  getDivisionLists(v.egion == '全部' ? '' : v.egion)
   emit("initDatas", v.egion, v.xmproject, [v.longitude, v.latitude])
   showRight.value = false
 }

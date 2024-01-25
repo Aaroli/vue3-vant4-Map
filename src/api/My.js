@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-16 01:41:37
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-18 02:47:26
+ * @LastEditTime: 2024-01-25 06:55:36
  */
 // 企业微信单点登录
 export const getSingleUrl = "getqyweiauthurl"
