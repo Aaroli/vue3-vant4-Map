@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 09:28:47
+ * @LastEditTime: 2024-01-25 10:02:09
 -->
 <template>
   <div class="header__nav">
@@ -269,15 +269,15 @@ const getDivisionList = async (v) => {
       columns.value = res.data;
       if (useMy.$state.adcdName) {
         cityName.value = useMy.$state.adcdName
-        emit("initData", useMy.$state.companyName, useMy.$state.adcdName)
+        emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : useMy.$state.adcdName)
         keyWord.value = useMy.$state.inputValue
         isChange.value = 0;
         isOtherChange.value = 0;
       } else {
         const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
         // const arr = [];
-        arr.length > 0 ? emit("initData", useMy.$state.companyName, arr[0].xmproject, true) : emit("initData", '', '', false);
-        arr.length > 0 ? cityName.value = arr[0].text : cityName.value = '全部';
+        arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", '', '', false);
+        arr.length > 0 && useMy.$state.companyName != '' ? cityName.value = arr[0].text : cityName.value = '全部';
         setAdcdName(cityName.value)
         if (arr.length == 0) {
           setCompanyName('');
@@ -320,6 +320,9 @@ const getDivisionLists = async (v) => {
 // }
 $globalEventBus.on("adcdChange", eventData => {
   getDivisionList(eventData)
+});
+$globalEventBus.on("cityName", eventData => {
+  cityName.value = eventData
 });
 $globalEventBus.on("zoomChange", eventData => {
   getDivisionLists('')
