@@ -8,20 +8,13 @@
 -->
 <template>
 	<div class="legend_nav">
-		<!-- <div class="legend__nav" @click="handleChange" v-if="legendShow">
-			<img class="imgIcon" :src="img1" />
-		</div> -->
 		<div class="box">
 			<div class="tab-content" ref="stateDom">
 				<div class="tab-content-box">
-					<!-- <div class="allBox" :class="isChange === 0 ? 'activeBox' : ''" @click="change('', 0)">全部</div> -->
-					<p v-for="item in legendList" :key="item.id" :class="isChange === item.id ? 'activeBox' : ''"
-						@click="change(item, item.id)"><span :class="getClass(item.id)"></span>{{ item.name }}
-						<van-icon v-if="isChange === item.id" name="success" class="icon" color="#007BFF" />
+					<p v-for="item in legendList" :key="item.index" :class="isChange === item.index ? 'activeBox' : ''"
+						@click="change(item, item.index)"><span :class="getClass(item.index)"></span>{{ item.name }}
+						<van-icon v-if="isChange === item.index" name="success" class="icon" color="#007BFF" />
 					</p>
-					<!-- <div class="closeBox">
-						<van-icon name="arrow-up" size="20" @click="handleChange" />
-					</div>-->
 				</div>
 			</div>
 			<div class="triangle" v-if="isTriangleShow">
@@ -31,7 +24,7 @@
 </template>
 
 <script setup name="legendNavPc">
-import { setCompanyNum, setCompanyName, setAdcdName, getSession, removeSession } from "@/util/util";
+import { setCompanyNum, setCompanyName, setAdcdName, setCompanyZoom, getSession, removeSession } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
@@ -39,45 +32,13 @@ import { nextTick } from "vue";
 const emit = defineEmits(["textChange", "selectList"]);
 const stateDom = ref(null);
 const legendShow = ref(true);
+const resultType = ref([]); //图例的map数组
 const isTriangleShow = ref(false);
-const isChange = ref(1);
+const isChange = ref(0);
 const legendList = ref([
-	// {
-	// 	id: 1,
-	// 	name: '万家',
-	// 	num: '110426'
-	// },
-	// {
-	// 	id: 2,
-	// 	name: '新城',
-	// 	num: '126012'
-	// },
-	// {
-	// 	id: 3,
-	// 	name: '海岸',
-	// 	num: '6012'
-	// },
-	// {
-	// 	id: 4,
-	// 	name: '浙中南',
-	// 	num: '542'
-	// },
-	// {
-	// 	id: 5,
-	// 	name: '萧山滨弘',
-	// 	num: '302'
-	// },
 ])
 const handleChange = () => {
-	let type = ''
-	const map = {
-		'海岸': 1,
-		'万家': 2,
-		'新城': 3,
-		'浙中南': 4,
-		'萧山滨弘': 5,
-	};
-	isChange.value = map[useMy.$state.companyName] || ''
+	isChange.value = resultType.value[useMy.$state.companyName] || 0
 	if (stateDom.value && stateDom.value.style.maxHeight) {
 		emit("textChange", false);
 		legendShow.value = true;
@@ -97,11 +58,10 @@ const closeLegend = () => {
 		stateDom.value.style.maxHeight = null;
 		isTriangleShow.value = false
 	}
-
 }
 const getClass = (v) => {
 	const map = {
-		0: '',
+		0: 'span20',
 		1: 'span1',
 		2: 'span2',
 		3: 'span3',
@@ -121,29 +81,39 @@ const getClass = (v) => {
 		17: 'span17',
 		18: 'span18',
 		19: 'span19',
-		20: 'span20',
 	};
 	return map[v] || "";
 }
 const change = (v, id) => {
-	$globalEventBus.emit('adcdChange', v.name);
-	setAdcdName(null)
-	setCompanyName(v.name)
+	if (v.name == '全部') {
+		$globalEventBus.emit('cityName', '全部')
+	}
+	$globalEventBus.emit('adcdChange', v.name == '全部' ? '' : v.name);
+	$globalEventBus.emit('setZoom', 18);
+	setAdcdName('')
+	setCompanyZoom('')
+	setCompanyName(v.name == '全部' ? '' : v.name)
 	setCompanyNum(0)
-	emit("selectList", v.name);
+	emit("selectList", v.name == '全部' ? '' : v.name);
 	isChange.value = id;
 };
 // 获取列表数据
 const getList = async () => {
 	const res = await useMy.getAddersslist();
 	if (res?.code === 200) {
-		res.data.forEach(v => {
+		res.data.unshift({ id: 0, regionName: '全部' });
+		res.data.forEach((v, index) => {
+			v.index = index
 			v.name = v.regionName;
 		});
 		legendList.value = res.data;
-		if (legendList.value && legendList.value[0].name) {
-			setCompanyName(legendList.value[0].name)
+		if (legendList.value && legendList.value[1].name) {
+			setCompanyName(legendList.value[1].name)
 		}
+		resultType.value = legendList.value.reduce((acc, cur) => {
+			acc[cur.regionName] = cur.index;
+			return acc;
+		}, { '全部': 0 });
 	} else {
 		showToast(res.msg);
 	}
@@ -156,9 +126,7 @@ $globalEventBus.on("LegendClick", eventData => {
 	}
 });
 onMounted(() => {
-	// $globalConfigure(() => {
 	getList();
-	// });
 });
 </script>
 <style lang="less" scoped>

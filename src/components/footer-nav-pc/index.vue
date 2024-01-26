@@ -1,7 +1,9 @@
 <template>
 	<div class="footer_nav">
 		<div class="img" @click="hasLegendClick"></div>
-		<div class="title" @click="hasLegendClick" v-text="useMy.$state.companyName"></div>
+		<div class="title" @click="hasLegendClick"
+			v-text="useMy.$state.companyName == '' ? '全部' : useMy.$state.companyName">
+		</div>
 		<div class="right__nav">
 			<div class="right__nav_img">
 				<img class="imgIcon" :src="getImg()" />

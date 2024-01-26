@@ -4,13 +4,11 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 11:56:35
+ * @LastEditTime: 2024-01-26 07:27:13
 -->
 <template>
-   <div class="header__nav">
+  <div class="header__nav">
     <div class="header__left" @click="closeLegend">
-      <!-- <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
-          style="vertical-align: middle;" /></div> -->
       <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
           style="vertical-align: middle;" /></div>
       <div class="fl6">
@@ -39,17 +37,6 @@
         @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
-    <!-- <van-popup v-model:show="showPicker" position="bottom">
-      <div class="handleButton">
-        <van-button style="border: none; color: #969799" @click="handleOrgCancel" size="normal">取消</van-button>
-        <div class="font" size="normal">
-          城市地区
-        </div>
-        <van-button style="border: none; color: #6398fb" size="normal" @click="handleConfirm">确认</van-button>
-      </div>
-      <van-tree-select v-model:active-id="activeId" v-model:main-active-index="activeIndex" @click-nav="isMenuActive"
-        height="55vw" :items="items" />
-    </van-popup> -->
     <van-popup v-model:show="showPicker" position="bottom">
       <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
     </van-popup>
@@ -76,7 +63,7 @@
   
 <script setup name="headerNavPc">
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, setCompanyName, setAdcdName, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
+import { setSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -95,11 +82,6 @@ const inputRef = ref(null);
 const cityName = ref('杭州市');
 const loctionName = ref('');
 const columns = ref([
-  // { text: '杭州', value: 'Hangzhou' },
-  // { text: '宁波', value: 'Ningbo' },
-  // { text: '温州', value: 'Wenzhou' },
-  // { text: '绍兴', value: 'Shaoxing' },
-  // { text: '湖州', value: 'Huzhou' },
 ]);
 const showPicker = ref(false);
 const isChange = ref(0);
@@ -125,13 +107,15 @@ const routerCallBack = () => {
 }
 // 登录
 const hasUser = async () => {
-  const res = await useMy.getSingleUrl();
-  if (res?.code === 200) {
-    window.location = res.qw_auth_url
-  } else {
-    showToast(res.msg);
-  }
-  // router.push({ name: "login" });
+  setSession('companyName', useMy.$state.companyName == '全部' ? '' : useMy.$state.companyName)
+  setSession('adcdName', useMy.$state.adcdName),
+    setSession('typeChange', useMy.$state.typeChange == '全部' ? '' : useMy.$state.typeChange)
+  // const res = await useMy.getSingleUrl();
+  // if (res?.code === 200) {
+  //   window.location = res.qw_auth_url
+  // } else {
+  //   showToast(res.msg);
+  // }
 };
 const activeIndex = ref(0);
 const activeId = ref(1);
@@ -190,21 +174,13 @@ const items = [
   },
 ]
 // 确认
-const handleConfirm = () => {
-  const result = items.map(item => item.children);
-  if (activeId.value != '') {
-    cityName.value = result.flat(Infinity).find(v => v.id == activeId.value).text
-  } else {
-    cityName.value = items[activeIndex.value].text
-  }
-  showPicker.value = false;
-};
 const onConfirm = ({ selectedOptions }) => {
   keyWord.value = ''
   if (selectedOptions[0]?.text) {
     cityName.value = selectedOptions[0]?.text;
-    emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value);
+    emit("cityChange", cityName.value == loctionName.value.slice(0, -1) ? true : false, cityName.value == '全部' ? '' : cityName.value);
   }
+  setAdcdName(cityName.value)
   showPicker.value = false;
 };
 // 重置
@@ -214,6 +190,7 @@ const reset = () => {
 };
 // 类别 => 确定
 const hasConfirm = () => {
+  setCompanyZoom('')
   let value = ''
   if (isChange.value == 0) {
     value = ''
@@ -222,13 +199,14 @@ const hasConfirm = () => {
   } else if (isChange.value == 2) {
     value = '项目'
   }
-  emit("stausChange", value);
+  setSearchType(value == '' ? '全部' : value);
+  const arr = columns.value.filter(item => item.text == loctionName.value.slice(0, -1))
+  emit("stausChange", value, arr.length > 0 ? true : false);
   itemRef.value.toggle();
 };
 // 搜索事件
 const hasSearch = () => {
   $globalEventBus.emit('LegendClick', false);
-  // router.push({ name: "Search" });
   list.value = []
   value.value = ''
   autofocusFn();
@@ -241,30 +219,31 @@ const opened = () => {
     inputEl.focus();
   }
 }
-// 切换父级区划事件
-const isMenuActive = () => {
-  activeId.value = '';
-};
 // 获取行政区划列表
 const getDivisionList = async (v) => {
-  const res = await useMy.getRegionList({ egion: v });
+  const res = await useMy.getRegionList({ egion: v == '全部' ? '' : v });
   if (res?.code === 200) {
     if (res.data && res.data.length > 0) {
       res.data.forEach(v => {
         v.text = v.xmproject;
         v.value = v.xmproject;
       });
+      res.data.unshift({ xmproject: '全部', text: '全部', value: '全部' });
       columns.value = res.data;
       if (useMy.$state.adcdName) {
         cityName.value = useMy.$state.adcdName
-        emit("initData", useMy.$state.companyName, useMy.$state.adcdName)
+        emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : useMy.$state.adcdName)
         keyWord.value = useMy.$state.inputValue
         isChange.value = 0;
         isOtherChange.value = 0;
       } else {
         const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
-        arr.length > 0 ? emit("initData", arr[0].egion, arr[0].xmproject, true) : emit("initData", res.data[0].egion, res.data[0].xmproject, false);
-        arr.length > 0 ? cityName.value = arr[0].text : cityName.value = res.data[0].text;
+        // const arr = [];
+        arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", useMy.$state.companyName, '', false);
+        arr.length > 0 && useMy.$state.companyName != '' ? cityName.value = arr[0].text : cityName.value = '全部';
+        if (arr.length == 0) {
+          setCompanyName('');
+        }
       }
     }
     if (res.data && res.data.length == 0) {
@@ -291,18 +270,27 @@ const getDivisionLists = async (v) => {
     showToast(res.msg);
   }
 }
-// // 获取用户信息
-// const queryUserInfo = async (v) => {
-//   const res = await useMy.getUserInfo({ code: v });
-//   if (res?.code === 200) {
-//     setSession("TOKEN", res.token);
-//     showToast('授权成功');
-//   } else {
-//     showToast(res.msg);
-//   }
-// }
 $globalEventBus.on("adcdChange", eventData => {
+  isChange.value = 0
   getDivisionList(eventData)
+});
+$globalEventBus.on("cityName", eventData => {
+  cityName.value = eventData
+});
+$globalEventBus.on("zoomChange", eventData => {
+  getDivisionLists('')
+  cityName.value = eventData
+  emit("initData", '', '', false)
+});
+$globalEventBus.on("userChange", eventData => {
+  cityName.value = eventData.cityName
+  if (eventData.isChange == '全部') {
+    isChange.value = 0
+  } else if (eventData.isChange == '案场') {
+    isChange.value = 1
+  } else if (eventData.isChange == '项目') {
+    isChange.value = 2
+  }
 });
 onBeforeMount(() => {
   initWx();
@@ -328,9 +316,7 @@ const handleSearch = async (v) => {
     if (list.value && list.value.length == 0) {
       showToast('暂无相关数据');
     }
-    // loading.value = false
   } else {
-    // loading.value = false
     showToast(res.msg);
   }
 };
@@ -339,9 +325,10 @@ const updateMap = (v) => {
   isChange.value = 0
   isOtherChange.value = null
   cityName.value = v.xmproject
+  setAdcdName(v.xmproject)
   keyWord.value = v.searchValue
-  setCompanyName(v.egion)
-  getDivisionLists(v.egion)
+  setCompanyName(v.egion == '全部' ? '' : v.egion)
+  getDivisionLists(v.egion == '全部' ? '' : v.egion)
   emit("initDatas", v.egion, v.xmproject, [v.longitude, v.latitude])
   showRight.value = false
 }

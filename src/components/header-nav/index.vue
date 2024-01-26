@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 02:32:07
+ * @LastEditTime: 2024-01-26 07:26:45
 -->
 <template>
   <div class="header__nav">
@@ -107,18 +107,15 @@ const routerCallBack = () => {
 }
 // 登录
 const hasUser = async () => {
-  let storageData = {
-    companyName: useMy.$state.companyName == '全部' ? '' : useMy.$state.companyName,
-    adcdName: useMy.$state.adcdName,
-    typeChange: useMy.$state.typeChange == '全部' ? '' : useMy.$state.typeChange,
-  }
-  setSession("storageData", storageData);
-  const res = await useMy.getSingleUrl();
-  if (res?.code === 200) {
-    window.location = res.qw_auth_url
-  } else {
-    showToast(res.msg);
-  }
+  setSession('companyName', useMy.$state.companyName == '全部' ? '' : useMy.$state.companyName)
+  setSession('adcdName', useMy.$state.adcdName),
+    setSession('typeChange', useMy.$state.typeChange == '全部' ? '' : useMy.$state.typeChange)
+  // const res = await useMy.getSingleUrl();
+  // if (res?.code === 200) {
+  //   window.location = res.qw_auth_url
+  // } else {
+  //   showToast(res.msg);
+  // }
 };
 const activeIndex = ref(0);
 const activeId = ref(1);
