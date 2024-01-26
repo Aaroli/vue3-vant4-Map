@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:37:15
+ * @LastEditTime: 2024-01-26 11:12:16
 -->
 <template>
 	<div class="app">
@@ -227,13 +227,7 @@ const clickArrayMarker = async (marker) => {
 }
 // 登录
 const hasUser = async () => {
-	const res = await useMy.getSingleUrl();
-	if (res?.code === 200) {
-		window.location = res.qw_auth_url
-	} else {
-		showToast(res.msg);
-	}
-	// router.push({ name: "login" });
+	$globalEventBus.emit('loginIn', 0);
 };
 const handleSearch = async (v) => {
 	loading.value = true

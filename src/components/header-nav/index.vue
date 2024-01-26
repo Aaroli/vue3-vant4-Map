@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:46:03
+ * @LastEditTime: 2024-01-26 11:12:54
 -->
 <template>
   <div class="header__nav">
@@ -63,7 +63,7 @@
   
 <script setup name="headerNav">
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
+import { setSession, getSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -116,7 +116,6 @@ const hasUser = async () => {
   } else {
     showToast(res.msg);
   }
-
 };
 const activeIndex = ref(0);
 const activeId = ref(1);
@@ -300,6 +299,9 @@ const getDivisionListss = async (v) => {
 $globalEventBus.on("adcdChange", eventData => {
   isChange.value = 0
   getDivisionList(eventData)
+});
+$globalEventBus.on("loginIn", eventData => {
+  hasUser(eventData);
 });
 $globalEventBus.on("cityName", eventData => {
   cityName.value = eventData

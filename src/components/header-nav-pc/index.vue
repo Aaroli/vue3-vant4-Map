@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:19:46
+ * @LastEditTime: 2024-01-26 11:13:23
 -->
 <template>
   <div class="header__nav">
@@ -63,7 +63,7 @@
   
 <script setup name="headerNavPc">
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
+import { setSession, getSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -308,6 +308,9 @@ $globalEventBus.on("zoomChange", eventData => {
   getDivisionLists('')
   cityName.value = eventData
   emit("initData", '', '', false)
+});
+$globalEventBus.on("loginIn", eventData => {
+  hasUser(eventData);
 });
 onBeforeMount(() => {
   initWx();
