@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 13:57:27
+ * @LastEditTime: 2024-01-26 23:56:25
 -->
 <template>
 	<div class="app">
@@ -66,10 +66,11 @@
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapinfo">
 						<div class="Mapinfo_box" v-for="(item, index) in locationObj.infoList" :key="index">
-							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon size="20"
-									color="#70DB93" v-if="checkPhoneNumber(item.fieldValue)" name="phone-o"
-									@click="handleTel(item.fieldValue)" /></div>
+							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon
+									v-if="checkPhoneNumber(item.fieldValue)" size="20" style="transform: rotate(-110deg);"
+									color="blue" name="phone-o" @click="handleTel(item.fieldValue)" /></div>
 						</div>
+						<!--  -->
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapbtns" @click="navigateLine">到这里去</div>
 				</div>
