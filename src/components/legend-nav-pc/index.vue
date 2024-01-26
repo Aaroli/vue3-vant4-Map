@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-24 07:47:10
+ * @LastEditTime: 2024-01-26 08:05:32
 -->
 <template>
 	<div class="legend_nav">
@@ -114,6 +114,11 @@ const getList = async () => {
 			acc[cur.regionName] = cur.index;
 			return acc;
 		}, { '全部': 0 });
+		const searchParams = new URLSearchParams(window.location.search);
+		const code = searchParams.get('code');
+		if (code && getSession('companyName')) {
+			setCompanyName(getSession('companyName'));
+		}
 	} else {
 		showToast(res.msg);
 	}

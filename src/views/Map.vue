@@ -4,15 +4,15 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 05:11:03
+ * @LastEditTime: 2024-01-26 10:16:18
 -->
 <template>
 	<div class="app">
 		<!-- 导航栏 -->
 		<div class="header_body">
 			<header-nav v-if="phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
-				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" @clearData="clearData"
-				titelText="首页"></header-nav>
+				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" @storeList="setDataSearch"
+				@clearData="clearData" titelText="首页"></header-nav>
 			<header-nav-pc v-if="!phoneType()" :leftArrow="false" @handleSearch="handleSearch" @cityChange="cityChange"
 				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" titelText="首页"></header-nav-pc>
 		</div>
@@ -102,7 +102,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
+import { getSession, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -409,27 +409,47 @@ const queryUserInfo = async (v) => {
 	}
 }
 onBeforeMount(() => {
-	lazyAMapApiLoaderInstance.then(() => {
-		useCitySearch().then(res => {
-			const { getLocalCity } = res;
-			getLocalCity().then(cityResult => {
-				center.value = cityResult.bounds.getCenter().toArray()
+	const searchParams = new URLSearchParams(window.location.search);
+	const code = searchParams.get('code');
+	if (code && getSession('companyName')) {
+
+	} else {
+		lazyAMapApiLoaderInstance.then(() => {
+			useCitySearch().then(res => {
+				const { getLocalCity } = res;
+				getLocalCity().then(cityResult => {
+					center.value = cityResult.bounds.getCenter().toArray()
+				})
 			})
 		})
-	})
+	}
 })
 //页面回刷 保存历史记录信息
 const setDataSearch = async () => {
-	loading.value = true;
+	// loading.value = true;
 	markers.value = [];
-	$globalEventBus.emit('userChange', { cityName: getSession('companyName'), isChange: getSession('typeChange') })
+	let companyName = getSession('companyName') == '全部' || getSession('companyName') == '' ? '' : getSession('companyName');
+	let adcdName = getSession('adcdName') ? getSession('adcdName') : ''
+	let typeChange = ''
+	const map = {
+		'0': '',
+		'1': '案场',
+		'2': '项目',
+	};
+	typeChange = map[getSession('typeChange')] || "";
+	// 设置管理的筛选条件 赋值用
+	// $globalEventBus.emit('userChange', { cityName: companyName, isChange: typeChange })
 	let data = {
-		egion: getSession('companyName'),
-		xmproject: getSession('adcdName'),
-		manage: getSession('typeChange'),
+		egion: companyName,
+		xmproject: adcdName,
+		manage: typeChange,
 	}
+	console.log('data---------------', data)
+	// zoom.value = 5
+	// center.value = [120.0424575805664, 30.293476104736328]
 	const res = await useMy.getPointInfo(data);
 	if (res?.code === 200) {
+		console.log('res.data', res.data)
 		res.data.forEach(v => {
 			v.position = [v.longitude, v.latitude],
 				v.type = useMy.$state.companyName,
@@ -451,11 +471,20 @@ const setDataSearch = async () => {
 		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
+			// if (mapRef.value) {
+			// 	mapRef.value.$$getInstance().setCenter(center.value)
+			// }
 		}
 		loading.value = false;
+		removeSession('companyName')
+		removeSession('adcdName')
+		removeSession('typeChange')
 	} else {
 		showToast(res.msg);
 		loading.value = false;
+		removeSession('companyName')
+		removeSession('adcdName')
+		removeSession('typeChange')
 	}
 }
 // 判断地图放大还是缩小
@@ -507,7 +536,7 @@ onMounted(() => {
 	const code = searchParams.get('code');
 	if (code && !getSession('TOKEN')) {
 		queryUserInfo(code);
-		setDataSearch();
+		// setDataSearch();
 	}
 })
 </script>

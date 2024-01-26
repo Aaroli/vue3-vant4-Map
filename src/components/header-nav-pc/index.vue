@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 07:27:13
+ * @LastEditTime: 2024-01-26 10:19:46
 -->
 <template>
   <div class="header__nav">
@@ -69,7 +69,7 @@ import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 const { useMy } = $globalStore
 const router = useRouter();
-const emit = defineEmits(["handleSearch", "cityChange", 'stausChange', "initData", "initDatas", "clearData"]);
+const emit = defineEmits(["handleSearch", "cityChange", 'setDataSearch', 'stausChange', "initData", "initDatas", "clearData"]);
 
 const keyWord = ref('');
 const itemRef = ref(null);
@@ -108,14 +108,15 @@ const routerCallBack = () => {
 // 登录
 const hasUser = async () => {
   setSession('companyName', useMy.$state.companyName == '全部' ? '' : useMy.$state.companyName)
-  setSession('adcdName', useMy.$state.adcdName),
-    setSession('typeChange', useMy.$state.typeChange == '全部' ? '' : useMy.$state.typeChange)
-  // const res = await useMy.getSingleUrl();
-  // if (res?.code === 200) {
-  //   window.location = res.qw_auth_url
-  // } else {
-  //   showToast(res.msg);
-  // }
+  setSession('adcdName', cityName.value),
+    setSession('typeChange', isChange.value)
+  const res = await useMy.getSingleUrl();
+  if (res?.code === 200) {
+    window.location = res.qw_auth_url
+  } else {
+    showToast(res.msg);
+  }
+
 };
 const activeIndex = ref(0);
 const activeId = ref(1);
@@ -244,6 +245,14 @@ const getDivisionList = async (v) => {
         if (arr.length == 0) {
           setCompanyName('');
         }
+        const searchParams = new URLSearchParams(window.location.search);
+        // const code = searchParams.get('code');
+        // if (code && getSession('adcdName')) {
+        //   cityName.value = getSession('adcdName');
+        // }
+        // if (code && getSession('typeChange')) {
+        //   isChange.value = getSession('typeChange');
+        // }
       }
     }
     if (res.data && res.data.length == 0) {
@@ -270,6 +279,24 @@ const getDivisionLists = async (v) => {
     showToast(res.msg);
   }
 }
+const getDivisionListss = async (v) => {
+  const res = await useMy.getRegionList({ egion: v });
+  if (res?.code === 200) {
+    if (res.data && res.data.length > 0) {
+      res.data.forEach(v => {
+        v.text = v.xmproject;
+        v.value = v.xmproject;
+      });
+      columns.value = res.data;
+    }
+    emit("storeList", 0);
+    if (res.data && res.data.length == 0) {
+      emit("clearData", true);
+    }
+  } else {
+    showToast(res.msg);
+  }
+}
 $globalEventBus.on("adcdChange", eventData => {
   isChange.value = 0
   getDivisionList(eventData)
@@ -282,28 +309,26 @@ $globalEventBus.on("zoomChange", eventData => {
   cityName.value = eventData
   emit("initData", '', '', false)
 });
-$globalEventBus.on("userChange", eventData => {
-  cityName.value = eventData.cityName
-  if (eventData.isChange == '全部') {
-    isChange.value = 0
-  } else if (eventData.isChange == '案场') {
-    isChange.value = 1
-  } else if (eventData.isChange == '项目') {
-    isChange.value = 2
-  }
-});
 onBeforeMount(() => {
   initWx();
-  lazyAMapApiLoaderInstance.then(() => {
-    useCitySearch().then(res => {
-      const { getLocalCity } = res;
-      getLocalCity().then(cityResult => {
-        cityName.value = cityResult.city || '未知'
-        loctionName.value = cityResult.city || '未知'
-        getDivisionList(useMy.$state.companyName);
+  const searchParams = new URLSearchParams(window.location.search);
+  const code = searchParams.get('code');
+  if (code && getSession('companyName')) {
+    cityName.value = getSession('adcdName');
+    isChange.value = Number(getSession('typeChange'));
+    getDivisionListss(getSession('companyName'))
+  } else {
+    lazyAMapApiLoaderInstance.then(() => {
+      useCitySearch().then(res => {
+        const { getLocalCity } = res;
+        getLocalCity().then(cityResult => {
+          loctionName.value = cityResult.city || '未知'
+          getDivisionList(useMy.$state.companyName);
+        })
       })
     })
-  })
+  }
+
 })
 const handleSearch = async (v) => {
   const res = await useMy.queryFuzzy({ name: value.value });

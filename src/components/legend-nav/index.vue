@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 04:07:16
+ * @LastEditTime: 2024-01-26 10:15:18
 -->
 <template>
 	<div class="legend_nav">
@@ -24,7 +24,7 @@
 </template>
 
 <script setup name="legendNav">
-import { setCompanyNum, setCompanyName, setAdcdName, setCompanyZoom, getSession, removeSession } from "@/util/util";
+import { setCompanyNum, removeSession, setCompanyName, setAdcdName, setCompanyZoom, getSession, removeSession } from "@/util/util";
 const { useMy } = $globalStore
 import { showToast } from "vant";
 import img1 from '@/assets/images/i_company.png'
@@ -114,6 +114,11 @@ const getList = async () => {
 			acc[cur.regionName] = cur.index;
 			return acc;
 		}, { '全部': 0 });
+		const searchParams = new URLSearchParams(window.location.search);
+		const code = searchParams.get('code');
+		if (code && getSession('companyName')) {
+			setCompanyName(getSession('companyName'));
+		}
 	} else {
 		showToast(res.msg);
 	}
