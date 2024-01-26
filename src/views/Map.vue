@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 12:09:34
+ * @LastEditTime: 2024-01-26 12:49:14
 -->
 <template>
 	<div class="app">
@@ -102,7 +102,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
+import { getSession, setlocal, getlocal, removelocal, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -381,10 +381,15 @@ const getMarkList = async (v) => {
 		}
 		if (v && v == true) {
 			if (useMy.$state.coordinate == 0) {
-				if (markers.value && markers.value.length > 0) {
-					center.value = [markers.value[0].longitude, markers.value[0].latitude]
+				// 获取定位失败 优先取getlocal的缓存
+				if (getlocal('Coordinate')) {
+					center.value = getlocal('Coordinate')
 				} else {
-					center.value = [120.0424575805664, 30.293476104736328]
+					if (markers.value && markers.value.length > 0) {
+						center.value = [markers.value[0].longitude, markers.value[0].latitude]
+					} else {
+						center.value = [120.0424575805664, 30.293476104736328]
+					}
 				}
 			} else {
 				center.value = useMy.$state.coordinate
@@ -410,7 +415,10 @@ const queryUserInfo = async (v) => {
 		setSession("TOKEN", res.token);
 		showToast('授权成功');
 	} else {
-		showToast(res.msg);
+		if (getlocal('isLogin')) {
+			$globalEventBus.emit('loginIn', 0);
+		}
+		// showToast(res.msg);
 	}
 }
 onBeforeMount(() => {

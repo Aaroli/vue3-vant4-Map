@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 12:07:05
+ * @LastEditTime: 2024-01-26 12:48:37
 -->
 <template>
   <div class="header__nav">
@@ -64,7 +64,7 @@
 <script setup name="headerNav">
 import wx from "weixin-js-sdk"; //引入WX sdk
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, getSession, setCoordinate, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue } from "@/util/util";
+import { setSession, setlocal, getlocal, removelocal, getSession, setCoordinate, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -114,6 +114,7 @@ const hasUser = async () => {
   const res = await useMy.getSingleUrl();
   if (res?.code === 200) {
     window.location = res.qw_auth_url
+    setlocal('isLogin', true)
   } else {
     showToast(res.msg);
   }
@@ -355,6 +356,8 @@ const initWx = async () => {
         success: function (res) {
           console.log('自身定位：', [res.longitude, res.latitude]);
           setCoordinate([res.longitude, res.latitude]);
+          setlocal('Coordinate', [res.longitude, res.latitude])
+          setlocal('CoordinateTimer', new Date())
         }
       });
     })

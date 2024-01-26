@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:30:04
+ * @LastEditTime: 2024-01-26 12:30:48
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -112,6 +112,23 @@ const getSession = (attr) => {
 // 删除session 某一项
 const removeSession = (attr) => {
 	return window.sessionStorage.removeItem(attr) || ''
+}
+// 设置session
+const setlocal = (attr, value) => {
+	try {
+		window.localStorage.setItem(attr, value)
+	} catch (error) {
+		console.log('设置失败')
+	}
+}
+
+// 获取session
+const getlocal = (attr) => {
+	return window.localStorage.getItem(attr) || ''
+}
+// 删除session 某一项
+const removelocal = (attr) => {
+	return window.localStorage.removeItem(attr) || ''
 }
 
 // 设置企业名称
@@ -329,5 +346,8 @@ export {
 	setInputValue,
 	setCompanyType,
 	removeSession,
-	setCompanyZoom
+	setCompanyZoom,
+	getlocal,
+	removelocal,
+	setlocal,
 };
