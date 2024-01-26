@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 03:39:32
+ * @LastEditTime: 2024-01-26 04:16:56
 -->
 <template>
 	<div class="app">
@@ -17,7 +17,7 @@
 				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
-		<el-amap @update:zoom="onUpdatedZoom" @zoomstart="onMapChange" v-model:center="center" :zoom="zoom"
+		<el-amap ref="mapRef" @update:zoom="onUpdatedZoom" @zoomstart="onMapChange" v-model:center="center" :zoom="zoom"
 			@click="closeLegend">
 			<el-amap-marker v-if="!phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
 				:position="marker.position" :offset="[0, 0]" @click="(e) => { clickArrayMarker(marker, e) }">
@@ -113,7 +113,7 @@ import img3 from '@/assets/images/point_purple.png'
 import img4 from '@/assets/images/point_red.png'
 import img5 from '@/assets/images/point_yellow.png'
 import img_mag_title from '@/assets/images/img_mag_title.png'
-
+const mapRef = ref();
 const labelOptions = ref({
 	visible: true,
 	position: [121.5495395, 31.21515044],
@@ -201,7 +201,7 @@ const onMapChange = (event) => {
 // 地图事件
 const onUpdatedZoom = (e) => {
 	$globalEventBus.emit('LegendClick', false);
-	if (iszoomChange.value == false) return
+	// if (iszoomChange.value == false) return
 	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return
 	if (Math.round(e) <= 5) {
 		setCompanyZoom('全部')
@@ -489,9 +489,10 @@ const setDataSearch = async () => {
 		loading.value = false;
 	}
 }
-// $globalEventBus.on("setZoom", eventData => {
-// 	zoom.value = eventData
-// });
+$globalEventBus.on("setZoom", eventData => {
+	zoom.value = eventData
+	mapRef.value.$$getInstance().setZoom(12)
+});
 onMounted(() => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');
