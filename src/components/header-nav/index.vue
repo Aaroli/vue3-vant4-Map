@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:19:33
+ * @LastEditTime: 2024-01-26 10:46:03
 -->
 <template>
   <div class="header__nav">
@@ -242,9 +242,9 @@ const getDivisionList = async (v) => {
         // const arr = [];
         arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", useMy.$state.companyName, '', false);
         arr.length > 0 && useMy.$state.companyName != '' ? cityName.value = arr[0].text : cityName.value = '全部';
-        if (arr.length == 0) {
-          setCompanyName('');
-        }
+        // if (arr.length == 0) {
+        //   setCompanyName('');
+        // }
         const searchParams = new URLSearchParams(window.location.search);
         // const code = searchParams.get('code');
         // if (code && getSession('adcdName')) {

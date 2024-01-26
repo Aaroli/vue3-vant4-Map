@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:16:18
+ * @LastEditTime: 2024-01-26 10:37:15
 -->
 <template>
 	<div class="app">
@@ -654,7 +654,6 @@ onMounted(() => {
 
 .Maptitle {
 	width: 225px;
-	height: 24px;
 	font-size: 18px;
 	font-weight: 500;
 	color: #383E44;
@@ -663,7 +662,6 @@ onMounted(() => {
 
 .Maptitle_pc {
 	width: 100px;
-	height: 12px;
 	font-size: 9px;
 	font-weight: 500;
 	color: #383E44;

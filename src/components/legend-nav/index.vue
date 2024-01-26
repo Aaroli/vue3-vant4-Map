@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:21:19
+ * @LastEditTime: 2024-01-26 10:44:53
 -->
 <template>
 	<div class="legend_nav">
@@ -85,6 +85,7 @@ const getClass = (v) => {
 	return map[v] || "";
 }
 const change = (v, id) => {
+	console.log('v', v)
 	if (v.name == '全部') {
 		$globalEventBus.emit('cityName', '全部')
 	}
@@ -96,6 +97,7 @@ const change = (v, id) => {
 	setCompanyNum(0)
 	emit("selectList", v.name == '全部' ? '' : v.name);
 	isChange.value = id;
+	console.log('useMy.$state.companyName', useMy.$state.companyName)
 };
 // 获取列表数据
 const getList = async () => {
