@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:38:29
+ * @LastEditTime: 2024-01-26 12:09:34
 -->
 <template>
 	<div class="app">
@@ -380,8 +380,17 @@ const getMarkList = async (v) => {
 			center.value = useMy.$state.centerCoordinate
 		}
 		if (v && v == true) {
-			center.value = useMy.$state.coordinate
-			zoom.value = 18
+			if (useMy.$state.coordinate == 0) {
+				if (markers.value && markers.value.length > 0) {
+					center.value = [markers.value[0].longitude, markers.value[0].latitude]
+				} else {
+					center.value = [120.0424575805664, 30.293476104736328]
+				}
+			} else {
+				center.value = useMy.$state.coordinate
+				zoom.value = 18
+			}
+
 		}
 		if (v == false) {
 			if (markers.value && markers.value.length > 0) {

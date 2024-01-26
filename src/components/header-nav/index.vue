@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:49:40
+ * @LastEditTime: 2024-01-26 12:07:05
 -->
 <template>
   <div class="header__nav">
@@ -62,8 +62,9 @@
 </template>
   
 <script setup name="headerNav">
+import wx from "weixin-js-sdk"; //引入WX sdk
 import { autofocusFn } from '@/util/ceshi'
-import { setSession, getSession, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue, initWx } from "@/util/util";
+import { setSession, getSession, setCoordinate, setCompanyName, setAdcdName, setSearchType, setCompanyZoom, setCenterValue, setCompanyType, setInputValue } from "@/util/util";
 import i_search from '@/assets/images/i_search.png'
 import { showToast } from "vant";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
@@ -332,6 +333,35 @@ onBeforeMount(async () => {
   }
 
 })
+const initWx = async () => {
+  const res = await $globalStore.useMy.getWxAuth({ url: window.location.href });
+  if (res?.code === 200) {
+    wx.config({
+      beta: true,
+      debug: false,
+      appId: res.appId,
+      timestamp: res.timestamp,
+      nonceStr: res.nonceStr,
+      signature: res.signature,
+      // jsApiList: res.jsApiList
+      jsApiList: ["checkJsApi", "openLocation", "getLocation"],
+      success(res) {
+        showToast(res)
+      },
+    });
+    wx.ready(function () {
+      wx.getLocation({
+        type: "gcj02",
+        success: function (res) {
+          console.log('自身定位：', [res.longitude, res.latitude]);
+          setCoordinate([res.longitude, res.latitude]);
+        }
+      });
+    })
+  } else {
+    showToast(res.msg);
+  }
+}
 const handleSearch = async (v) => {
   const res = await useMy.queryFuzzy({ name: value.value });
   if (res?.code === 200) {

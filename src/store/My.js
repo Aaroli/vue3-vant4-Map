@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:28:49
+ * @LastEditTime: 2024-01-26 12:06:23
  */
 import { getAddersslist, getRegionList, getPointInfo, getPointInfoList, queryFuzzy, getSingleUrl, getUserInfo, getWxAuth } from "@/api/My";
 export default defineStore('useMy', {
@@ -12,7 +12,7 @@ export default defineStore('useMy', {
 		companyName: "万家",
 		companyNum: "0", //总数
 		adcdName: '',
-		coordinate: [116.413384, 39.910925], //定位坐标
+		coordinate: [], //定位坐标
 		centerCoordinate: null, //更新中心点坐标
 		inputValue: null, //输入框名称
 		companyType: null, //公司列表
