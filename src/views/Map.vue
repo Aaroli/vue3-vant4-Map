@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:12:16
+ * @LastEditTime: 2024-01-26 11:38:29
 -->
 <template>
 	<div class="app">
@@ -370,6 +370,8 @@ const getMarkList = async (v) => {
 				}
 		});
 		markers.value = res.data;
+		console.log('v----------', v)
+		console.log('useMy.$state.coordinate', useMy.$state.coordinate)
 		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]

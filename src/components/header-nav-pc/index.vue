@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:13:23
+ * @LastEditTime: 2024-01-26 11:49:44
 -->
 <template>
   <div class="header__nav">
@@ -312,8 +312,8 @@ $globalEventBus.on("zoomChange", eventData => {
 $globalEventBus.on("loginIn", eventData => {
   hasUser(eventData);
 });
-onBeforeMount(() => {
-  initWx();
+onBeforeMount(async () => {
+  await initWx();
   const searchParams = new URLSearchParams(window.location.search);
   const code = searchParams.get('code');
   if (code && getSession('companyName')) {

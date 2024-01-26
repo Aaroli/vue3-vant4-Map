@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 08:47:44
+ * @LastEditTime: 2024-01-26 11:30:04
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -171,6 +171,7 @@ const initWx = async () => {
 			wx.getLocation({
 				type: "gcj02",
 				success: function (res) {
+					console.log('自身定位：', [res.longitude, res.latitude]);
 					$globalStore.useMy.SET_COORDINATE([res.longitude, res.latitude]);
 				}
 			});

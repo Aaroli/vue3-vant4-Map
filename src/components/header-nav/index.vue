@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 11:12:54
+ * @LastEditTime: 2024-01-26 11:49:40
 -->
 <template>
   <div class="header__nav">
@@ -311,8 +311,8 @@ $globalEventBus.on("zoomChange", eventData => {
   cityName.value = eventData
   emit("initData", '', '', false)
 });
-onBeforeMount(() => {
-  initWx();
+onBeforeMount(async () => {
+  await initWx();
   const searchParams = new URLSearchParams(window.location.search);
   const code = searchParams.get('code');
   if (code && getSession('companyName')) {
