@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 04:16:56
+ * @LastEditTime: 2024-01-26 05:11:03
 -->
 <template>
 	<div class="app">
@@ -17,8 +17,8 @@
 				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
-		<el-amap ref="mapRef" @update:zoom="onUpdatedZoom" @zoomstart="onMapChange" v-model:center="center" :zoom="zoom"
-			@click="closeLegend">
+		<el-amap ref="mapRef" @update:zoom="onUpdatedZoom" @zoomend="zoomend" @zoomstart="onMapChange"
+			v-model:center="center" :zoom="zoom" @click="closeLegend">
 			<el-amap-marker v-if="!phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
 				:position="marker.position" :offset="[0, 0]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content_pc">
@@ -152,7 +152,8 @@ const markers = ref([])
 const markersAll = ref([])
 const zoom = ref(18)
 const zoomLever = ref(0)
-const iszoomChange = ref(true)
+const iszoomChange = ref(false)
+const hasAllChange = ref(false)
 // 比例尺
 const ScaleVisible = ref(false)
 // 文本标记
@@ -178,38 +179,6 @@ const locationObj = ref({
 	address: '杭州市西湖区武林广场',
 	infoList: []
 })
-// 判断地图放大还是缩小
-const onMapChange = (event) => {
-	const newZoom = event.target.getZoom(); // 获取新的缩放级别
-	console.log('newZoom', newZoom)
-	console.log('zoomLever.value', zoomLever.value)
-	if (Math.round(newZoom) > Math.round(zoomLever.value)) {
-		iszoomChange.value = false
-		// 地图放大
-		console.log('地图放大');
-	} else if (Math.round(newZoom) < Math.round(zoomLever.value)) {
-		// 地图缩小
-		iszoomChange.value = true
-		console.log('地图缩小');
-	} else {
-		// 缩放级别未改变
-		iszoomChange.value = false
-		console.log('缩放级别未改变');
-	}
-	zoomLever.value = newZoom; // 更新旧的缩放级别
-}
-// 地图事件
-const onUpdatedZoom = (e) => {
-	$globalEventBus.emit('LegendClick', false);
-	// if (iszoomChange.value == false) return
-	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return
-	if (Math.round(e) <= 5) {
-		setCompanyZoom('全部')
-		setCompanyName('')
-		$globalEventBus.emit('zoomChange', '全部')
-	}
-}
-
 const getImgType = (v) => {
 	const map = {
 		'全部': '',
@@ -489,9 +458,49 @@ const setDataSearch = async () => {
 		loading.value = false;
 	}
 }
+// 判断地图放大还是缩小
+const onMapChange = (event) => {
+	if (hasAllChange.value == true) return
+	const newZoom = event.target.getZoom(); // 获取新的缩放级别
+	if (newZoom > zoomLever.value) {
+		// iszoomChange.value = true
+		// // 地图放大
+		// console.log('地图放大');
+	} else if (newZoom < zoomLever.value) {
+		// 地图缩小
+		// iszoomChange.value = false
+		console.log('地图缩小');
+	} else {
+		// 缩放级别未改变
+		// iszoomChange.value = false
+		console.log('缩放级别未改变');
+	}
+	zoomLever.value = newZoom; // 更新旧的缩放级别
+}
+// 地图事件
+const onUpdatedZoom = (e) => {
+	$globalEventBus.emit('LegendClick', false);
+	if (iszoomChange.value == true) return
+	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return
+	if (Math.round(e) <= 5) {
+		setCompanyZoom('全部')
+		setCompanyName('')
+		iszoomChange.value = false
+		$globalEventBus.emit('zoomChange', '全部')
+	}
+}
+// 完成事件
+const zoomend = () => {
+	// console.log('1', 1)
+	if (iszoomChange.value == true) return iszoomChange.value = false
+}
 $globalEventBus.on("setZoom", eventData => {
 	zoom.value = eventData
+	iszoomChange.value = true
+	// hasAllChange.value = true
 	mapRef.value.$$getInstance().setZoom(12)
+	// mapRef.value.$$getInstance().setZoom(12).resize();
+	// hasAllChange.value = false
 });
 onMounted(() => {
 	const searchParams = new URLSearchParams(window.location.search);
