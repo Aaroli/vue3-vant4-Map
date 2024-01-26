@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 13:54:35
+ * @LastEditTime: 2024-01-26 13:57:27
 -->
 <template>
 	<div class="app">
@@ -558,8 +558,6 @@ onMounted(() => {
 	const code = searchParams.get('code');
 	console.log('getlocal', getlocal('isLoginSucc'))
 	console.log('code', code)
-	alert(code)
-	alert(getlocal('isLoginSucc'))
 	if (code && !getSession('TOKEN')) {
 		queryUserInfo(code);
 	} else if (code == null && getlocal('isLoginSucc') == true) {
