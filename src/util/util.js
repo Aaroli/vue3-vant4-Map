@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 12:30:48
+ * @LastEditTime: 2024-01-26 12:56:20
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -324,6 +324,20 @@ const phoneType = () => {
 		return false
 	}
 }
+const checkPhoneNumber = (phoneNumber) => {
+	// 手机号码正则表达式
+	const mobileRegex = /^1[3456789]\d{9}$/;
+	// 固定电话号码正则表达式
+	const landlineRegex = /^(0\d{2,3}-?)?\d{7,8}$/;
+
+	if (mobileRegex.test(phoneNumber)) {
+		return true;
+	} else if (landlineRegex.test(phoneNumber)) {
+		return true;
+	} else {
+		return false;
+	}
+}
 export {
 	isObject,
 	comparisonObject,
@@ -350,4 +364,5 @@ export {
 	getlocal,
 	removelocal,
 	setlocal,
+	checkPhoneNumber
 };

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 12:48:37
+ * @LastEditTime: 2024-01-26 13:04:00
 -->
 <template>
   <div class="header__nav">
@@ -116,6 +116,7 @@ const hasUser = async () => {
     window.location = res.qw_auth_url
     setlocal('isLogin', true)
   } else {
+    removelocal('isLogin')
     showToast(res.msg);
   }
 };

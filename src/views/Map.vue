@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 12:49:14
+ * @LastEditTime: 2024-01-26 13:12:38
 -->
 <template>
 	<div class="app">
@@ -82,7 +82,9 @@
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapinfo_pc">
 						<div class="Mapinfo_box_pc" v-for="(item, index) in locationObj.infoList" :key="index">
-							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span></div>
+							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon
+									v-if="checkPhoneNumber(item.fieldValue)" name="phone-o"
+									@click="handleTel(item.fieldValue)" /></div>
 						</div>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapbtns_pc" @click="navigateLine">到这里去</div>
@@ -102,7 +104,7 @@
 </template>
 
 <script setup name="Map">
-import { getSession, setlocal, getlocal, removelocal, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, initWx } from "@/util/util";
+import { getSession, setlocal, getlocal, removelocal, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, checkPhoneNumber } from "@/util/util";
 import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
@@ -227,8 +229,13 @@ const clickArrayMarker = async (marker) => {
 }
 // 登录
 const hasUser = async () => {
+	handleTel('4000-000-000')
 	$globalEventBus.emit('loginIn', 0);
 };
+// 拨打电话
+const handleTel = (v) => {
+	window.location.href = `tel:${v}`;
+}
 const handleSearch = async (v) => {
 	loading.value = true
 	const res = await useMy.queryFuzzy({ name: v });
@@ -550,6 +557,8 @@ onMounted(() => {
 	if (code && !getSession('TOKEN')) {
 		queryUserInfo(code);
 		// setDataSearch();
+	} else if (!code && getlocal('isLogin')) {
+		$globalEventBus.emit('loginIn', 0);
 	}
 })
 </script>
