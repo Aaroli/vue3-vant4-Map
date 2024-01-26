@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 13:04:00
+ * @LastEditTime: 2024-01-26 13:46:32
 -->
 <template>
   <div class="header__nav">
@@ -112,11 +112,10 @@ const hasUser = async () => {
   setSession('adcdName', cityName.value),
     setSession('typeChange', isChange.value)
   const res = await useMy.getSingleUrl();
+  console.log('res.code', res.code)
   if (res?.code === 200) {
     window.location = res.qw_auth_url
-    setlocal('isLogin', true)
   } else {
-    removelocal('isLogin')
     showToast(res.msg);
   }
 };

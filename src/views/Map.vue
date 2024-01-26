@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 13:12:38
+ * @LastEditTime: 2024-01-26 13:54:35
 -->
 <template>
 	<div class="app">
@@ -66,7 +66,9 @@
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapinfo">
 						<div class="Mapinfo_box" v-for="(item, index) in locationObj.infoList" :key="index">
-							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span></div>
+							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon size="20"
+									color="#70DB93" v-if="checkPhoneNumber(item.fieldValue)" name="phone-o"
+									@click="handleTel(item.fieldValue)" /></div>
 						</div>
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapbtns" @click="navigateLine">到这里去</div>
@@ -82,7 +84,7 @@
 					</div>
 					<div v-if="getSession('TOKEN')" class="Mapinfo_pc">
 						<div class="Mapinfo_box_pc" v-for="(item, index) in locationObj.infoList" :key="index">
-							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon
+							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon size="15"
 									v-if="checkPhoneNumber(item.fieldValue)" name="phone-o"
 									@click="handleTel(item.fieldValue)" /></div>
 						</div>
@@ -229,7 +231,6 @@ const clickArrayMarker = async (marker) => {
 }
 // 登录
 const hasUser = async () => {
-	handleTel('4000-000-000')
 	$globalEventBus.emit('loginIn', 0);
 };
 // 拨打电话
@@ -421,11 +422,12 @@ const queryUserInfo = async (v) => {
 	if (res?.code === 200) {
 		setSession("TOKEN", res.token);
 		showToast('授权成功');
+		setlocal('isLoginSucc', true)
+		console.log('setisLogin', true)
+		console.log('setisLogin---', getlocal('isLoginSucc'))
 	} else {
-		if (getlocal('isLogin')) {
-			$globalEventBus.emit('loginIn', 0);
-		}
-		// showToast(res.msg);
+		removelocal('isLoginSucc')
+		showToast(res.msg);
 	}
 }
 onBeforeMount(() => {
@@ -554,10 +556,13 @@ $globalEventBus.on("setZoom", eventData => {
 onMounted(() => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');
+	console.log('getlocal', getlocal('isLoginSucc'))
+	console.log('code', code)
+	alert(code)
+	alert(getlocal('isLoginSucc'))
 	if (code && !getSession('TOKEN')) {
 		queryUserInfo(code);
-		// setDataSearch();
-	} else if (!code && getlocal('isLogin')) {
+	} else if (code == null && getlocal('isLoginSucc') == true) {
 		$globalEventBus.emit('loginIn', 0);
 	}
 })
