@@ -59,7 +59,7 @@ const baseCfg = (viteEnv = {}) => {
 		},
 		build: {
 			outDir: "dist",
-			minify: "terser", // esbuild 打包更快，但是不能去除 console.log，去除 console 使用 terser 模式
+			minify: "terser",
 			rollupOptions: {
 				output: {
 					chunkFileNames: "js/[name]-[hash].js", // 引入文件名的名称

@@ -4,13 +4,11 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 11:33:42
+ * @LastEditTime: 2024-01-26 02:32:07
 -->
 <template>
   <div class="header__nav">
     <div class="header__left" @click="closeLegend">
-      <!-- <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
-          style="vertical-align: middle;" /></div> -->
       <div @click="showPicker = true">{{ cityName }} <van-icon name="arrow-down" color="#A6B2C3" size="17"
           style="vertical-align: middle;" /></div>
       <div class="fl6">
@@ -39,17 +37,6 @@
         @click-right-icon="hasSearch" />
       <div class="user" @click="hasUser"></div>
     </div>
-    <!-- <van-popup v-model:show="showPicker" position="bottom">
-      <div class="handleButton">
-        <van-button style="border: none; color: #969799" @click="handleOrgCancel" size="normal">取消</van-button>
-        <div class="font" size="normal">
-          城市地区
-        </div>
-        <van-button style="border: none; color: #6398fb" size="normal" @click="handleConfirm">确认</van-button>
-      </div>
-      <van-tree-select v-model:active-id="activeId" v-model:main-active-index="activeIndex" @click-nav="isMenuActive"
-        height="55vw" :items="items" />
-    </van-popup> -->
     <van-popup v-model:show="showPicker" position="bottom">
       <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
     </van-popup>
@@ -95,11 +82,6 @@ const inputRef = ref(null);
 const cityName = ref('杭州市');
 const loctionName = ref('');
 const columns = ref([
-  // { text: '杭州', value: 'Hangzhou' },
-  // { text: '宁波', value: 'Ningbo' },
-  // { text: '温州', value: 'Wenzhou' },
-  // { text: '绍兴', value: 'Shaoxing' },
-  // { text: '湖州', value: 'Huzhou' },
 ]);
 const showPicker = ref(false);
 const isChange = ref(0);
@@ -137,9 +119,6 @@ const hasUser = async () => {
   } else {
     showToast(res.msg);
   }
-  // console.log('useMy.$state.companyName', useMy.$state.companyName)
-  // console.log('useMy.$state.adcdName', useMy.$state.adcdName)
-  // console.log('useMy.$state.typeChange', useMy.$state.typeChange)
 };
 const activeIndex = ref(0);
 const activeId = ref(1);
@@ -198,15 +177,6 @@ const items = [
   },
 ]
 // 确认
-const handleConfirm = () => {
-  const result = items.map(item => item.children);
-  if (activeId.value != '') {
-    cityName.value = result.flat(Infinity).find(v => v.id == activeId.value).text
-  } else {
-    cityName.value = items[activeIndex.value].text
-  }
-  showPicker.value = false;
-};
 const onConfirm = ({ selectedOptions }) => {
   keyWord.value = ''
   if (selectedOptions[0]?.text) {
@@ -233,13 +203,13 @@ const hasConfirm = () => {
     value = '项目'
   }
   setSearchType(value == '' ? '全部' : value);
-  emit("stausChange", value);
+  const arr = columns.value.filter(item => item.text == loctionName.value.slice(0, -1))
+  emit("stausChange", value, arr.length > 0 ? true : false);
   itemRef.value.toggle();
 };
 // 搜索事件
 const hasSearch = () => {
   $globalEventBus.emit('LegendClick', false);
-  // router.push({ name: "Search" });
   list.value = []
   value.value = ''
   autofocusFn();
@@ -252,10 +222,6 @@ const opened = () => {
     inputEl.focus();
   }
 }
-// 切换父级区划事件
-const isMenuActive = () => {
-  activeId.value = '';
-};
 // 获取行政区划列表
 const getDivisionList = async (v) => {
   const res = await useMy.getRegionList({ egion: v == '全部' ? '' : v });
@@ -269,16 +235,14 @@ const getDivisionList = async (v) => {
       columns.value = res.data;
       if (useMy.$state.adcdName) {
         cityName.value = useMy.$state.adcdName
-        console.log('useMy.$state.adcdName', useMy.$state.adcdName)
         emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : useMy.$state.adcdName)
         keyWord.value = useMy.$state.inputValue
         isChange.value = 0;
         isOtherChange.value = 0;
       } else {
-        console.log('useMy.$state.companyName', useMy.$state.companyName)
         const arr = res.data.filter(item => item.text == loctionName.value.slice(0, -1))
         // const arr = [];
-        arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", '', useMy.$state.companyName, false);
+        arr.length > 0 ? emit("initData", useMy.$state.companyName, useMy.$state.companyName == '' ? '' : arr[0].xmproject, true) : emit("initData", useMy.$state.companyName, '', false);
         arr.length > 0 && useMy.$state.companyName != '' ? cityName.value = arr[0].text : cityName.value = '全部';
         if (arr.length == 0) {
           setCompanyName('');
@@ -309,17 +273,8 @@ const getDivisionLists = async (v) => {
     showToast(res.msg);
   }
 }
-// // 获取用户信息
-// const queryUserInfo = async (v) => {
-//   const res = await useMy.getUserInfo({ code: v });
-//   if (res?.code === 200) {
-//     setSession("TOKEN", res.token);
-//     showToast('授权成功');
-//   } else {
-//     showToast(res.msg);
-//   }
-// }
 $globalEventBus.on("adcdChange", eventData => {
+  isChange.value = 0
   getDivisionList(eventData)
 });
 $globalEventBus.on("cityName", eventData => {
@@ -364,9 +319,7 @@ const handleSearch = async (v) => {
     if (list.value && list.value.length == 0) {
       showToast('暂无相关数据');
     }
-    // loading.value = false
   } else {
-    // loading.value = false
     showToast(res.msg);
   }
 };

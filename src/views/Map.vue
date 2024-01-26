@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 12:18:47
+ * @LastEditTime: 2024-01-26 03:39:32
 -->
 <template>
 	<div class="app">
@@ -17,31 +17,16 @@
 				@stausChange="stausChange" @initData="initData" @initDatas="initDatas" titelText="首页"></header-nav-pc>
 		</div>
 		<!-- 地图容器 -->
-		<el-amap @update:zoom="onUpdatedZoom" v-model:center="center" :zoom="zoom" @click="closeLegend">
-			<!-- 地图标记 -->
-			<!-- 左偏移 -50+ 上下偏移 -35 -->
-			<!-- <el-amap-marker v-if="phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
-				:position="marker.position" :offset="marker.name.length >= 9 ? [-90, -40] : [-70, -40]"
-				@click="(e) => { clickArrayMarker(marker, e) }">
-				<div :class="marker.name.length >= 9 ? 'marker-contents' : 'marker-content'">
-					<div class="title">{{ marker.name }}</div>
-				</div>
-			</el-amap-marker> -->
-			<!-- pc地图标记 -->
+		<el-amap @update:zoom="onUpdatedZoom" @zoomstart="onMapChange" v-model:center="center" :zoom="zoom"
+			@click="closeLegend">
 			<el-amap-marker v-if="!phoneType()" :visible="textVisible" v-for="marker in markers" :key="marker.id"
 				:position="marker.position" :offset="[0, 0]" @click="(e) => { clickArrayMarker(marker, e) }">
 				<div class="marker-content_pc">
 					<div class="title">{{ marker.name }}</div>
 					<div class="img"><img :src="img1" /></div>
-					<!-- <div class="img"><img :src="getImgType(marker.type)" /></div> -->
 				</div>
 			</el-amap-marker>
-			<!-- <el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:icon="img1" @click="(e) => { clickArrayMarker(marker, e) }" /> -->
-			<!-- 备份代码 -->
-			<!-- <el-amap-marker v-if="phoneType()" v-for="marker in markers" :key="marker.id" :position="marker.position"
-				:icon="getImgType(marker.type)" @click="(e) => { clickArrayMarker(marker, e) }" /> -->
-			<el-amap-layer-labels>
+			<el-amap-layer-labels :collision="false" :allowCollision="false">
 				<el-amap-label-marker :visible="labelOptions.visible" v-for="marker in markers" :key="marker.id"
 					:position="marker.position" :text="marker.text" :icon="labelOptions.icon"
 					@click="(e) => { clickArrayMarker(marker, e) }" />
@@ -52,8 +37,6 @@
 			<el-amap-control-tool-bar :visible="ScalinVisible" />
 			<!-- 地图类型切换 -->
 			<el-amap-control-map-type :visible="MapStatusvisible" />
-			<!-- 定位 -->
-			<!-- <el-amap-control-geolocation :visible="true" @complete="aaa" /> -->
 		</el-amap>
 		<!-- 底部 -->
 		<div class="footer_body" v-if="phoneType()">
@@ -136,7 +119,7 @@ const labelOptions = ref({
 	position: [121.5495395, 31.21515044],
 	text: {
 		content: '测试content',
-		direction: 'right',
+		direction: 'top',
 		style: {
 			fontSize: 15,
 			fillColor: '#fff',
@@ -152,7 +135,7 @@ const labelOptions = ref({
 		image: 'https://a.amap.com/jsapi_demos/static/images/poi-marker.png',
 		anchor: 'bottom-center',
 		size: [25, 34],
-		clipOrigin: [459, 92],
+		clipOrigin: [279, 0],
 		clipSize: [50, 68]
 	}
 });
@@ -168,6 +151,8 @@ const searchInfo = ref({
 const markers = ref([])
 const markersAll = ref([])
 const zoom = ref(18)
+const zoomLever = ref(0)
+const iszoomChange = ref(true)
 // 比例尺
 const ScaleVisible = ref(false)
 // 文本标记
@@ -193,9 +178,30 @@ const locationObj = ref({
 	address: '杭州市西湖区武林广场',
 	infoList: []
 })
+// 判断地图放大还是缩小
+const onMapChange = (event) => {
+	const newZoom = event.target.getZoom(); // 获取新的缩放级别
+	console.log('newZoom', newZoom)
+	console.log('zoomLever.value', zoomLever.value)
+	if (Math.round(newZoom) > Math.round(zoomLever.value)) {
+		iszoomChange.value = false
+		// 地图放大
+		console.log('地图放大');
+	} else if (Math.round(newZoom) < Math.round(zoomLever.value)) {
+		// 地图缩小
+		iszoomChange.value = true
+		console.log('地图缩小');
+	} else {
+		// 缩放级别未改变
+		iszoomChange.value = false
+		console.log('缩放级别未改变');
+	}
+	zoomLever.value = newZoom; // 更新旧的缩放级别
+}
 // 地图事件
 const onUpdatedZoom = (e) => {
-	// if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return textVisible.value = false
+	$globalEventBus.emit('LegendClick', false);
+	if (iszoomChange.value == false) return
 	if (useMy.$state.companyName == '全部' || useMy.$state.companyName == '') return
 	if (Math.round(e) <= 5) {
 		setCompanyZoom('全部')
@@ -218,13 +224,10 @@ const getImgType = (v) => {
 }
 // marker点击事件
 const clickArrayMarker = async (marker) => {
-	console.log('1', 1)
 	$globalEventBus.emit('LegendClick', false);
-	console.log('marker', marker)
 	if (getSession('TOKEN')) {
 		const res = await useMy.getPointInfoList({ id: marker.id });
 		if (res?.code === 200) {
-			console.log('res', res)
 			locationObj.value = {
 				title: marker.name ? marker.name : '暂无数据',
 				contant: marker.addr ? marker.addr : '暂无数据',
@@ -264,12 +267,9 @@ const hasUser = async () => {
 	// router.push({ name: "login" });
 };
 const handleSearch = async (v) => {
-	// 要判断一下当前的公司和地市是不是跟这条记录一样，如果一样，就直接定位到那个项目就行了，
-	// 如果不一样，那要切换项目和地市，并刷新当前项目和地市的数据，并定位到当前选的项目，管理那个查询字段要清空（如果当前有选过的话）
 	loading.value = true
 	const res = await useMy.queryFuzzy({ name: v });
 	if (res?.code === 200) {
-		console.log('res', res)
 		loading.value = false
 	} else {
 		loading.value = false
@@ -278,21 +278,17 @@ const handleSearch = async (v) => {
 };
 // 区划选中事件
 const cityChange = (status, v) => {
-	console.log('v--------', v)
 	searchInfo.value.xmproject = v
 	getMarkList(status);
 }
 // 初始化没值的时候 赋值有值的数据
 const initData = (egion, xmproject, isMycity) => {
-	console.log('xmproject---------', egion, xmproject, isMycity)
 	searchInfo.value.egion = egion == '全部' ? '' : egion;
 	searchInfo.value.xmproject = xmproject;
-	console.log('searchInfo.value.xmproject', searchInfo.value.xmproject)
 	searchInfo.value.manage = '';
 	getMarkList(isMycity);
 }
 const initDatas = async (egion, xmproject, list) => {
-	console.log('2', 2)
 	loading.value = true
 	searchInfo.value.egion = egion == '全部' ? '' : egion;;
 	searchInfo.value.xmproject = xmproject;
@@ -305,16 +301,15 @@ const initDatas = async (egion, xmproject, list) => {
 				v.type = useMy.$state.companyName,
 				v.text = {
 					content: v.name,
-					direction: 'right',
+					direction: 'top',
 					style: {
 						fontSize: 15,
 						fillColor: '#fff',
-						strokeColor: 'rgba(255,0,0,0.5)',
-						strokeWidth: 2,
-						padding: [3, 10],
-						backgroundColor: 'yellow',
-						borderColor: '#ccc',
-						borderWidth: 3,
+						strokeWidth: 0,
+						padding: [1, 5],
+						backgroundColor: '#A94D36',
+						borderColor: '',
+						borderWidth: 0,
 					}
 				}
 		});
@@ -334,18 +329,16 @@ const clearData = () => {
 	showToast('暂无数据');
 }
 // 类型切换事件
-const stausChange = (v) => {
+const stausChange = (v, isCity) => {
 	searchInfo.value.manage = v
 	getMarkList();
 }
 // 显示地图文本标记事件
 const textChange = async (v) => {
-	// textVisible.value = v
 }
 // 筛选点事件
 const selectList = (v) => {
 	searchInfo.value.egion = v
-	// getMarkList();
 }
 // 关闭图例事件
 const closeLegend = () => {
@@ -388,16 +381,10 @@ const getLocation = () => {
 		lng: locationObj.value.lng,
 		name: locationObj.value.addressName,
 		address: locationObj.value.address
-		// lat: '30.061333',
-		// lng: '120.001',
-		// name: 'A',
-		// address: '杭州市西湖区武林广场'
 	}
 }
 // 获取点的数组 
 const getMarkList = async (v) => {
-	console.log('searchInfo.value', searchInfo.value)
-	console.log('3', 3)
 	loading.value = true;
 	markers.value = [];
 	const res = await useMy.getPointInfo(searchInfo.value);
@@ -409,10 +396,12 @@ const getMarkList = async (v) => {
 					content: v.name,
 					direction: 'top',
 					style: {
-						fontSize: 17,
-						fillColor: '#792A17',
+						fontSize: 15,
+						fillColor: '#fff',
 						strokeWidth: 0,
-						padding: [0, 0],
+						padding: [1, 5],
+						backgroundColor: '#A94D36',
+						borderColor: '',
 						borderWidth: 0,
 					}
 				}
@@ -450,25 +439,12 @@ const queryUserInfo = async (v) => {
 		showToast(res.msg);
 	}
 }
-// $globalEventBus.on("initSearch", v => {
-// 	aaa.value = false;
-// 	aaa.value = true;
-// 	searchInfo.value.egion = v.egion;
-// 	searchInfo.value.xmproject = v.xmproject;
-// 	searchInfo.value.manage = '';
-// 	setCompanyName(v.egion)
-// 	setAdcdName(v.xmproject)
-// 	setCenterValue([v.longitude, v.latitude])
-// 	setInputValue(v.searchValue)
-// 	getMarkList(false);
-// });
 onBeforeMount(() => {
 	lazyAMapApiLoaderInstance.then(() => {
 		useCitySearch().then(res => {
 			const { getLocalCity } = res;
 			getLocalCity().then(cityResult => {
 				center.value = cityResult.bounds.getCenter().toArray()
-				// console.log('cityResult', cityResult)
 			})
 		})
 	})
@@ -487,7 +463,20 @@ const setDataSearch = async () => {
 	if (res?.code === 200) {
 		res.data.forEach(v => {
 			v.position = [v.longitude, v.latitude],
-				v.type = useMy.$state.companyName
+				v.type = useMy.$state.companyName,
+				v.text = {
+					content: v.name,
+					direction: 'top',
+					style: {
+						fontSize: 15,
+						fillColor: '#fff',
+						strokeWidth: 0,
+						padding: [1, 5],
+						backgroundColor: '#A94D36',
+						borderColor: '',
+						borderWidth: 0,
+					}
+				}
 		});
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
@@ -500,6 +489,9 @@ const setDataSearch = async () => {
 		loading.value = false;
 	}
 }
+// $globalEventBus.on("setZoom", eventData => {
+// 	zoom.value = eventData
+// });
 onMounted(() => {
 	const searchParams = new URLSearchParams(window.location.search);
 	const code = searchParams.get('code');

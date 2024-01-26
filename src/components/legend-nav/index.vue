@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-25 11:01:45
+ * @LastEditTime: 2024-01-26 02:55:11
 -->
 <template>
 	<div class="legend_nav">
@@ -58,7 +58,6 @@ const closeLegend = () => {
 		stateDom.value.style.maxHeight = null;
 		isTriangleShow.value = false
 	}
-
 }
 const getClass = (v) => {
 	const map = {
@@ -86,11 +85,11 @@ const getClass = (v) => {
 	return map[v] || "";
 }
 const change = (v, id) => {
-	console.log('v', v.name)
 	if (v.name == '全部') {
 		$globalEventBus.emit('cityName', '全部')
 	}
 	$globalEventBus.emit('adcdChange', v.name == '全部' ? '' : v.name);
+	// $globalEventBus.emit('setZoom', 18);
 	setAdcdName('')
 	setCompanyZoom('')
 	setCompanyName(v.name == '全部' ? '' : v.name)
