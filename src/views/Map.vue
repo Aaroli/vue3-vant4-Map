@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 00:39:25
+ * @LastEditTime: 2024-01-27 02:38:05
 -->
 <template>
 	<div class="app">
@@ -393,10 +393,12 @@ const getMarkList = async (v) => {
 			center.value = useMy.$state.centerCoordinate
 		}
 		if (v && v == true) {
-			if (useMy.$state.coordinate == 0) {
+			if (useMy.$state.coordinate.length == 0) {
 				// 获取定位失败 优先取getlocal的缓存
 				if (getlocal('Coordinate')) {
 					center.value = getlocal('Coordinate')
+				} else if (isPCFun()) {
+					center.value = enterprisecenter.value
 				} else {
 					if (markers.value && markers.value.length > 0) {
 						center.value = [markers.value[0].longitude, markers.value[0].latitude]
@@ -442,16 +444,18 @@ onBeforeMount(() => {
 
 	} else {
 		lazyAMapApiLoaderInstance.then(() => {
-			useGeolocation({
-				enableHighAccuracy: true,
-				needAddress: true
-			}).then(res => {
-				const { getCurrentPosition } = res;
-				getCurrentPosition().then(currentPosition => {
-					alert(currentPosition.position.toArray())
-					enterprisecenter.value = currentPosition.position.toArray()
-				});
-			})
+			if (isPCFun()) {
+				useGeolocation({
+					enableHighAccuracy: true,
+					needAddress: true
+				}).then(res => {
+					const { getCurrentPosition } = res;
+					getCurrentPosition().then(currentPosition => {
+						alert(enterprisecenter.value)
+						enterprisecenter.value = currentPosition.position.toArray()
+					});
+				})
+			}
 			useCitySearch().then(res => {
 				const { getLocalCity } = res;
 				getLocalCity().then(cityResult => {

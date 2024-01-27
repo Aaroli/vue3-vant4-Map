@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 00:41:12
+ * @LastEditTime: 2024-01-27 02:28:16
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -343,7 +343,6 @@ const isPCFun = () => {
 	var isWx = /micromessenger/i.test(navigator.userAgent); // 是否微信
 	var isComWx = /wxwork/i.test(navigator.userAgent); // 是否企业微信
 	if (isComWx && isMobile) { //手机端企业微信
-		PCFlag = false;
 		return true
 	} else {
 		return false;
