@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:38:41
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 03:55:34
+ * @LastEditTime: 2024-01-27 04:44:46
 -->
 <template>
   <div class="header__nav">
@@ -202,6 +202,7 @@ const hasConfirm = () => {
     value = '项目'
   }
   setSearchType(value == '' ? '全部' : value);
+  $globalEventBus.emit('setZoom', 15);
   const arr = columns.value.filter(item => item.text == loctionName.value.slice(0, -1))
   emit("stausChange", value, arr.length > 0 ? true : false);
   itemRef.value.toggle();
