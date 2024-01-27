@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 02:49:09
+ * @LastEditTime: 2024-01-27 03:57:54
 -->
 <template>
 	<div class="app">
@@ -155,7 +155,7 @@ const searchInfo = ref({
 // 地图标记
 const markers = ref([])
 const markersAll = ref([])
-const zoom = ref(18)
+const zoom = ref(12)
 const zoomLever = ref(0)
 const iszoomChange = ref(false)
 const hasAllChange = ref(false)
@@ -168,9 +168,9 @@ const ScalinVisible = ref(true)
 // 地图类型切换
 const MapStatusvisible = ref(false)
 // 地图中心点
-const center = ref([120.05, 30.04])
+const center = ref([120.199675, 30.263458])
 // 企微定位
-const enterprisecenter = ref([120.05, 30.04])
+const enterprisecenter = ref([120.199675, 30.263458])
 const locationObj = ref({
 	title: '富阳旅游项目',
 	name: '张涵',
@@ -289,7 +289,7 @@ const initDatas = async (egion, xmproject, list) => {
 					}
 				}
 		});
-		zoom.value = 18
+		zoom.value = 12
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
 		center.value = list
@@ -307,7 +307,7 @@ const clearData = () => {
 // 类型切换事件
 const stausChange = (v, isCity) => {
 	searchInfo.value.manage = v
-	getMarkList();
+	getMarkList(isCity);
 }
 // 显示地图文本标记事件
 const textChange = async (v) => {
@@ -383,8 +383,6 @@ const getMarkList = async (v) => {
 				}
 		});
 		markers.value = res.data;
-		console.log('v----------', v)
-		console.log('useMy.$state.coordinate', useMy.$state.coordinate)
 		setCompanyNum(res.data.length);
 		if (markers.value && markers.value.length > 0) {
 			center.value = [markers.value[0].longitude, markers.value[0].latitude]
@@ -403,12 +401,12 @@ const getMarkList = async (v) => {
 					if (markers.value && markers.value.length > 0) {
 						center.value = [markers.value[0].longitude, markers.value[0].latitude]
 					} else {
-						center.value = [120.0424575805664, 30.293476104736328]
+						center.value = [120.199675, 30.263458]
 					}
 				}
 			} else {
 				center.value = useMy.$state.coordinate
-				zoom.value = 18
+				zoom.value = 12
 			}
 
 		}
@@ -452,6 +450,7 @@ onBeforeMount(() => {
 					const { getCurrentPosition } = res;
 					getCurrentPosition().then(currentPosition => {
 						enterprisecenter.value = currentPosition.position.toArray()
+						setlocal('Coordinate', enterprisecenter.value)
 					});
 				})
 			}
@@ -485,8 +484,6 @@ const setDataSearch = async () => {
 		manage: typeChange,
 	}
 	console.log('data---------------', data)
-	// zoom.value = 5
-	// center.value = [120.0424575805664, 30.293476104736328]
 	const res = await useMy.getPointInfo(data);
 	if (res?.code === 200) {
 		console.log('res.data', res.data)

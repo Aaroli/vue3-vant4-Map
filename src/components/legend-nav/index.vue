@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 11:27:10
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 10:44:53
+ * @LastEditTime: 2024-01-27 03:38:56
 -->
 <template>
 	<div class="legend_nav">
@@ -90,7 +90,7 @@ const change = (v, id) => {
 		$globalEventBus.emit('cityName', '全部')
 	}
 	$globalEventBus.emit('adcdChange', v.name == '全部' ? '' : v.name);
-	$globalEventBus.emit('setZoom', 18);
+	$globalEventBus.emit('setZoom', 12);
 	setAdcdName('')
 	setCompanyZoom('')
 	setCompanyName(v.name == '全部' ? '' : v.name)
