@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2023-12-30 15:40:52
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 00:38:52
+ * @LastEditTime: 2024-01-27 00:41:12
  */
 import { showToast } from "vant";
 import wx from "weixin-js-sdk"; //引入WX sdk
@@ -294,7 +294,6 @@ const navToMap = (addressInfo, type) => {
 }
 // 根据经纬度换算距离
 const calcDistance = (lat1, lon1, lat2, lon2) => {
-	console.log(lat1, lon1, lat2, lon2);
 	// const R = 6371; // 地球半径，单位为千米
 	// const dLat = (lat2 - lat1) * Math.PI / 180;
 	// const dLon = (lon2 - lon1) * Math.PI / 180;
