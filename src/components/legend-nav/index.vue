@@ -90,7 +90,7 @@ const change = (v, id) => {
 		$globalEventBus.emit('cityName', '全部')
 	}
 	$globalEventBus.emit('adcdChange', v.name == '全部' ? '' : v.name);
-	$globalEventBus.emit('setZoom', 12);
+	$globalEventBus.emit('setZoom', 15);
 	setAdcdName('')
 	setCompanyZoom('')
 	setCompanyName(v.name == '全部' ? '' : v.name)

@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 03:57:54
+ * @LastEditTime: 2024-01-27 04:21:56
 -->
 <template>
 	<div class="app">
@@ -155,7 +155,7 @@ const searchInfo = ref({
 // 地图标记
 const markers = ref([])
 const markersAll = ref([])
-const zoom = ref(12)
+const zoom = ref(15)
 const zoomLever = ref(0)
 const iszoomChange = ref(false)
 const hasAllChange = ref(false)
@@ -289,7 +289,7 @@ const initDatas = async (egion, xmproject, list) => {
 					}
 				}
 		});
-		zoom.value = 12
+		zoom.value = 15
 		markers.value = res.data;
 		setCompanyNum(res.data.length);
 		center.value = list
@@ -394,7 +394,7 @@ const getMarkList = async (v) => {
 			if (useMy.$state.coordinate.length == 0) {
 				// 获取定位失败 优先取getlocal的缓存
 				if (getlocal('Coordinate')) {
-					center.value = getlocal('Coordinate')
+					center.value = getlocal('Coordinate').split(',')
 				} else if (isPCFun()) {
 					center.value = enterprisecenter.value
 				} else {
@@ -406,7 +406,7 @@ const getMarkList = async (v) => {
 				}
 			} else {
 				center.value = useMy.$state.coordinate
-				zoom.value = 12
+				zoom.value = 15
 			}
 
 		}
@@ -564,7 +564,7 @@ $globalEventBus.on("setZoom", eventData => {
 	zoom.value = eventData
 	iszoomChange.value = true
 	// hasAllChange.value = true
-	mapRef.value.$$getInstance().setZoom(12)
+	mapRef.value.$$getInstance().setZoom(15)
 	// mapRef.value.$$getInstance().setZoom(12).resize();
 	// hasAllChange.value = false
 });
