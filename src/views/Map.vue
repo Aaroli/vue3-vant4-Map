@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-26 23:56:25
+ * @LastEditTime: 2024-01-27 00:39:25
 -->
 <template>
 	<div class="app">
@@ -67,7 +67,7 @@
 					<div v-if="getSession('TOKEN')" class="Mapinfo">
 						<div class="Mapinfo_box" v-for="(item, index) in locationObj.infoList" :key="index">
 							<div>{{ `${item.fieldTitle}：` }}<span>{{ item.fieldValue }}</span><van-icon
-									v-if="checkPhoneNumber(item.fieldValue)" size="20" style="transform: rotate(-110deg);"
+									v-if="checkPhoneNumber(item.fieldValue)" size="16" style="transform: rotate(-110deg);"
 									color="blue" name="phone-o" @click="handleTel(item.fieldValue)" /></div>
 						</div>
 						<!--  -->
@@ -107,8 +107,8 @@
 </template>
 
 <script setup name="Map">
-import { getSession, setlocal, getlocal, removelocal, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, setInputValue, isWx, navToMap, setCompanyNum, phoneType, calcDistance, checkPhoneNumber } from "@/util/util";
-import { useCitySearch, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
+import { getSession, setlocal, getlocal, removelocal, removeSession, setSession, navigationWx, setAdcdName, setCompanyZoom, setCenterValue, debounce, setCompanyName, isPCFun, isWx, navToMap, setCompanyNum, phoneType, calcDistance, checkPhoneNumber } from "@/util/util";
+import { ElAmap, useCitySearch, useGeolocation, lazyAMapApiLoaderInstance } from "@vuemap/vue-amap";
 import { showToast } from "vant";
 const { useMy } = $globalStore
 const router = useRouter();
@@ -169,6 +169,8 @@ const ScalinVisible = ref(true)
 const MapStatusvisible = ref(false)
 // 地图中心点
 const center = ref([120.05, 30.04])
+// 企微定位
+const enterprisecenter = ref([120.05, 30.04])
 const locationObj = ref({
 	title: '富阳旅游项目',
 	name: '张涵',
@@ -199,13 +201,15 @@ const getImgType = (v) => {
 // marker点击事件
 const clickArrayMarker = async (marker) => {
 	$globalEventBus.emit('LegendClick', false);
+	let zb = ''
+	isPCFun() == true || useMy.$state.coordinate.length == 0 ? zb = enterprisecenter.value : zb = useMy.$state.coordinate
 	if (getSession('TOKEN')) {
 		const res = await useMy.getPointInfoList({ id: marker.id });
 		if (res?.code === 200) {
 			locationObj.value = {
 				title: marker.name ? marker.name : '暂无数据',
 				contant: marker.addr ? marker.addr : '暂无数据',
-				distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
+				distanc: `${calcDistance(zb[1], zb[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
 				lat: marker.latitude,
 				lng: marker.longitude,
 				addressName: marker.name,
@@ -220,7 +224,7 @@ const clickArrayMarker = async (marker) => {
 		locationObj.value = {
 			title: marker.name ? marker.name : '暂无数据',
 			contant: marker.addr ? marker.addr : '暂无数据',
-			distanc: `${calcDistance(useMy.$state.coordinate[1], useMy.$state.coordinate[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
+			distanc: `${calcDistance(zb[1], zb[0], marker.position[1], marker.position[0])}KM` || '暂无数据',
 			lat: marker.latitude,
 			lng: marker.longitude,
 			addressName: marker.name,
@@ -438,6 +442,16 @@ onBeforeMount(() => {
 
 	} else {
 		lazyAMapApiLoaderInstance.then(() => {
+			useGeolocation({
+				enableHighAccuracy: true,
+				needAddress: true
+			}).then(res => {
+				const { getCurrentPosition } = res;
+				getCurrentPosition().then(currentPosition => {
+					alert(currentPosition.position.toArray())
+					enterprisecenter.value = currentPosition.position.toArray()
+				});
+			})
 			useCitySearch().then(res => {
 				const { getLocalCity } = res;
 				getLocalCity().then(cityResult => {
