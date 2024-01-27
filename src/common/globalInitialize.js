@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 02:38:47
+ * @LastEditTime: 2024-01-27 02:49:14
  */
 import VueDompurifyHtml from 'vue-dompurify-html'; // 替代v-html插件防止xss
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -14,8 +14,8 @@ import 'vant/lib/index.css'; // 引入vant样式文件
 import 'amfe-flexible'; // 导入适配
 import { initAMapApiLoader } from '@vuemap/vue-amap'
 import '@vuemap/vue-amap/dist/style.css'
-import Vconsole from 'vconsole'
-let vConsole = new Vconsole()
+// import Vconsole from 'vconsole'
+// let vConsole = new Vconsole()
 // 初始化地图
 initAMapApiLoader({
 	key: 'cf616969abaa80500e97eb21ea98a6f8',
@@ -57,7 +57,7 @@ const $globalReady = {
 
 		// 初始化语言
 		app.use($globalLang);
-		app.use(vConsole)
+		// app.use(vConsole)
 		// 依赖注入
 		app.provide('$provideLang', getLang);
 		app.provide('$provideLoadUrl', handleLoadUrl);

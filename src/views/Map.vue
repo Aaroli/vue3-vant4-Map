@@ -4,7 +4,7 @@
  * @Author: AaroLi
  * @Date: 2024-01-03 09:33:21
  * @LastEditors: AaroLi
- * @LastEditTime: 2024-01-27 02:38:05
+ * @LastEditTime: 2024-01-27 02:49:09
 -->
 <template>
 	<div class="app">
@@ -451,7 +451,6 @@ onBeforeMount(() => {
 				}).then(res => {
 					const { getCurrentPosition } = res;
 					getCurrentPosition().then(currentPosition => {
-						alert(enterprisecenter.value)
 						enterprisecenter.value = currentPosition.position.toArray()
 					});
 				})
